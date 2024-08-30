@@ -14,6 +14,13 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-agents_pay-agents_payTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-agents_pay-agents_payTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		316D7A86C404487895E3FE95 /* Poppins-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0B42B56ED71344339B0DE045 /* Poppins-Regular.ttf */; };
+		A83708EA3F5B42C798244C4B /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 65689C79D7D449DBB0036EBB /* Poppins-SemiBold.ttf */; };
+		287FEE0FFDF84516B66A3447 /* Poppins-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 11BD99D25A9F418DA350E905 /* Poppins-Medium.ttf */; };
+		B3F7A96A16584077BF4197BB /* Jost-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7899DBD96EAD4751892B3863 /* Jost-Regular.ttf */; };
+		7BEF8E3BCE2A49EEA3D67920 /* Jost-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D01B6BBCFFC34AE59CA6FF5E /* Jost-SemiBold.ttf */; };
+		68804188BCA449AD90E9C781 /* Inter_28pt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E8AAE28F49624F2AA99474E3 /* Inter_28pt-Regular.ttf */; };
+		D7593ED108554B71816E6D69 /* IBMPlexMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDE52F13B1C1430E9BE84CED /* IBMPlexMono-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,6 +52,13 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = agents_pay/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-agents_pay-agents_payTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-agents_pay-agents_payTests.release.xcconfig"; path = "Target Support Files/Pods-agents_pay-agents_payTests/Pods-agents_pay-agents_payTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		0B42B56ED71344339B0DE045 /* Poppins-Regular.ttf */ = {isa = PBXFileReference; name = "Poppins-Regular.ttf"; path = "../src/assets/fonts/Poppins-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		65689C79D7D449DBB0036EBB /* Poppins-SemiBold.ttf */ = {isa = PBXFileReference; name = "Poppins-SemiBold.ttf"; path = "../src/assets/fonts/Poppins-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		11BD99D25A9F418DA350E905 /* Poppins-Medium.ttf */ = {isa = PBXFileReference; name = "Poppins-Medium.ttf"; path = "../src/assets/fonts/Poppins-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		7899DBD96EAD4751892B3863 /* Jost-Regular.ttf */ = {isa = PBXFileReference; name = "Jost-Regular.ttf"; path = "../src/assets/fonts/Jost-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		D01B6BBCFFC34AE59CA6FF5E /* Jost-SemiBold.ttf */ = {isa = PBXFileReference; name = "Jost-SemiBold.ttf"; path = "../src/assets/fonts/Jost-SemiBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		E8AAE28F49624F2AA99474E3 /* Inter_28pt-Regular.ttf */ = {isa = PBXFileReference; name = "Inter_28pt-Regular.ttf"; path = "../src/assets/fonts/Inter_28pt-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		EDE52F13B1C1430E9BE84CED /* IBMPlexMono-Regular.ttf */ = {isa = PBXFileReference; name = "IBMPlexMono-Regular.ttf"; path = "../src/assets/fonts/IBMPlexMono-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +138,7 @@
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
 				BBD78D7AC51CEA395F1C20DB /* Pods */,
+				821846E748DE45F48D89A59C /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -149,6 +164,21 @@
 			);
 			path = Pods;
 			sourceTree = "<group>";
+		};
+		821846E748DE45F48D89A59C /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				0B42B56ED71344339B0DE045 /* Poppins-Regular.ttf */,
+				65689C79D7D449DBB0036EBB /* Poppins-SemiBold.ttf */,
+				11BD99D25A9F418DA350E905 /* Poppins-Medium.ttf */,
+				7899DBD96EAD4751892B3863 /* Jost-Regular.ttf */,
+				D01B6BBCFFC34AE59CA6FF5E /* Jost-SemiBold.ttf */,
+				E8AAE28F49624F2AA99474E3 /* Inter_28pt-Regular.ttf */,
+				EDE52F13B1C1430E9BE84CED /* IBMPlexMono-Regular.ttf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -245,6 +275,13 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				316D7A86C404487895E3FE95 /* Poppins-Regular.ttf in Resources */,
+				A83708EA3F5B42C798244C4B /* Poppins-SemiBold.ttf in Resources */,
+				287FEE0FFDF84516B66A3447 /* Poppins-Medium.ttf in Resources */,
+				B3F7A96A16584077BF4197BB /* Jost-Regular.ttf in Resources */,
+				7BEF8E3BCE2A49EEA3D67920 /* Jost-SemiBold.ttf in Resources */,
+				68804188BCA449AD90E9C781 /* Inter_28pt-Regular.ttf in Resources */,
+				D7593ED108554B71816E6D69 /* IBMPlexMono-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
