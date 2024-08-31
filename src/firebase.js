@@ -17,13 +17,15 @@ const config = {
   databaseURL: 'https://date420-c38ee-default-rtdb.firebaseio.com/',
 };
 
-export async function connectFirebase() {
+export async function connectFirebase(setState) {
   try {
+    console.log('fetching...');
     const initializeLoginFramework = !firebase.apps.length ? firebase.initializeApp(config) : firebase.app();
     const fcmToken = await messaging().getToken();
     const subscribeToTopic = await messaging().subscribeToTopic('date420');
-    return fcmToken;
+    setState(fcmToken);
+    // return fcmToken;
   }catch(err) {
-    console.log(err);
+    await connectFirebase(setState);
   }
 }

@@ -14,6 +14,7 @@ import { api, errHandler } from '../API';
 import DeviceInfo from 'react-native-device-info';
 import { connectFirebase } from '../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Loading from './Loading';
 
 const { width, height } = Dimensions.get('window');
 const Login = ({ navigation, route }) => {
@@ -31,17 +32,14 @@ const Login = ({ navigation, route }) => {
         if (route?.params?.email) {setUser({...user, email: route?.params?.email.toLowerCase()});}
     }, [route?.params?.email]);
     useEffect(() => {
-        if (!FCM) {getFCM();}
-    }, [FCM]);
+        getFCM();
+    }, []);
     useEffect(() => {
         getDeviceInfo();
     }, []);
 
     async function getFCM() {
-        const token = await connectFirebase();
-        setFCM(token);
-
-        if (!Device) {}
+        await connectFirebase(setFCM);
     }
 
     const getDeviceInfo = async () => {
@@ -114,12 +112,14 @@ const Login = ({ navigation, route }) => {
                     navigation.navigate('CompleteProfile');
                 }
             } catch(err) {
-                console.log('err', err);
-                setLoading(false);
                 await errHandler(err);
             }
+            setLoading(false);
         }
     };
+    if (!FCM) {
+        return <Loading />;
+    }
     return (
         <Background>
             <Backbtn onPress={() => navigation.goBack()} />
