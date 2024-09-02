@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { Alert } from 'react-native';
 
-const basUrl = 'http://192.168.18.190:8080';
+export const baseUrl = 'http://192.168.18.190:8080';
 export const api = axios.create({
-    baseURL: basUrl,
+    baseURL: baseUrl,
     timeout: 5000,
 });
 
@@ -24,9 +24,10 @@ export const errHandler = async (err) => {
     }else
     if (status === 404) // NOT FOUND
     {
+        const calledAPI = err?.response?.config?.url;
         Alert.alert(
-            err.response.data?.title,
-            err.response.data?.message
+            'Unknown API Called',
+            'Please make sure that the API (' + calledAPI + ") you're calling is already exists!",
         );
     }else {
         Alert.alert(

@@ -107,7 +107,11 @@ const Login = ({ navigation, route }) => {
 
                 Toast.show(res.data?.title, Toast.SHORT);
                 if (res.data?.data?.is_profile_completed) {
-                    navigation.navigate('Home');
+                    if (res.data?.data?.is_subscription_activated) {
+                        navigation.navigate('Home');
+                    }else {
+                        navigation.navigate('Subscriptions');
+                    }
                 }else {
                     navigation.navigate('CompleteProfile');
                 }

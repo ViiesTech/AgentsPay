@@ -17,21 +17,23 @@ interface Props {
     value?: any,
     onBlur?: any,
     defaultValue?: any,
-    secure?: boolean
+    secure?: boolean,
+    isDefaultFocused?: boolean,
+    keyboardType?: any
 }
 const inputHeight = Platform.OS === 'ios' ? 60 : height * 0.05;
 
-const Input = ({secure, defaultValue, onBlur, labelText, style, numberOfLines, onChange, value}: Props) => {
+const Input = ({secure, defaultValue, onBlur, labelText, style, numberOfLines, onChange, value, isDefaultFocused, keyboardType}: Props) => {
     const [ isFocused, setIsFocused ] = useState(false);
     const [ inputValue, setInputValue ] = useState('');
     const halfHeight = inputHeight / 20;
     const labelMovement = useRef(new Animated.Value(halfHeight)).current;
 
     useEffect(() => {
-        if (defaultValue && defaultValue.length > 0) {
+        if ((defaultValue && defaultValue.length > 0) || isDefaultFocused) {
             focused();
         }
-    }, [defaultValue]);
+    }, [defaultValue, isDefaultFocused]);
 
     const focused = () => {
         Animated.timing(labelMovement, {
@@ -82,7 +84,7 @@ const Input = ({secure, defaultValue, onBlur, labelText, style, numberOfLines, o
                         }}>{labelText}</Pera>
                     }
                 </Animated.View>
-                <TextInput secureTextEntry={secure} onFocus={focused} defaultValue={defaultValue} onBlur={unFocused} value={value} onChangeText={onChangeHandler} multiline={numberOfLines && numberOfLines > 0 ? true : false} numberOfLines={numberOfLines} style={[styles.field, {color: Color('textColor'), textAlignVertical: numberOfLines && numberOfLines > 0 ? 'top' : 'center'}]} />
+                <TextInput keyboardType={keyboardType} secureTextEntry={secure} onFocus={focused} defaultValue={defaultValue} onBlur={unFocused} value={value} onChangeText={onChangeHandler} multiline={numberOfLines && numberOfLines > 0 ? true : false} numberOfLines={numberOfLines} style={[styles.field, {color: Color('textColor'), textAlignVertical: numberOfLines && numberOfLines > 0 ? 'top' : 'center'}]} />
             </View>
         </>
     );

@@ -95,6 +95,7 @@ const Signup = ({ navigation }) => {
                     textBody: res.data?.message,
                     button: 'Great',
                     onPressButton: () => navigation.replace('Login', { email: user?.email }),
+                    onHide: () => navigation.replace('Login', { email: user?.email }),
                 });
             } catch(err) {
                 setLoading(false);

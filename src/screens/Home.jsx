@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import { H6, Pera } from '../utils/Text';
@@ -13,10 +13,40 @@ import PropertyCard from '../components/PropertyCard';
 import NavigationBar from '../components/NavigationBar';
 import { useDispatch } from 'react-redux';
 import { showDrawer } from '../redux/Reducers/drawerSlice';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { api, errHandler } from '../API';
+import Loading from './Loading';
+import { useIsFocused } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
 const Home = ({ navigation }) => {
+    const isFocused = useIsFocused();
+    const [ homepageData, setHomepageData ] = useState();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (isFocused) {loadProperties();}
+    }, [isFocused]);
+
+    const loadProperties = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const res = await api.get('/user/properties/home',{headers: {Authorization: `Bearer ${token}`}});
+            setHomepageData(res.data?.data);
+        } catch(err) {
+            await errHandler(err);
+        }
+    };
+
+    if (!homepageData) {
+        return <Loading />;
+    }
+
+    const user = homepageData[0];
+    const propertyTypes = homepageData[1];
+    const recentProperties = homepageData[2];
+    const popularProperties = homepageData[3];
+
     return (
         <>
             <Background>
@@ -32,14 +62,14 @@ const Home = ({ navigation }) => {
                         justifyContent: 'space-between',
                         gap: 10,
                     }}>
-                        <Image source={{uri: 'https://random.imagecdn.app/500/150'}} resizeMode="cover" style={{
+                        <Image source={{uri: user ? `${JSON.parse(user?.profile_image).prefix}${JSON.parse(user?.profile_image).uri}` : 'https://random.imagecdn.app/500/150'}} resizeMode="cover" style={{
                             borderRadius: 100,
                             width: width * 0.12,
                             height: width * 0.12,
                             borderWidth: 2,
                             borderColor: Color('textColor'),
                         }} />
-                        <H6 style={{marginTop: height * 0.01, fontFamily: 'Poppins-SemiBold'}}>Welcome Jacob,</H6>
+                        <H6 style={{marginTop: height * 0.01, fontFamily: 'Poppins-SemiBold', textTransform: 'capitalize'}}>Welcome {user.full_name},</H6>
                     </TouchableOpacity>
                     <Notificationbtn unSeen position="static" style={{marginTop: height * 0.01}} />
                 </View>
@@ -47,6 +77,7 @@ const Home = ({ navigation }) => {
                 <Search
                     label="Explore"
                     navigation={navigation}
+                    propertyTypes={propertyTypes}
                 />
                 <Br space={0.03} />
                 <Swiper
@@ -57,9 +88,15 @@ const Home = ({ navigation }) => {
                     activeDotColor={Color('btnBackground')}
                     loop
                 >
-                    <PropertyInfo />
-                    <PropertyInfo />
-                    <PropertyInfo />
+                    {
+                        recentProperties?.map((val, index) => {
+                            return (
+                                <View key={index}>
+                                    <PropertyInfo data={val} clickable />
+                                </View>
+                            );
+                        })
+                    }
                 </Swiper>
                 <View style={{ width: width * 0.85, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', alignSelf: 'center', marginBottom: height * 0.005 }}>
                     <Pera theme="light">Popular</Pera>
@@ -67,8 +104,15 @@ const Home = ({ navigation }) => {
                         <Pera style={{ color: Color('gray') }}>See All</Pera>
                     </TouchableOpacity>
                 </View>
-                <PropertyCard />
-                <PropertyCard />
+                {
+                    popularProperties?.map((val, index) => {
+                        return (
+                            <View key={index}>
+                                <PropertyCard data={val} />
+                            </View>
+                        );
+                    })
+                }
                 <Br space={0.08} />
             </Background>
             <NavigationBar />

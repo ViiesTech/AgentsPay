@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import { Dimensions, Image, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, Image, Pressable, View } from 'react-native';
 import Background from '../utils/Background';
 import { H6, Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -9,26 +9,68 @@ import PropertyInfo from '../components/PropertyInfo';
 import NavigationBar from '../components/NavigationBar';
 import { DocumentDownload } from 'iconsax-react-native';
 import { Button } from '../components/Button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { api, baseUrl, errHandler } from '../API';
+import Loading from './Loading';
+import RNFS from 'react-native-fs';
+import Toast from 'react-native-simple-toast';
 
 const { width, height } = Dimensions.get('window');
-const PropertyDetails = ({ navigation }) => {
+const PropertyDetails = ({ navigation, route }) => {
+    const [ details, setDetails ] = useState();
+
+    useEffect(() => {
+        if (route?.params?.data?.id) {
+            loadDetails(route?.params?.data?.id);
+        }
+    }, [route]);
+
+    const loadDetails = async (id) => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const res = await api.get('/user/properties/details?id=' + id,{headers: {Authorization: `Bearer ${token}`}});
+
+            setDetails(res.data?.data);
+        } catch(err) {
+            await errHandler(err);
+        }
+    };
+
+    const downloadDocument = async (url) => {
+        const downloadUrl = `${baseUrl}/documents/properties/${url}`;
+        const filePath = `${RNFS.DocumentDirectoryPath}/${url}`;
+
+        await RNFS.downloadFile({ fromUrl: downloadUrl, toFile: filePath });
+        const isFile = await RNFS.exists(filePath);
+
+        if (isFile) {
+            Toast.show('Document has been downloaded', Toast.SHORT);
+        }else {
+            Toast.show('Could not download the document!', Toast.SHORT);
+        }
+    };
+
+    if (!details) {
+        return <Loading />;
+    }
+
     return (
         <>
             <Background>
                 <View style={{position: 'relative'}}>
                     <Br space={0.03} />
-                    <PropertyInfo />
+                    <PropertyInfo data={route?.params?.data} isSwiper />
                     <Br space={0.07} />
                     <View style={{alignSelf: 'center', position: 'absolute', width: width * 0.85, paddingVertical: height * 0.005, bottom: 0, backgroundColor: Color('btnBackground'), alignItems: 'center'}}>
-                        <Pera>Agent Commission 5% ($6250)</Pera>
+                        <Pera numberOfLines={1}>Agent Commission {details?.agent_percentage}% (${details?.agent_amount.toLocaleString('en')}/-)</Pera>
                     </View>
                 </View>
                 <View style={{width: width * 0.85, alignSelf: 'center'}}>
                     <Br space={0.03} />
                     <H6 style={{fontFamily: 'Jost-Regular'}}>About the Property</H6>
                     <Br space={0.01} />
-                    <Pera theme="transparent" style={{fontFamily: 'Jost-Regular'}}>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed arcu quam laoreet aliquet amet, ipsum mi. In molestie fames mollis feugiat ultricies ultrices integer in. Vulputate
+                    <Pera theme="transparent" style={{fontFamily: 'Jost-Regular', textAlign: 'justify'}}>
+                        {details?.property_description}
                     </Pera>
                     <Br space={0.03} />
                     <H6 style={{fontFamily: 'Jost-Regular'}}>
@@ -36,29 +78,38 @@ const PropertyDetails = ({ navigation }) => {
                     </H6>
                     <Br space={0.01} />
                     <View style={{flexDirection: 'row', gap: 10, justifyContent: 'space-around'}}>
-                        <Pera>Washer/dryer</Pera>
-                        <Pera theme="light">|</Pera>
-                        <Pera>Wifi</Pera>
-                        <Pera theme="light">|</Pera>
-                        <Pera>Laundry</Pera>
-                        <Pera theme="light">|</Pera>
-                        <Pera>Parking</Pera>
+                        {
+                            details?.tags.split(', ').map((tag, index) => {
+                                return (
+                                    <React.Fragment  key={index}>
+                                        <Pera style={{textTransform: 'capitalize'}}>{tag}</Pera>
+                                        {(index + 1) < details?.tags.split(', ')?.length && <Pera theme="light">|</Pera>}
+                                    </React.Fragment>
+                                );
+                            })
+                        }
                     </View>
                     <Br space={0.03} />
                     <H6 style={{fontFamily: 'Jost-Regular'}}>
                         Documents
                     </H6>
                     <Br space={0.02} />
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingRight: width * 0.02}}>
-                        <View style={{flexDirection: 'row', gap: 10, justifyContent: 'space-between', alignItems: 'center'}}>
-                            <View style={{backgroundColor: Color('btnBackground'), width: width * 0.03, height: width * 0.03, borderRadius: 20}} />
-                            <Pera style={{marginTop: height * 0.002}}>Document 1 - Property Lease</Pera>
-                        </View>
-                        <DocumentDownload
-                            size="25"
-                            color={Color('btnBackground')}
-                        />
-                    </View>
+                    {
+                        details?.tbl_property_documents?.map((val, index) => {
+                            return (
+                                <Pressable onPress={() => downloadDocument(val.url)} key={index} style={{flexDirection: 'row', justifyContent: 'space-between', paddingRight: width * 0.02, marginBottom: height * 0.015}}>
+                                    <View style={{flexDirection: 'row', gap: 10, justifyContent: 'space-between', alignItems: 'center'}}>
+                                        <View style={{backgroundColor: Color('btnBackground'), width: width * 0.03, height: width * 0.03, borderRadius: 20}} />
+                                        <Pera numberOfLines={1} style={{marginTop: height * 0.002, textTransform: 'capitalize'}}>{val.url}</Pera>
+                                    </View>
+                                    <DocumentDownload
+                                        size="25"
+                                        color={Color('btnBackground')}
+                                    />
+                                </Pressable>
+                            );
+                        })
+                    }
                     <Br space={0.03} />
                     <View style={{backgroundColor: Color('navigationBackground'), borderRadius: 20, paddingVertical: height * 0.03, paddingHorizontal: width * 0.05}}>
                         <Small>
@@ -71,14 +122,14 @@ const PropertyDetails = ({ navigation }) => {
                     </H6>
                     <Br space={0.02} />
                     <View style={{flexDirection: 'row', alignItems: 'center', gap: 15}}>
-                        <Image source={{uri: 'https://wac-cdn.atlassian.com/dam/jcr:ba03a215-2f45-40f5-8540-b2015223c918/Max-R_Headshot%20(1).jpg?cdnVersion=2193'}}
+                        <Image source={{uri: `${JSON.parse(details?.tbl_user?.profile_image).prefix}${JSON.parse(details?.tbl_user?.profile_image).uri}`}}
                             style={{
                                 width: width * 0.12,
                                 height: width * 0.12,
                                 borderRadius: 10,
                             }}
                         />
-                        <Pera>Cameron Williamson</Pera>
+                        <Pera style={{textTransform: 'capitalize'}}>{details?.tbl_user?.full_name}</Pera>
                     </View>
                     <Br space={0.03} />
                     <Button onPress={() => navigation.replace('Login')}>View Contact Details</Button>

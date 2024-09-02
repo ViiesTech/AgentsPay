@@ -9,7 +9,7 @@ import Br from './Br';
 
 const { height, width } = Dimensions.get('window');
 
-const Search = ({label, navigation}: {label: number, navigation?: any}) => {
+const Search = ({propertyTypes, label, navigation}: {propertyTypes?: any, label: number, navigation?: any}) => {
     return (
         <View>
             <H6 theme="light" style={{fontFamily: 'Poppins-SemiBold'}}>{label}</H6>
@@ -35,28 +35,32 @@ const Search = ({label, navigation}: {label: number, navigation?: any}) => {
                 </TouchableOpacity>
             </View>
             <Br space={0.02} />
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                showsHorizontalScrollIndicator={false}
-                data={['House', 'Appartment', 'Villa', 'Workspace']}
-                horizontal
-                renderItem={({ item }: { item?: any }) => {
-                    return (
-                        <View style={{
-                            borderColor: Color('textColor'),
-                            borderWidth: 1,
-                            paddingTop: height * 0.01,
-                            paddingBottom: height * 0.007,
-                            paddingHorizontal: width * 0.05,
-                            marginRight: width * 0.02,
-                            borderRadius: 30,
-                        }}>
-                            <Small>{item}</Small>
-                        </View>
-                    );
-                }}
-                keyExtractor={(item, index: any) => index}
-            />
+            {
+                propertyTypes && (
+                    <FlatList
+                        showsVerticalScrollIndicator={false}
+                        showsHorizontalScrollIndicator={false}
+                        data={propertyTypes}
+                        horizontal
+                        renderItem={({ item }: { item?: any }) => {
+                            return (
+                                <View style={{
+                                    borderColor: Color('textColor'),
+                                    borderWidth: 1,
+                                    paddingTop: height * 0.01,
+                                    paddingBottom: height * 0.007,
+                                    paddingHorizontal: width * 0.05,
+                                    marginRight: width * 0.02,
+                                    borderRadius: 30,
+                                }}>
+                                    <Small>{item?.label}</Small>
+                                </View>
+                            );
+                        }}
+                        keyExtractor={(item, index: any) => index}
+                    />
+                )
+            }
         </View>
     );
 };
