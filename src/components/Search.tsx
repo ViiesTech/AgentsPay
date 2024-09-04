@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Dimensions, FlatList, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Pressable, TextInput, TouchableOpacity, View } from 'react-native';
 import { H6, Small } from '../utils/Text';
 import { SearchNormal1, Setting4 } from 'iconsax-react-native';
 import { Color } from '../utils/Colors';
@@ -9,7 +9,7 @@ import Br from './Br';
 
 const { height, width } = Dimensions.get('window');
 
-const Search = ({propertyTypes, label, navigation}: {propertyTypes?: any, label: number, navigation?: any}) => {
+const Search = ({propertyType, propertyTypes, label, navigation, setKeywords, setPropertyType}: {propertyType?: any, setPropertyType?: any, setKeywords?: any, propertyTypes?: any, label: number, navigation?: any}) => {
     return (
         <View>
             <H6 theme="light" style={{fontFamily: 'Poppins-SemiBold'}}>{label}</H6>
@@ -26,7 +26,13 @@ const Search = ({propertyTypes, label, navigation}: {propertyTypes?: any, label:
                     size="25"
                     color={Color('gray')}
                 />
-                <TextInput style={{flex: 1, paddingLeft: width * 0.03, fontSize: RFValue(14, height)}} placeholderTextColor={Color('gray')} placeholder="Search anything" />
+                <TextInput
+                    style={{flex: 1, paddingLeft: width * 0.03, fontSize: RFValue(14, height), color: Color('btnText')}}
+                    placeholderTextColor={Color('gray')}
+                    placeholder="Search anything"
+                    onChangeText={(text: any) => setKeywords(text.toLowerCase())}
+                    // onBlur={() => navigation.navigate('ListedProperties', {keywords: keywords})}
+                />
                 <TouchableOpacity onPress={() => navigation.navigate('Filters')} style={{backgroundColor: Color('btnBackground'), padding: width * 0.02, borderRadius: 100}}>
                     <Setting4
                         size="20"
@@ -44,17 +50,21 @@ const Search = ({propertyTypes, label, navigation}: {propertyTypes?: any, label:
                         horizontal
                         renderItem={({ item }: { item?: any }) => {
                             return (
-                                <View style={{
-                                    borderColor: Color('textColor'),
-                                    borderWidth: 1,
-                                    paddingTop: height * 0.01,
-                                    paddingBottom: height * 0.007,
-                                    paddingHorizontal: width * 0.05,
-                                    marginRight: width * 0.02,
-                                    borderRadius: 30,
-                                }}>
-                                    <Small>{item?.label}</Small>
-                                </View>
+                                <Pressable
+                                    onPress={() => setPropertyType(item?.label.toLowerCase())}
+                                    style={{
+                                        borderColor: Color('textColor'),
+                                        backgroundColor: propertyType === item?.label.toLowerCase() ? Color('textColor') : null,
+                                        borderWidth: 1,
+                                        paddingTop: height * 0.01,
+                                        paddingBottom: height * 0.007,
+                                        paddingHorizontal: width * 0.05,
+                                        marginRight: width * 0.02,
+                                        borderRadius: 30,
+                                    }}
+                                >
+                                    <Small style={{ color: propertyType === item?.label.toLowerCase() ? Color('btnText') : Color('textColor') }}>{item?.label}</Small>
+                                </Pressable>
                             );
                         }}
                         keyExtractor={(item, index: any) => index}

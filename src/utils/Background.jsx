@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dimensions, FlatList, Image, Keyboard, Platform, SafeAreaView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { Dimensions, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import KeyboardView from './KeyboardView';
 import Sidebar from '../components/Sidebar';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
@@ -7,7 +7,7 @@ import { Color } from './Colors';
 
 const { width, height } = Dimensions.get('screen');
 
-const Background = ({ children, noBackground }) => {
+const Background = ({ children, noBackground, data }) => {
     return (
         <>
             <AlertNotificationRoot colors={[
@@ -20,7 +20,7 @@ const Background = ({ children, noBackground }) => {
                     warning: Color('warning'),
                 },
             ]}>
-                <Sidebar />
+                <Sidebar user={data} />
                 <TouchableWithoutFeedback onPress={() => {
                     Keyboard.dismiss();
                 }}>
@@ -28,13 +28,16 @@ const Background = ({ children, noBackground }) => {
                         {!noBackground && <Image source={require('../assets/images/background.png')} style={styles.backgroundImage} />}
                         <View style={styles.content}>
                             <KeyboardView>
-                                <FlatList
+                                <ScrollView showsVerticalScrollIndicator={false}>
+                                    {children}
+                                </ScrollView>
+                                {/* <FlatList
                                     showsVerticalScrollIndicator={false}
                                     showsHorizontalScrollIndicator={false}
                                     data={[children]}
                                     renderItem={({ item }) => item}
                                     keyExtractor={(item, index) => index}
-                                />
+                                /> */}
                             </KeyboardView>
                         </View>
                     </SafeAreaView>

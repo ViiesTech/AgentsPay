@@ -51,7 +51,7 @@ const PropertyCard = ({ data }: { data?: any }) => {
                 <Br space={0.005} />
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Image style={{ width: width * 0.04, height: width * 0.04 }} source={require('../assets/images/location_2.png')} resizeMode="contain" />
-                    <Small style={{ fontFamily: 'Jost-Regular', color: Color('gray') }}>39 West Street Johannesburg, 2198, SA</Small>
+                    <Small style={{ fontFamily: 'Jost-Regular', color: Color('gray') }}>{data?.address}</Small>
                 </View>
                 <Br space={0.003} />
                 <View style={{

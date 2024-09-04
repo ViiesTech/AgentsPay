@@ -15,7 +15,7 @@ import Hr from './Hr';
 
 const { width, height } = Dimensions.get('screen');
 
-const Sidebar = () => {
+const Sidebar = ({ user }) => {
     // Create animated value for the horizontal position
     const slideAnim = new Animated.Value(-width);
     const showDrawer = useSelector(({drawer}) => drawer?.drawer);
@@ -80,7 +80,7 @@ const Sidebar = () => {
                                 width: width * 0.25,
                                 alignSelf: 'center',
                             }}>
-                                <Image source={{ uri: 'https://random.imagecdn.app/500/150' }} resizeMode="cover" style={{
+                                <Image source={{ uri: user ? `${JSON.parse(user?.profile_image).prefix}${JSON.parse(user?.profile_image).uri}` : 'https://random.imagecdn.app/500/150' }} resizeMode="cover" style={{
                                     width: width * 0.25,
                                     height: width * 0.25,
                                     borderRadius: 500,
@@ -106,7 +106,7 @@ const Sidebar = () => {
                             </View>
                         </View>
                         <View style={{flex: 1}}>
-                            <H6>Jacob Brooks</H6>
+                            <H6 style={{ textTransform: 'capitalize' }} numberOfLines={1}>{user?.full_name}</H6>
                             <Hr style={{ width: width * 0.3 }} />
                             <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005}}>
                                 <SmsNotification
@@ -114,7 +114,7 @@ const Sidebar = () => {
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{width: width * 0.35}} numberOfLines={1}>jacobbrooks@gmail.com</Small>
+                                <Small style={{width: width * 0.35}} numberOfLines={1}>{user?.email}</Small>
                             </View>
                             <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005}}>
                                 <Call
@@ -122,7 +122,7 @@ const Sidebar = () => {
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{width: width * 0.35}} numberOfLines={1}>234 567 8912</Small>
+                                <Small style={{width: width * 0.35}} numberOfLines={1}>{user?.phone}</Small>
                             </View>
                             <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005}}>
                                 <Personalcard
@@ -130,7 +130,7 @@ const Sidebar = () => {
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{width: width * 0.35}} numberOfLines={1}>A2B3C456</Small>
+                                <Small style={{width: width * 0.35}} numberOfLines={1}>{user?.license_number}</Small>
                             </View>
                             <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
                                 <Notepad
@@ -138,7 +138,7 @@ const Sidebar = () => {
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{width: width * 0.35}} numberOfLines={1}>Keller Williams</Small>
+                                <Small style={{width: width * 0.35}} numberOfLines={1}>{user?.broker_name}</Small>
                             </View>
                         </View>
                     </View>

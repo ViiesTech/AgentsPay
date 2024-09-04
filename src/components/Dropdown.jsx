@@ -17,14 +17,15 @@ const Dropdown = ({ style, data, selectedValue, onValueChange, defaultStyle, lab
     };
 
     const defaulDropdownButton = defaultStyle ? {
-        backgroundColor: Color('primary_opactiy_15'),
-        borderColor: Color('primary'),
+        borderColor: Color('gray'),
         borderWidth: 1,
-        minHeight: Platform.OS === 'ios' ? 60 : height * 0.07,
+        minHeight: Platform.OS === 'ios' ? 60 : height * 0.065,
+        borderRadius: 10,
     } : {};
     const defaultDropdownButtonText = defaultStyle ? {
-        color: Color('primary_100'),
+        color: Color('darkTheme'),
         fontSize: RFValue(15, height),
+        paddingLeft: width * 0.03,
     } : {};
 
     return (
@@ -83,14 +84,14 @@ const styles = StyleSheet.create({
         width: width * 0.9,
         backgroundColor: Color('textColor'),
         borderWidth: 1,
-        borderColor: Color('textLight'),
+        borderColor: Color('gray'),
         borderRadius: 5,
         maxHeight: height * 0.5,
     },
     dropdownItem: {
         padding: 10,
         borderBottomWidth: 1,
-        borderBottomColor: Color('textLight'),
+        borderBottomColor: Color('gray'),
     },
     dropdownItemText: {
         color: Color('btnText'),

@@ -1,15 +1,73 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import { Dimensions, Image, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, Dimensions, Image, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
 import Br from '../components/Br';
 import { ButtonOutline } from '../components/Button';
 import Hr from '../components/Hr';
 import Input from '../components/Input';
+import { api, errHandler } from '../API';
+import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 
 const { width, height } = Dimensions.get('window');
-const ResetPassword = ({ navigation }) => {
+const ResetPassword = ({ navigation, route }) => {
+    const validator = require('validator');
+
+    const [loading, setLoading] = useState(false);
+    const [ user, setUser ] = useState({
+        password: '',
+        confirm_password: '',
+    });
+
+    const isValid = () => {
+        if (validator.isEmpty(user?.password)) {
+            Alert.alert('Password is required!', 'Please enter your password.');
+            return false;
+        }
+        if (!validator.isStrongPassword(user?.password)) {
+            Alert.alert('Password is weak!', 'Please enter a strong password that contains letters, numbers and a special character.');
+            return false;
+        }
+
+        if (validator.isEmpty(user?.confirm_password)) {
+            Alert.alert('Confirm Password is required!', 'Please re-enter your password.');
+            return false;
+        }
+        if (!validator.equals(user?.confirm_password, user?.password)) {
+            Alert.alert('Password not matched!', 'Please re-check the confirm password.');
+            return false;
+        }
+
+        return true;
+    };
+
+    const onResetPassword = async () => {
+        const validation = isValid();
+        if (validation) {
+            setLoading(true);
+
+            try {
+                const res = await api.put('/auth/reset_password', {
+                    request_id: route?.params?.request_id,
+                    password: user?.password,
+                });
+
+                Dialog.show({
+                    type: ALERT_TYPE.SUCCESS,
+                    title: res.data?.title,
+                    textBody: res.data?.message,
+                    button: 'Okay',
+                    onPressButton: () => navigation.replace('Login'),
+                    onHide: () => navigation.replace('Login'),
+                });
+            } catch(err) {
+                await errHandler(err);
+            }
+            setLoading(false);
+        }
+    };
+
     return (
         <Background>
             <View style={{height: height * 0.9, width: width * 0.85, alignSelf: 'center'}}>
@@ -22,19 +80,21 @@ const ResetPassword = ({ navigation }) => {
                     <Hr style={{ width: width * 0.5 }} />
                     <Br space={0.02} />
                     <Input
+                        value={user?.password}
                         labelText="Password"
                         style={{ marginBottom: height * 0.015 }}
-                        onChange={(emailAddress) => console.log(emailAddress)}
+                        onChange={(value) => setUser({ ...user, password: value })}
                         secure
                     />
                     <Input
+                        value={user?.confirm_password}
                         labelText="Re-Enter Password"
                         style={{ marginBottom: height * 0.015 }}
-                        onChange={(emailAddress) => console.log(emailAddress)}
+                        onChange={(value) => setUser({ ...user, confirm_password: value })}
                         secure
                     />
                     <Br space={0.05} />
-                    <ButtonOutline style={{width: width * 0.85}} onPress={() => navigation.replace('Login')}>Submit</ButtonOutline>
+                    <ButtonOutline loading={loading} style={{width: width * 0.85}} onPress={onResetPassword}>Submit</ButtonOutline>
                 </View>
             </View>
         </Background>

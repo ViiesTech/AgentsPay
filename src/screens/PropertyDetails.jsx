@@ -1,6 +1,7 @@
+/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, Pressable, View } from 'react-native';
+import { Dimensions, Image, Linking, Pressable, View } from 'react-native';
 import Background from '../utils/Background';
 import { H6, Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -14,10 +15,12 @@ import { api, baseUrl, errHandler } from '../API';
 import Loading from './Loading';
 import RNFS from 'react-native-fs';
 import Toast from 'react-native-simple-toast';
+import Hr from '../components/Hr';
 
 const { width, height } = Dimensions.get('window');
 const PropertyDetails = ({ navigation, route }) => {
     const [ details, setDetails ] = useState();
+    const [ showAgentDetails, setShowAgentDetails ] = useState(false);
 
     useEffect(() => {
         if (route?.params?.data?.id) {
@@ -48,6 +51,60 @@ const PropertyDetails = ({ navigation, route }) => {
         }else {
             Toast.show('Could not download the document!', Toast.SHORT);
         }
+    };
+    const AgentDetailsModal = () => {
+        return (
+            <View style={{ paddingVertical: height * 0.03, position: 'absolute', width: width * 0.85, top: height * 0.2, left: width * 0.075, backgroundColor: Color('textColor'), borderRadius: 20, borderWidth: 2, borderColor: Color('btnText') }}>
+                <Image source={{ uri: `${JSON.parse(details?.tbl_user?.profile_image).prefix}${JSON.parse(details?.tbl_user?.profile_image).uri}` }}
+                    style={{
+                        width: width * 0.42,
+                        height: width * 0.42,
+                        borderRadius: 200,
+                        alignSelf: 'center',
+                        borderWidth: 1,
+                        borderColor: Color('btnText'),
+                    }}
+                />
+                <Br space={0.03} />
+                <H6 theme="dark" style={{alignSelf: 'center', textTransform: 'capitalize'}}>{details?.tbl_user?.full_name}</H6>
+                <Hr style={{width: width * 0.42, height: 3, alignSelf: 'center'}} />
+                <Br space={0.03} />
+                <View style={{flexDirection: 'row', width: width * 0.6, alignSelf: 'center', marginBottom: height * 0.01}}>
+                    <View style={{flex: 1}}>
+                        <Pera theme="light">Email</Pera>
+                    </View>
+                    <View style={{flex: 3, paddingLeft: width * 0.02}}>
+                        <Pera theme="dark">{details?.tbl_user?.email}</Pera>
+                    </View>
+                </View>
+                <View style={{flexDirection: 'row', width: width * 0.6, alignSelf: 'center', marginBottom: height * 0.01}}>
+                    <View style={{flex: 1}}>
+                        <Pera theme="light">Phone</Pera>
+                    </View>
+                    <View style={{flex: 3, paddingLeft: width * 0.02}}>
+                        <Pera theme="dark">{details?.tbl_user?.phone}</Pera>
+                    </View>
+                </View>
+                <View style={{flexDirection: 'row', width: width * 0.6, alignSelf: 'center', marginBottom: height * 0.01}}>
+                    <View style={{flex: 1}}>
+                        <Pera theme="light">Lic #</Pera>
+                    </View>
+                    <View style={{flex: 3, paddingLeft: width * 0.02}}>
+                        <Pera theme="dark">{details?.tbl_user?.license_number}</Pera>
+                    </View>
+                </View>
+                <View style={{flexDirection: 'row', width: width * 0.6, alignSelf: 'center', marginBottom: height * 0.01}}>
+                    <View style={{flex: 1}}>
+                        <Pera theme="light">Broker</Pera>
+                    </View>
+                    <View style={{flex: 3, paddingLeft: width * 0.02}}>
+                        <Pera theme="dark">{details?.tbl_user?.broker_name}</Pera>
+                    </View>
+                </View>
+                <Br space={0.03} />
+                <Button onPress={() => setShowAgentDetails(false)} style={{width: width * 0.5, alignSelf: 'center'}}>Close</Button>
+            </View>
+        );
     };
 
     if (!details) {
@@ -132,11 +189,12 @@ const PropertyDetails = ({ navigation, route }) => {
                         <Pera style={{textTransform: 'capitalize'}}>{details?.tbl_user?.full_name}</Pera>
                     </View>
                     <Br space={0.03} />
-                    <Button onPress={() => navigation.replace('Login')}>View Contact Details</Button>
+                    <Button onPress={() => setShowAgentDetails(true)}>View Contact Details</Button>
                     <Br space={0.15} />
                 </View>
             </Background>
             <NavigationBar />
+            {showAgentDetails && <AgentDetailsModal />}
         </>
     );
 };

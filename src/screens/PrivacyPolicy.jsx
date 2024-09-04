@@ -1,15 +1,38 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
 import Br from '../components/Br';
 import Backbtn from '../components/Backbtn';
 import Hr from '../components/Hr';
+import { useIsFocused } from '@react-navigation/native';
+import { api, errHandler } from '../API';
+import Loading from './Loading';
 
 const { width, height } = Dimensions.get('window');
 const PrivacyPolicy = ({ navigation }) => {
-    const policyText = 'Aldus Corporation, which later merged with Adobe Systems, ushered lorem information age with its desktop publishing software Aldus PageMaker. The program came bundled with lorem ipsum dummy text for laying out page content, and other word processors like Microsoft Word followed suit. More recently the growth of web design has proliferate lorem ipsum across the internet as a placeholder for future text and in some cases the final content this is why we proofread, kids.<br />Aldus Corporation, which later merged with Adobe Systems, ushered lorem information age with its desktop publishing software Aldus PageMaker.<br />The program came bundled with lorem ipsum dummy text for laying out page content, and other word processors like Microsoft Word followed suit. More recently the growth of web design has proliferate lorem ipsum across the internet as a placeholder for future text and in some cases the final content this is why we proofread, kids. Aldus Corporation, which later merged with Adobe Systems, ushered lorem information age with its desktop publishing software Aldus PageMaker.<br />The program came bundled with lorem ipsum dummy text for laying out page content, and other word processors like Microsoft Word followed suit. More recently the growth of web design has proliferate lorem ipsum across the internet as a placeholder for future text and in some cases the final content this is why we proofread, kids.';
+    const isFocused = useIsFocused();
+
+    const [ content, setContent ] = useState('');
+
+    useEffect(() => {
+        if (isFocused) {loadContent();}
+    }, [isFocused]);
+
+    const loadContent = async () => {
+        try {
+            const res = await api.get('/user/privacy_policy');
+            setContent(res.data?.data?.content);
+        } catch(err) {
+            await errHandler(err);
+        }
+    };
+
+    if (content.length === 0) {
+        return <Loading />;
+    }
+
     return (
         <Background>
             <Backbtn onPress={() => navigation.goBack()} />
@@ -22,7 +45,7 @@ const PrivacyPolicy = ({ navigation }) => {
                     <Br space={0.01} />
                     <Hr style={{ width: width * 0.5 }} />
                     <Br space={0.02} />
-                    <Pera style={{textAlign: 'left'}}>{policyText.replaceAll('<br />', '\n\n')}</Pera>
+                    <Pera style={{textAlign: 'left', whiteSpace: 'pre-line'}}>{content}</Pera>
                     <Br space={0.05} />
                 </View>
             </View>

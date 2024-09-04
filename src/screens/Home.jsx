@@ -21,6 +21,8 @@ import { useIsFocused } from '@react-navigation/native';
 const { width, height } = Dimensions.get('window');
 const Home = ({ navigation }) => {
     const isFocused = useIsFocused();
+    const [ keywords, setKeywords ] = useState('');
+    const [ propertyType, setPropertyType ] = useState('');
     const [ homepageData, setHomepageData ] = useState();
     const dispatch = useDispatch();
 
@@ -49,7 +51,7 @@ const Home = ({ navigation }) => {
 
     return (
         <>
-            <Background>
+            <Background data={user}>
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -75,9 +77,12 @@ const Home = ({ navigation }) => {
                 </View>
                 <Br space={0.03} />
                 <Search
+                    propertyType={propertyType}
                     label="Explore"
                     navigation={navigation}
                     propertyTypes={propertyTypes}
+                    setKeywords={setKeywords}
+                    setPropertyType={setPropertyType}
                 />
                 <Br space={0.03} />
                 <Swiper
@@ -89,7 +94,11 @@ const Home = ({ navigation }) => {
                     loop
                 >
                     {
-                        recentProperties?.map((val, index) => {
+                        recentProperties?.filter(
+                            val =>
+                                (val.title.toLowerCase().includes(keywords) || val.address.toLowerCase().includes(keywords)) &&
+                                val?.tbl_property_type?.label.toLowerCase().includes(propertyType)
+                        )?.map((val, index) => {
                             return (
                                 <View key={index}>
                                     <PropertyInfo data={val} clickable />
@@ -105,7 +114,11 @@ const Home = ({ navigation }) => {
                     </TouchableOpacity>
                 </View>
                 {
-                    popularProperties?.map((val, index) => {
+                    popularProperties?.filter(
+                        val =>
+                            (val.title.toLowerCase().includes(keywords) || val.address.toLowerCase().includes(keywords.toLowerCase())) &&
+                            val?.tbl_property_type?.label.toLowerCase().includes(propertyType)
+                    )?.map((val, index) => {
                         return (
                             <View key={index}>
                                 <PropertyCard data={val} />

@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useState } from 'react';
 import { Alert, Dimensions, Image, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
@@ -8,9 +8,46 @@ import { ButtonOutline } from '../components/Button';
 import Hr from '../components/Hr';
 import OTPInput from '../components/OTPInput';
 import Backbtn from '../components/Backbtn';
+import { api, errHandler } from '../API';
+import Toast from 'react-native-simple-toast';
 
 const { width, height } = Dimensions.get('window');
-const OTP = ({ navigation }) => {
+const OTPScreen = ({ navigation, route }) => {
+    const validator = require('validator');
+    const [OTP, setOTP] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const isValid = () => {
+        if (validator.isEmpty(OTP)) {
+            Alert.alert('OTP is required!', 'Please enter the OTP you received.');
+            return false;
+        }
+        if (OTP.toString().length < 6) {
+            Alert.alert('OTP is not valid!', 'Please enter a valid OTP.');
+            return false;
+        }
+
+        return true;
+    };
+    const verifyOTP = async () => {
+        const validation = isValid();
+        if (validation) {
+            setLoading(true);
+
+            try {
+                const res = await api.post('/auth/verify_otp', {
+                    request_id: route?.params?.request_id,
+                    otp: OTP,
+                });
+                Toast.show(res.data?.title, Toast.SHORT);
+                navigation.replace('ResetPassword', { request_id: route?.params?.request_id });
+            } catch(err) {
+                await errHandler(err);
+            }
+            setLoading(false);
+        }
+    };
+
     return (
         <Background>
             <Backbtn onPress={() => navigation.goBack()} />
@@ -23,13 +60,13 @@ const OTP = ({ navigation }) => {
                     <Br space={0.01} />
                     <Hr style={{ width: width * 0.5 }} />
                     <Br space={0.02} />
-                    <OTPInput inputs={6} onComplete={(enteredOTP) => Alert.alert('Entered OTP', enteredOTP)} />
+                    <OTPInput inputs={6} onComplete={(otp) => setOTP(otp)} />
                     <Br space={0.05} />
-                    <ButtonOutline style={{width: width * 0.85}} onPress={() => navigation.navigate('ResetPassword')}>Submit</ButtonOutline>
+                    <ButtonOutline loading={loading} style={{width: width * 0.85}} onPress={verifyOTP}>Submit</ButtonOutline>
                 </View>
             </View>
         </Background>
     );
 };
 
-export default OTP;
+export default OTPScreen;
