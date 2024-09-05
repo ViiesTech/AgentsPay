@@ -54,7 +54,7 @@ const Filters = ({ navigation }) => {
         setBaths(1);
         setAreaMin(0);
         setAreaMax(0);
-    }
+    };
 
     if (!filterOptions) {
         return <Loading />;

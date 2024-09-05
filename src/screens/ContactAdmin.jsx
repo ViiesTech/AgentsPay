@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
-import { Dimensions, TextInput, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, Dimensions, TextInput, View } from 'react-native';
 import Background from '../utils/Background';
 import Backbtn from '../components/Backbtn';
 import Notificationbtn from '../components/Notificationbtn';
@@ -9,9 +9,75 @@ import Br from '../components/Br';
 import Input from '../components/Input';
 import { Color } from '../utils/Colors';
 import { ButtonOutline } from '../components/Button';
+import { api, errHandler } from '../API';
+import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
 const ContactAdmin = ({ navigation }) => {
+    const validator = require('validator');
+
+    const [loading, setLoading] = useState(false);
+    const [ user, setUser ] = useState({
+        full_name: '',
+        email: '',
+        message: '',
+    });
+
+    const isValid = () => {
+        if (validator.isEmpty(user?.full_name)) {
+            Alert.alert('Name is required!', 'Please enter your name.');
+            return false;
+        }
+        if (!validator.isAlpha(user?.full_name.replace(' ', '')) || user?.full_name?.length < 3) {
+            Alert.alert('Name is not valid!', 'Name can only contains letters, minimum 3 letters are required.');
+            return false;
+        }
+
+        if (validator.isEmpty(user?.email)) {
+            Alert.alert('Email is required!', 'Please enter your email.');
+            return false;
+        }
+        if (!validator.isEmail(user?.email)) {
+            Alert.alert('Email is not valid!', 'Please enter your valid email address.');
+            return false;
+        }
+
+        if (validator.isEmpty(user?.message)) {
+            Alert.alert('Message is required!', 'Please enter your message.');
+            return false;
+        }
+
+        return true;
+    };
+
+    const onContact = async () => {
+        const validation = isValid();
+
+        if (validation) {
+            setLoading(true);
+            try {
+                const token = await AsyncStorage.getItem('token');
+                const res = await api.post('/user/contact_admin', {
+                    full_name: user?.full_name,
+                    email: user?.email,
+                    message: user?.message,
+                }, {headers: {Authorization: `Bearer ${token}`}});
+                Dialog.show({
+                    type: ALERT_TYPE.SUCCESS,
+                    title: res.data?.title,
+                    textBody: res.data?.message,
+                    button: 'Great',
+                    onPressButton: () => navigation.replace('Home'),
+                    onHide: () => navigation.replace('Home'),
+                });
+            } catch(err) {
+                setLoading(false);
+                await errHandler(err);
+            }
+        }
+    };
+
     return (
         <Background>
             <View style={{
@@ -30,14 +96,16 @@ const ContactAdmin = ({ navigation }) => {
                 <Pera theme="transparent" style={{textAlign: 'center'}}>Please enter below details to complete your profile</Pera>
                 <Br space={0.02} />
                 <Input
+                    value={user?.full_name}
                     labelText="Name"
                     style={{ marginBottom: height * 0.015 }}
-                    onChange={(emailAddress) => console.log(emailAddress)}
+                    onChange={(value) => setUser({...user, full_name: value})}
                 />
                 <Input
+                    value={user?.email}
                     labelText="Email"
                     style={{ marginBottom: height * 0.015 }}
-                    onChange={(emailAddress) => console.log(emailAddress)}
+                    onChange={(value) => setUser({...user, email: value})}
                 />
                 <Br space={0.02} />
                 <Small theme="transparent" style={{paddingLeft: width * 0.02}}>Message</Small>
@@ -48,10 +116,10 @@ const ContactAdmin = ({ navigation }) => {
                     backgroundColor: Color('btnOutline'),
                     borderRadius: 20,
                 }}>
-                    <TextInput placeholder="Enter Your Message Here" numberOfLines={height < 650 ? 8 : 10} style={{textAlignVertical: 'top'}} placeholderTextColor={Color('gray')} />
+                    <TextInput value={user?.message} onChangeText={(value) => setUser({...user, message: value})} multiline placeholder="Enter Your Message Here" numberOfLines={height < 650 ? 8 : 10} style={{textAlignVertical: 'top', color: Color('darkTheme')}} placeholderTextColor={Color('gray')} />
                 </View>
                 <Br space={0.05} />
-                <ButtonOutline>
+                <ButtonOutline onPress={onContact} loading={loading}>
                     Submit
                 </ButtonOutline>
             </View>

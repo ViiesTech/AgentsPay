@@ -1,23 +1,43 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useState } from 'react';
 import { Dimensions, Image, Pressable, View } from 'react-native';
 import { Pera, Small, XSmall } from '../utils/Text';
 import { Color } from '../utils/Colors';
 import Br from './Br';
 import { Book1 } from 'iconsax-react-native';
 import { useNavigation } from '../utils/NavigationContext';
-import { baseUrl } from '../API';
+import { api, baseUrl, errHandler } from '../API';
 import { amountFormat } from '../utils/defaultValues';
+import Toast from 'react-native-simple-toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { height, width } = Dimensions.get('window');
 
 const PropertyCard = ({ data }: { data?: any }) => {
     const { navigate } = useNavigation();
+    const [bookmarked, setBookmarked] = useState(data?.is_bookmarked);
+    const markBookmark = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const res = await api.post('/user/properties/bookmark', {
+                id: data?.id,
+                isActive: bookmarked ? 1 : 0,
+            }, { headers: { Authorization: `Bearer ${token}` } });
+            Toast.show(res.data?.title, Toast.SHORT);
+            if (bookmarked) {
+                setBookmarked(null);
+            } else {
+                setBookmarked(1);
+            }
+        } catch (err) {
+            await errHandler(err);
+        }
+    };
     return (
         <Pressable onPress={() => navigate('PropertyDetails')} style={{ width: width * 0.85, alignSelf: 'center', position: 'relative' }}>
-            <View style={{ borderRadius: 100, backgroundColor: Color('gray'), position: 'absolute', zIndex: 1, padding: width * 0.02, top: height * 0.015, right: width * 0.035 }}>
+            <Pressable onPress={markBookmark} style={{ borderRadius: 100, backgroundColor: bookmarked ? Color('btnBackground') : Color('gray'), position: 'absolute', zIndex: 1, padding: width * 0.02, top: height * 0.015, right: width * 0.035 }}>
                 <Book1 size="15" color={Color('textColor')} />
-            </View>
+            </Pressable>
             <Image style={{
                 width: width * 0.85,
                 height: height < 650 ? (height * 0.25) : (height * 0.2),
@@ -30,7 +50,7 @@ const PropertyCard = ({ data }: { data?: any }) => {
                 shadowOpacity: 0.41,
                 shadowRadius: 9.11,
             }} source={{ uri: `${baseUrl}/images/properties/${data?.tbl_property_images[0].url}` }} resizeMode="cover" />
-            <View style={{ transform: [{translateY: -(height * 0.05)}], paddingHorizontal: width * 0.03, paddingVertical: height * 0.015, borderRadius: 10, backgroundColor: Color('textColor'), width: width * 0.75, alignSelf: 'center' }}>
+            <View style={{ transform: [{ translateY: -(height * 0.05) }], paddingHorizontal: width * 0.03, paddingVertical: height * 0.015, borderRadius: 10, backgroundColor: Color('textColor'), width: width * 0.75, alignSelf: 'center' }}>
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',

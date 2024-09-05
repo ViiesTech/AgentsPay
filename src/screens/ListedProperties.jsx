@@ -27,6 +27,7 @@ const ListedProperties = ({ navigation }) => {
                 <Search
                     label="Property Listing"
                     navigation={navigation}
+                    noFilters
                 />
                 <Br space={0.03} />
                 <FlatList

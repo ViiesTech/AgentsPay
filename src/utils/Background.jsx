@@ -7,7 +7,7 @@ import { Color } from './Colors';
 
 const { width, height } = Dimensions.get('screen');
 
-const Background = ({ children, noBackground, data }) => {
+const Background = ({ children, noBackground, data, noScroll }) => {
     return (
         <>
             <AlertNotificationRoot colors={[
@@ -28,16 +28,15 @@ const Background = ({ children, noBackground, data }) => {
                         {!noBackground && <Image source={require('../assets/images/background.png')} style={styles.backgroundImage} />}
                         <View style={styles.content}>
                             <KeyboardView>
-                                <ScrollView showsVerticalScrollIndicator={false}>
-                                    {children}
-                                </ScrollView>
-                                {/* <FlatList
-                                    showsVerticalScrollIndicator={false}
-                                    showsHorizontalScrollIndicator={false}
-                                    data={[children]}
-                                    renderItem={({ item }) => item}
-                                    keyExtractor={(item, index) => index}
-                                /> */}
+                                {
+                                    noScroll
+                                    ?
+                                    children
+                                    :
+                                    <ScrollView showsVerticalScrollIndicator={false}>
+                                        {children}
+                                    </ScrollView>
+                                }
                             </KeyboardView>
                         </View>
                     </SafeAreaView>

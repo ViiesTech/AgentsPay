@@ -49,6 +49,8 @@ const Home = ({ navigation }) => {
     const recentProperties = homepageData[2];
     const popularProperties = homepageData[3];
 
+    const filteredRecentProperties = recentProperties?.filter(val => (val.title.toLowerCase().includes(keywords) || val.address.toLowerCase().includes(keywords)) && val?.tbl_property_type?.label.toLowerCase().includes(propertyType));
+
     return (
         <>
             <Background data={user}>
@@ -71,7 +73,7 @@ const Home = ({ navigation }) => {
                             borderWidth: 2,
                             borderColor: Color('textColor'),
                         }} />
-                        <H6 style={{marginTop: height * 0.01, fontFamily: 'Poppins-SemiBold', textTransform: 'capitalize'}}>Welcome {user.full_name},</H6>
+                        <H6 numberOfLines={1} style={{marginTop: height * 0.01, fontFamily: 'Poppins-SemiBold', textTransform: 'capitalize'}}>Welcome {user.full_name},</H6>
                     </TouchableOpacity>
                     <Notificationbtn unSeen position="static" style={{marginTop: height * 0.01}} />
                 </View>
@@ -85,28 +87,36 @@ const Home = ({ navigation }) => {
                     setPropertyType={setPropertyType}
                 />
                 <Br space={0.03} />
-                <Swiper
-                    centerContent
-                    showsButtons={false}
-                    style={{ height: height * 0.55 }}
-                    showsPagination={true}
-                    activeDotColor={Color('btnBackground')}
-                    loop
-                >
-                    {
-                        recentProperties?.filter(
-                            val =>
-                                (val.title.toLowerCase().includes(keywords) || val.address.toLowerCase().includes(keywords)) &&
-                                val?.tbl_property_type?.label.toLowerCase().includes(propertyType)
-                        )?.map((val, index) => {
-                            return (
-                                <View key={index}>
-                                    <PropertyInfo data={val} clickable />
-                                </View>
-                            );
-                        })
-                    }
-                </Swiper>
+                {
+                    filteredRecentProperties && filteredRecentProperties.length > 1
+                    ?
+                    <Swiper
+                        centerContent
+                        showsButtons={false}
+                        style={{ height: height * 0.55 }}
+                        showsPagination={true}
+                        activeDotColor={Color('btnBackground')}
+                        loop
+                    >
+                        {
+                            filteredRecentProperties?.map((val, index) => {
+                                return (
+                                    <View key={index}>
+                                        <PropertyInfo data={val} clickable />
+                                    </View>
+                                );
+                            })
+                        }
+                    </Swiper>
+                    :
+                    filteredRecentProperties?.map((val, index) => {
+                        return (
+                            <View key={index} style={{ height: height * 0.55 }}>
+                                <PropertyInfo data={val} clickable />
+                            </View>
+                        );
+                    })
+                }
                 <View style={{ width: width * 0.85, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', alignSelf: 'center', marginBottom: height * 0.005 }}>
                     <Pera theme="light">Popular</Pera>
                     <TouchableOpacity onPress={() => navigation.navigate('ListedProperties')}>

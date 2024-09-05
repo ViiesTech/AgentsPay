@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useState } from 'react';
 import { Dimensions, Image, Pressable, View } from 'react-native';
 import { Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -7,25 +7,44 @@ import Br from './Br';
 import { Book1 } from 'iconsax-react-native';
 import { useNavigation } from '../utils/NavigationContext';
 import { amountFormat } from '../utils/defaultValues';
-import { baseUrl } from '../API';
+import { api, baseUrl, errHandler } from '../API';
 import Swiper from 'react-native-swiper';
+import Toast from 'react-native-simple-toast';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { height, width } = Dimensions.get('window');
 
 const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: boolean, isSwiper?: boolean }) => {
     const { navigate } = useNavigation();
-
+    const [ bookmarked, setBookmarked ] = useState(data?.is_bookmarked);
     const onPress = () => {
         if (clickable) {navigate('PropertyDetails', { data: data });}
+    };
+    const markBookmark = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const res = await api.post('/user/properties/bookmark', {
+                id: data?.id,
+                isActive: bookmarked ? 1 : 0,
+            }, {headers: {Authorization: `Bearer ${token}`}});
+            Toast.show(res.data?.title, Toast.SHORT);
+            if (bookmarked) {
+                setBookmarked(null);
+            }else {
+                setBookmarked(1);
+            }
+        } catch(err) {
+            await errHandler(err);
+        }
     };
     return (
         <Pressable onPress={onPress} style={{ width: width * 0.85, alignSelf: 'center', position: 'relative' }}>
             <View style={{ backgroundColor: Color('propertyPrice'), position: 'absolute', zIndex: 1, paddingHorizontal: width * 0.05, top: height * 0.02, paddingTop: height * 0.004 }}>
                 <Small style={{ fontFamily: 'Poppins-SemiBold' }}>${amountFormat(data?.property_value)}</Small>
             </View>
-            <View style={{ borderRadius: 100, backgroundColor: Color('gray'), position: 'absolute', zIndex: 1, padding: width * 0.02, top: height * 0.015, right: width * 0.035 }}>
+            <Pressable onPress={markBookmark} style={{ borderRadius: 100, backgroundColor: bookmarked ? Color('btnBackground') : Color('gray'), position: 'absolute', zIndex: 1, padding: width * 0.02, top: height * 0.015, right: width * 0.035 }}>
                 <Book1 size="20" color={Color('textColor')} />
-            </View>
+            </Pressable>
             {
                 isSwiper
                 ?

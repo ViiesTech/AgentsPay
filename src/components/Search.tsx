@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Dimensions, FlatList, Pressable, TextInput, TouchableOpacity, View } from 'react-native';
+import { Dimensions, FlatList, Pressable, TextInput, View } from 'react-native';
 import { H6, Small } from '../utils/Text';
 import { SearchNormal1, Setting4 } from 'iconsax-react-native';
 import { Color } from '../utils/Colors';
@@ -9,7 +9,11 @@ import Br from './Br';
 
 const { height, width } = Dimensions.get('window');
 
-const Search = ({propertyType, propertyTypes, label, navigation, setKeywords, setPropertyType}: {propertyType?: any, setPropertyType?: any, setKeywords?: any, propertyTypes?: any, label: number, navigation?: any}) => {
+const Search = ({noFilters, propertyType, propertyTypes, label, navigation, setKeywords, setPropertyType}: {propertyType?: any, setPropertyType?: any, setKeywords?: any, propertyTypes?: any, label: number, navigation?: any, noFilters?: boolean}) => {
+
+    const goToFilters = () => {
+        if (!noFilters) {navigation.navigate('Filters');}
+    };
     return (
         <View>
             <H6 theme="light" style={{fontFamily: 'Poppins-SemiBold'}}>{label}</H6>
@@ -33,12 +37,16 @@ const Search = ({propertyType, propertyTypes, label, navigation, setKeywords, se
                     onChangeText={(text: any) => setKeywords(text.toLowerCase())}
                     // onBlur={() => navigation.navigate('ListedProperties', {keywords: keywords})}
                 />
-                <TouchableOpacity onPress={() => navigation.navigate('Filters')} style={{backgroundColor: Color('btnBackground'), padding: width * 0.02, borderRadius: 100}}>
-                    <Setting4
-                        size="20"
-                        color={Color('btnText')}
-                    />
-                </TouchableOpacity>
+                {
+                    !noFilters && (
+                        <Pressable onPress={goToFilters} style={{backgroundColor: Color('btnBackground'), padding: width * 0.02, borderRadius: 100}}>
+                            <Setting4
+                                size="20"
+                                color={Color('btnText')}
+                            />
+                        </Pressable>
+                    )
+                }
             </View>
             <Br space={0.02} />
             {

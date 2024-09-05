@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Text } from 'react-native';
+import { Dimensions, Text } from 'react-native';
 import { RFValue } from 'react-native-responsive-fontsize';
 import { Color } from './Colors';
 
-// const { height } = Dimensions.get('window');
+const { height } = Dimensions.get('window');
 
 interface Props {
     children: any,
@@ -13,7 +13,7 @@ interface Props {
     theme?: string
 }
 
-const standardHeight = 700;
+const standardHeight = height < 650 ? 600 : height < 850 ? 700 : 800;
 
 export const H1 = ({theme, children, numberOfLines, style}: Props) => {
     return (

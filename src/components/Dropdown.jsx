@@ -47,7 +47,7 @@ const Dropdown = ({ style, data, selectedValue, onValueChange, defaultStyle, lab
                             data={data}
                             keyExtractor={(item) => item.value}
                             renderItem={({ item }) => (
-                                <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSelect(item.value)}>
+                                <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSelect(item.value || item.label)}>
                                     <Pera style={styles.dropdownItemText}>{item.label}</Pera>
                                 </TouchableOpacity>
                             )}

@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, Linking, Pressable, View } from 'react-native';
+import { Dimensions, Image, Pressable, View } from 'react-native';
 import Background from '../utils/Background';
 import { H6, Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -157,7 +157,7 @@ const PropertyDetails = ({ navigation, route }) => {
                                 <Pressable onPress={() => downloadDocument(val.url)} key={index} style={{flexDirection: 'row', justifyContent: 'space-between', paddingRight: width * 0.02, marginBottom: height * 0.015}}>
                                     <View style={{flexDirection: 'row', gap: 10, justifyContent: 'space-between', alignItems: 'center'}}>
                                         <View style={{backgroundColor: Color('btnBackground'), width: width * 0.03, height: width * 0.03, borderRadius: 20}} />
-                                        <Pera numberOfLines={1} style={{marginTop: height * 0.002, textTransform: 'capitalize'}}>{val.url}</Pera>
+                                        <Pera numberOfLines={1} style={{marginTop: height * 0.002, textTransform: 'capitalize', width: width * 0.6}}>{val.url}</Pera>
                                     </View>
                                     <DocumentDownload
                                         size="25"
