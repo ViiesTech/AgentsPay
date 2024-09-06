@@ -104,7 +104,7 @@ const Signup = ({ navigation }) => {
         }
     };
     return (
-        <Background>
+        <Background noAuth>
             <Image source={require('../assets/images/icon.png')} style={{ alignSelf: 'center', width: width * 0.4, height: width * 0.4, resizeMode: 'contain', marginTop: height * 0.05 }} />
             <Br space={0.03} />
             <View style={{width: width * 0.85, alignSelf: 'center'}}>

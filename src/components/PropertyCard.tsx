@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, View } from 'react-native';
 import { Pera, Small, XSmall } from '../utils/Text';
 import { Color } from '../utils/Colors';
 import Br from './Br';
-import { Book1 } from 'iconsax-react-native';
+import { ArchiveAdd } from 'iconsax-react-native';
 import { useNavigation } from '../utils/NavigationContext';
 import { api, baseUrl, errHandler } from '../API';
 import { amountFormat } from '../utils/defaultValues';
@@ -15,7 +15,13 @@ const { height, width } = Dimensions.get('window');
 
 const PropertyCard = ({ data }: { data?: any }) => {
     const { navigate } = useNavigation();
-    const [bookmarked, setBookmarked] = useState(data?.is_bookmarked);
+    const [bookmarked, setBookmarked]: any = useState(null);
+    useEffect(() => {
+        if (data) {
+            setBookmarked(data?.is_bookmarked);
+        }
+    }, [data]);
+
     const markBookmark = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
@@ -36,7 +42,7 @@ const PropertyCard = ({ data }: { data?: any }) => {
     return (
         <Pressable onPress={() => navigate('PropertyDetails')} style={{ width: width * 0.85, alignSelf: 'center', position: 'relative' }}>
             <Pressable onPress={markBookmark} style={{ borderRadius: 100, backgroundColor: bookmarked ? Color('btnBackground') : Color('gray'), position: 'absolute', zIndex: 1, padding: width * 0.02, top: height * 0.015, right: width * 0.035 }}>
-                <Book1 size="15" color={Color('textColor')} />
+                <ArchiveAdd size="15" color={Color('textColor')} />
             </Pressable>
             <Image style={{
                 width: width * 0.85,

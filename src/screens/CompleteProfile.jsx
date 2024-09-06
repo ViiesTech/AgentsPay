@@ -125,8 +125,8 @@ const CompleteProfile = ({ navigation }) => {
                     title: res.data?.title,
                     textBody: res.data?.message,
                     button: 'Okay',
-                    onPressButton: () => navigation.navigate('Subscriptions'),
-                    onHide: () => navigation.navigate('Subscriptions'),
+                    onPressButton: () => navigation.replace('Subscriptions'),
+                    onHide: () => navigation.replace('Subscriptions'),
                 });
             } catch(err) {
                 await errHandler(err);

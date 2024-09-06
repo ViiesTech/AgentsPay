@@ -25,15 +25,17 @@ const UserTerms = ({ navigation }) => {
     const loadContent = async () => {
         try {
             const res = await api.get('/user/user_terms');
-            console.log(res.data?.data);
-            setContent(res.data?.data?.content);
-            setPoints(JSON.parse(res.data?.data?.points));
+            const data = res.data?.data?.content || 'No User Terms';
+            setContent(data);
+            if (data.length > 0 && data !== 'No User Terms') {
+                setPoints(JSON.parse(res.data?.data?.points));
+            }
         } catch(err) {
             await errHandler(err);
         }
     };
 
-    if (content.length === 0 || points.length === 0) {
+    if (content.length === 0) {
         return <Loading />;
     }
     return (

@@ -69,7 +69,7 @@ const ResetPassword = ({ navigation, route }) => {
     };
 
     return (
-        <Background>
+        <Background noAuth>
             <View style={{height: height * 0.9, width: width * 0.85, alignSelf: 'center'}}>
                 <Image source={require('../assets/images/icon.png')} style={{ alignSelf: 'center', width: width * 0.4, height: width * 0.4, resizeMode: 'contain', marginTop: height * 0.05 }} />
                 <Br space={0.05} />

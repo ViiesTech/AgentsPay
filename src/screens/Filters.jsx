@@ -13,6 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import Loading from './Loading';
 import Dropdown from '../components/Dropdown';
+import Toast from 'react-native-simple-toast';
 
 const { width, height } = Dimensions.get('window');
 const Filters = ({ navigation }) => {
@@ -54,6 +55,7 @@ const Filters = ({ navigation }) => {
         setBaths(1);
         setAreaMin(0);
         setAreaMax(0);
+        Toast.show('Filters has been reset', Toast.SHORT);
     };
 
     if (!filterOptions) {
@@ -230,7 +232,7 @@ const Filters = ({ navigation }) => {
                     />
                     <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Reset all</Pera>
                 </Pressable>
-                <Button style={{backgroundColor: Color('darkTheme')}} onPress={() => navigation.navigate('ListedProperties')}>
+                <Button style={{backgroundColor: Color('darkTheme')}} onPress={() => navigation.navigate('ListedProperties', {propertyType: propertyType, state: state, city: city, min: min, max: max, beds: beds, baths: baths, areaMin: areaMin, areaMax: areaMax})}>
                     Search Properties
                 </Button>
             </View>

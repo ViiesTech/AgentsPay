@@ -1,10 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, View } from 'react-native';
 import { Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
 import Br from './Br';
-import { Book1 } from 'iconsax-react-native';
+import { ArchiveAdd } from 'iconsax-react-native';
 import { useNavigation } from '../utils/NavigationContext';
 import { amountFormat } from '../utils/defaultValues';
 import { api, baseUrl, errHandler } from '../API';
@@ -16,7 +16,14 @@ const { height, width } = Dimensions.get('window');
 
 const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: boolean, isSwiper?: boolean }) => {
     const { navigate } = useNavigation();
-    const [ bookmarked, setBookmarked ] = useState(data?.is_bookmarked);
+    const [ bookmarked, setBookmarked ]: any = useState(null);
+
+    useEffect(() => {
+        if (data) {
+            setBookmarked(data?.is_bookmarked);
+        }
+    }, [data]);
+
     const onPress = () => {
         if (clickable) {navigate('PropertyDetails', { data: data });}
     };
@@ -43,7 +50,7 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                 <Small style={{ fontFamily: 'Poppins-SemiBold' }}>${amountFormat(data?.property_value)}</Small>
             </View>
             <Pressable onPress={markBookmark} style={{ borderRadius: 100, backgroundColor: bookmarked ? Color('btnBackground') : Color('gray'), position: 'absolute', zIndex: 1, padding: width * 0.02, top: height * 0.015, right: width * 0.035 }}>
-                <Book1 size="20" color={Color('textColor')} />
+                <ArchiveAdd size="20" color={Color('textColor')} />
             </Pressable>
             {
                 isSwiper

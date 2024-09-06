@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Dimensions, View } from 'react-native';
 import Background from '../utils/Background';
 import Backbtn from '../components/Backbtn';
-import Notificationbtn from '../components/Notificationbtn';
-import { H5 } from '../utils/Text';
+import { H5, Pera } from '../utils/Text';
 import Br from '../components/Br';
 import { Color } from '../utils/Colors';
 import Swiper from 'react-native-swiper';
@@ -44,29 +43,40 @@ const Subscriptions = ({ navigation }) => {
                 alignSelf: 'center',
             }}>
                 <Backbtn position="static" onPress={() => navigation.goBack()} />
-                <Notificationbtn unSeen position="static" onPress={() => navigation.goBack()} />
             </View>
             <Br space={0.05} />
             <H5 theme="light" style={{fontFamily: 'Poppins-Medium', textAlign: 'center'}}>Subscriptions</H5>
             <Br space={0.02} />
-            <Swiper
-                centerContent
-                showsButtons={false}
-                style={{ height: height < 650 ? (height * 0.4) :  (height * 0.33) }}
-                showsPagination={true}
-                activeDotColor={Color('btnBackground')}
-                loop
-            >
-                {
-                    subscriptions.map((val, index) => {
-                        return (
-                            <View key={index}>
-                                <SubscriptionCard data={val} onPress={() => navigation.navigate('SubscriptionPayment', {package: val})} style={{ width: width * 0.85, alignSelf: 'center' }} />
-                            </View>
-                        );
-                    })
-                }
-            </Swiper>
+            {
+                subscriptions.length === 0
+                ?
+                <Pera style={{textAlign: 'center'}}>No Subscription Available</Pera>
+                :
+                subscriptions.length === 1
+                ?
+                <View style={{ height: height < 650 ? (height * 0.4) :  (height * 0.33) }}>
+                    <SubscriptionCard data={subscriptions[0]} onPress={() => navigation.navigate('SubscriptionPayment', {package: subscriptions[0]})} style={{ width: width * 0.85, alignSelf: 'center' }} />
+                </View>
+                :
+                <Swiper
+                    centerContent
+                    showsButtons={false}
+                    style={{ height: height < 650 ? (height * 0.4) :  (height * 0.33) }}
+                    showsPagination={true}
+                    activeDotColor={Color('btnBackground')}
+                    loop
+                >
+                    {
+                        subscriptions.map((val, index) => {
+                            return (
+                                <View key={index}>
+                                    <SubscriptionCard data={val} onPress={() => navigation.navigate('SubscriptionPayment', {package: val})} style={{ width: width * 0.85, alignSelf: 'center' }} />
+                                </View>
+                            );
+                        })
+                    }
+                </Swiper>
+            }
         </Background>
     );
 };

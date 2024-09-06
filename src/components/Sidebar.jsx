@@ -12,6 +12,7 @@ import Br from './Br';
 import { useNavigation } from '../utils/NavigationContext';
 import Backbtn from './Backbtn';
 import Hr from './Hr';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -67,7 +68,7 @@ const Sidebar = ({ user }) => {
             <Image source={require('../assets/images/background.png')} style={styles.backgroundImage} />
             <Backbtn style={{ marginLeft: width * 0.03 }} position="static" onPress={() => dispatch(hideDrawer())} />
             <Br space={0.03} />
-            <ScrollView>
+            <ScrollView showsVerticalScrollIndicator={false}>
                 <View style={{width: width * 0.9, alignSelf: 'center'}}>
                     <View style={{
                         flexDirection: 'row',
@@ -184,9 +185,10 @@ const Sidebar = ({ user }) => {
                         screen="PrivacyPolicy"
                     />
                     <Br space={0.03} />
-                    <TouchableOpacity onPress={() => {
+                    <TouchableOpacity onPress={async () => {
                         dispatch(hideDrawer());
-                        navigate('Login');
+                        await AsyncStorage.removeItem('token');
+                        navigate('Logout');
                     }}>
                         <View style={{
                             flexDirection: 'row',
@@ -201,7 +203,7 @@ const Sidebar = ({ user }) => {
                             <Pera style={{ fontFamily: 'Poppins-SemiBold', color: Color('btnText') }}>Logout</Pera>
                         </View>
                     </TouchableOpacity>
-                    {height < 650 && <Br space={0.08} />}
+                    <Br space={0.08} />
                 </View>
             </ScrollView>
         </Animated.View>

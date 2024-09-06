@@ -1,13 +1,37 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from 'react';
 import { Dimensions, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import KeyboardView from './KeyboardView';
 import Sidebar from '../components/Sidebar';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
 import { Color } from './Colors';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from './NavigationContext';
+import { useIsFocused } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('screen');
 
-const Background = ({ children, noBackground, data, noScroll }) => {
+const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, onScrollEnd, noAuth }) => {
+    const { navigate } = useNavigation();
+    const isFocused = useIsFocused();
+
+    useEffect(() => {
+        if (!noAuth) {hasToken();}
+    }, [isFocused]);
+
+    const hasToken = async () => {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+            navigate('Login');
+        }
+    };
+
+    const scrollEnd = () => {
+        if (detectScrollEnd) {
+            onScrollEnd();
+        }
+    };
+
     return (
         <>
             <AlertNotificationRoot colors={[
@@ -33,7 +57,16 @@ const Background = ({ children, noBackground, data, noScroll }) => {
                                     ?
                                     children
                                     :
-                                    <ScrollView showsVerticalScrollIndicator={false}>
+                                    <ScrollView
+                                        showsVerticalScrollIndicator={false}
+                                        onScrollEndDrag={(e) => {
+                                            const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
+                                            const end = contentOffset.y + layoutMeasurement.height >= contentSize.height - 20;
+                                            if (end) {
+                                                scrollEnd();
+                                            }
+                                        }}
+                                    >
                                         {children}
                                     </ScrollView>
                                 }

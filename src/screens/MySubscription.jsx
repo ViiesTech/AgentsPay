@@ -1,16 +1,37 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, View } from 'react-native';
 import Background from '../utils/Background';
 import Backbtn from '../components/Backbtn';
-import Notificationbtn from '../components/Notificationbtn';
 import { H5 } from '../utils/Text';
 import Br from '../components/Br';
 import SubscriptionCard from '../components/SubscriptionCard';
 import { Button } from '../components/Button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { api, errHandler } from '../API';
+import Loading from './Loading';
 
 const { width } = Dimensions.get('window');
 const MySubscription = ({ navigation }) => {
+    const [ subscription, setSubscription ] = useState();
+    useEffect(() => {
+        loadSubscription();
+    }, []);
+
+    const loadSubscription = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const res = await api.get('/user/subscriptions/current',{headers: {Authorization: `Bearer ${token}`}});
+
+            setSubscription(res.data?.data);
+        } catch(err) {
+            await errHandler(err);
+        }
+    };
+
+    if (!subscription) {
+        return <Loading />;
+    }
     return (
         <Background>
             <View style={{
@@ -21,14 +42,13 @@ const MySubscription = ({ navigation }) => {
                 alignSelf: 'center',
             }}>
                 <Backbtn position="static" onPress={() => navigation.goBack()} />
-                <Notificationbtn unSeen position="static" onPress={() => navigation.goBack()} />
             </View>
             <Br space={0.05} />
             <H5 theme="light" style={{fontFamily: 'Poppins-Medium', textAlign: 'center'}}>Subscribed Plan</H5>
             <Br space={0.02} />
-            <SubscriptionCard onPress={() => navigation.navigate('SubscriptionPayment')} style={{ width: width * 0.85, alignSelf: 'center' }} />
+            <SubscriptionCard data={subscription} onPress={() => console.log('do nothing')} style={{ width: width * 0.85, alignSelf: 'center' }} />
             <Br space={0.05} />
-            <Button onPress={() => console.log('1')} style={{ width: width * 0.85, alignSelf: 'center' }}>Upgrade Plan</Button>
+            <Button onPress={() => navigation.navigate('Subscriptions')} style={{ width: width * 0.85, alignSelf: 'center' }}>Upgrade Plan</Button>
         </Background>
     );
 };

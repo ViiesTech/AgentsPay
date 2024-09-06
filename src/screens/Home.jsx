@@ -88,55 +88,63 @@ const Home = ({ navigation }) => {
                 />
                 <Br space={0.03} />
                 {
-                    filteredRecentProperties && filteredRecentProperties.length > 1
+                    filteredRecentProperties?.length === 0 && popularProperties?.length === 0
                     ?
-                    <Swiper
-                        centerContent
-                        showsButtons={false}
-                        style={{ height: height * 0.55 }}
-                        showsPagination={true}
-                        activeDotColor={Color('btnBackground')}
-                        loop
-                    >
+                    <Pera style={{textAlign: 'center'}}>No Property Available</Pera>
+                    :
+                    <View>
                         {
+                            filteredRecentProperties && filteredRecentProperties.length > 1
+                            ?
+                            <Swiper
+                                centerContent
+                                showsButtons={false}
+                                style={{ height: height * 0.55 }}
+                                showsPagination={true}
+                                activeDotColor={Color('btnBackground')}
+                                loop
+                            >
+                                {
+                                    filteredRecentProperties?.map((val, index) => {
+                                        return (
+                                            <View key={index}>
+                                                <PropertyInfo data={val} clickable />
+                                            </View>
+                                        );
+                                    })
+                                }
+                            </Swiper>
+                            :
                             filteredRecentProperties?.map((val, index) => {
                                 return (
-                                    <View key={index}>
+                                    <View key={index} style={{ height: height * 0.55 }}>
                                         <PropertyInfo data={val} clickable />
                                     </View>
                                 );
                             })
                         }
-                    </Swiper>
-                    :
-                    filteredRecentProperties?.map((val, index) => {
-                        return (
-                            <View key={index} style={{ height: height * 0.55 }}>
-                                <PropertyInfo data={val} clickable />
-                            </View>
-                        );
-                    })
+                        <View style={{ width: width * 0.85, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', alignSelf: 'center', marginBottom: height * 0.005 }}>
+                            <Pera theme="light">Popular</Pera>
+                            <TouchableOpacity onPress={() => navigation.navigate('ListedProperties')}>
+                                <Pera style={{ color: Color('gray') }}>See All</Pera>
+                            </TouchableOpacity>
+                        </View>
+                        {
+                            popularProperties?.filter(
+                                val =>
+                                    (val.title.toLowerCase().includes(keywords) || val.address.toLowerCase().includes(keywords.toLowerCase())) &&
+                                    val?.tbl_property_type?.label.toLowerCase().includes(propertyType)
+                            )?.map((val, index) => {
+                                return (
+                                    <View key={index}>
+                                        <PropertyCard data={val} />
+                                    </View>
+                                );
+                            })
+                        }
+                        <Br space={0.08} />
+                    </View>
                 }
-                <View style={{ width: width * 0.85, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', alignSelf: 'center', marginBottom: height * 0.005 }}>
-                    <Pera theme="light">Popular</Pera>
-                    <TouchableOpacity onPress={() => navigation.navigate('ListedProperties')}>
-                        <Pera style={{ color: Color('gray') }}>See All</Pera>
-                    </TouchableOpacity>
-                </View>
-                {
-                    popularProperties?.filter(
-                        val =>
-                            (val.title.toLowerCase().includes(keywords) || val.address.toLowerCase().includes(keywords.toLowerCase())) &&
-                            val?.tbl_property_type?.label.toLowerCase().includes(propertyType)
-                    )?.map((val, index) => {
-                        return (
-                            <View key={index}>
-                                <PropertyCard data={val} />
-                            </View>
-                        );
-                    })
-                }
-                <Br space={0.08} />
             </Background>
             <NavigationBar />
         </>

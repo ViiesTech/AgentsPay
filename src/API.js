@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { Alert } from 'react-native';
+import Toast from 'react-native-simple-toast';
+import RNRestart from 'react-native-restart';
 
 export const baseUrl = 'http://192.168.18.190:8080';
 export const api = axios.create({
@@ -29,6 +31,11 @@ export const errHandler = async (err) => {
             'Unknown API Called',
             'Please make sure that the API (' + calledAPI + ") you're calling is already exists!",
         );
+    }else
+    if (status === 511) // NOT FOUND
+    {
+        Toast.show('Your session has been expired!!', Toast.SHORT);
+        RNRestart.restart();
     }else {
         Alert.alert(
             'Unknown Error',

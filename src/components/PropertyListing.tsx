@@ -1,21 +1,49 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, View } from 'react-native';
 import { Small, XSmall } from '../utils/Text';
 import { Color } from '../utils/Colors';
 import Br from './Br';
 import { amountFormat } from '../utils/defaultValues';
-import { baseUrl } from '../API';
-// import { Book1 } from 'iconsax-react-native';
+import { api, baseUrl, errHandler } from '../API';
+import { ArchiveAdd } from 'iconsax-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-simple-toast';
 
 const { height, width } = Dimensions.get('window');
 
 const PropertyListing = ({ style, data, onPress }: { style?: any, onPress?: any, data?: any }) => {
+    const [ bookmarked, setBookmarked ]: any = useState(null);
+
+    useEffect(() => {
+        if (data) {
+            setBookmarked(data?.is_bookmarked);
+        }
+    }, [data]);
+
+    const markBookmark = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const res = await api.post('/user/properties/bookmark', {
+                id: data?.id,
+                isActive: bookmarked ? 1 : 0,
+            }, {headers: {Authorization: `Bearer ${token}`}});
+            Toast.show(res.data?.title, Toast.SHORT);
+            if (bookmarked) {
+                setBookmarked(null);
+            }else {
+                setBookmarked(1);
+            }
+        } catch(err) {
+            await errHandler(err);
+        }
+    };
+
     return (
         <Pressable onPress={onPress} style={[{ alignSelf: 'center', borderRadius: 10, position: 'relative', backgroundColor: Color('textColor'), padding: width * 0.015 }, style]}>
-            {/* <View style={{ borderRadius: 100, backgroundColor: Color('danger'), position: 'absolute', zIndex: 1, padding: width * 0.02, top: height * 0.015, right: width * 0.035 }}>
-                <Book1 size="10" color={Color('textColor')} />
-            </View> */}
+            <Pressable onPress={markBookmark} style={{ borderRadius: 100, backgroundColor: bookmarked ? Color('btnBackground') : Color('gray'), position: 'absolute', zIndex: 1, padding: width * 0.015, top: height * 0.015, right: width * 0.035 }}>
+                <ArchiveAdd size="15" color={Color('textColor')} />
+            </Pressable>
             <View style={{ left: width * 0.015, backgroundColor: Color('propertyPrice'), position: 'absolute', zIndex: 1, paddingHorizontal: width * 0.05, top: height * 0.02, paddingTop: height * 0.004 }}>
                 <XSmall style={{ fontFamily: 'Poppins-SemiBold' }}>${amountFormat(data?.property_value)}</XSmall>
             </View>

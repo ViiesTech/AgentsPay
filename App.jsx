@@ -35,6 +35,7 @@ import AddCard from './src/screens/AddCard';
 import PropertyDetails from './src/screens/PropertyDetails';
 import Notifications from './src/screens/Notifications';
 import UploadProperty from './src/screens/UploadProperty';
+import Logout from './src/screens/Logout';
 
 const Stack = createNativeStackNavigator();
 
@@ -128,6 +129,9 @@ function App() {
             </Stack.Screen>
             <Stack.Screen name="UploadProperty">
               {props => <Sus component={<UploadProperty {...props} />} />}
+            </Stack.Screen>
+            <Stack.Screen name="Logout">
+              {props => <Sus component={<Logout {...props} />} />}
             </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>

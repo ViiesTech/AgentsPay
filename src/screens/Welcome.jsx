@@ -11,7 +11,7 @@ import { AvatarList } from '../components/GroupAvatar';
 const { width, height } = Dimensions.get('window');
 const Welcome = ({ navigation }) => {
     return (
-        <Background>
+        <Background noAuth>
             <View style={{paddingTop: height * 0.05, height: height * 0.9, width: width * 0.8, alignSelf: 'center'}}>
                 <Image source={require('../assets/images/icon.png')} style={{ width: width * 0.2, height: width * 0.2, resizeMode: 'contain', alignSelf: 'center' }} />
                 <Br space={0.04} />

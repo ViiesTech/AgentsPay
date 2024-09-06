@@ -108,12 +108,12 @@ const Login = ({ navigation, route }) => {
                 Toast.show(res.data?.title, Toast.SHORT);
                 if (res.data?.data?.is_profile_completed) {
                     if (res.data?.data?.is_subscription_activated) {
-                        navigation.navigate('Home');
+                        navigation.replace('Home');
                     }else {
-                        navigation.navigate('Subscriptions');
+                        navigation.replace('Subscriptions');
                     }
                 }else {
-                    navigation.navigate('CompleteProfile');
+                    navigation.replace('CompleteProfile');
                 }
             } catch(err) {
                 await errHandler(err);
@@ -125,7 +125,7 @@ const Login = ({ navigation, route }) => {
         return <Loading />;
     }
     return (
-        <Background>
+        <Background noAuth>
             <Backbtn onPress={() => navigation.goBack()} />
             <Image source={require('../assets/images/icon.png')} style={{ alignSelf: 'center', width: width * 0.4, height: width * 0.4, resizeMode: 'contain', marginTop: height * 0.05 }} />
             <Br space={0.03} />

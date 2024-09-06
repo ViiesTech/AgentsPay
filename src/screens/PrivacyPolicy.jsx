@@ -23,7 +23,8 @@ const PrivacyPolicy = ({ navigation }) => {
     const loadContent = async () => {
         try {
             const res = await api.get('/user/privacy_policy');
-            setContent(res.data?.data?.content);
+            const data = res.data?.data?.content || 'No Privacy Policy';
+            setContent(data);
         } catch(err) {
             await errHandler(err);
         }

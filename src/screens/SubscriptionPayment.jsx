@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import { Dimensions, ImageBackground, View } from 'react-native';
 import Background from '../utils/Background';
 import Backbtn from '../components/Backbtn';
-// import Notificationbtn from '../components/Notificationbtn';
 import { H5, H6, Pera, Small } from '../utils/Text';
 import Br from '../components/Br';
 import { Color } from '../utils/Colors';
@@ -80,7 +79,6 @@ const SubscriptionPayment = ({ navigation, route }) => {
                 alignSelf: 'center',
             }}>
                 <Backbtn position="static" onPress={() => navigation.goBack()} />
-                {/* <Notificationbtn unSeen position="static" onPress={() => navigation.goBack()} /> */}
             </View>
             <Br space={0.05} />
             <H5 theme="light" style={{ fontFamily: 'Poppins-Medium', textAlign: 'center' }}>Payment</H5>

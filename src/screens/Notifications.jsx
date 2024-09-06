@@ -85,7 +85,7 @@ const Notifications = ({ navigation }) => {
             {
                 notifications.length === 0
                 ?
-                <Pera style={{textAlign: 'center'}}>No Notification</Pera>
+                <Pera style={{textAlign: 'center'}}>No Notification Available</Pera>
                 :
                 notifications.map((val, index) => {
                     return <Notification id={index} data={val} />;

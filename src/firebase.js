@@ -19,13 +19,15 @@ const config = {
 
 export async function connectFirebase(setState) {
   try {
-    console.log('fetching...');
+    console.log('connecting to firebase...');
     const initializeLoginFramework = !firebase.apps.length ? firebase.initializeApp(config) : firebase.app();
     const fcmToken = await messaging().getToken();
     const subscribeToTopic = await messaging().subscribeToTopic('date420');
     setState(fcmToken);
     // return fcmToken;
   }catch(err) {
-    await connectFirebase(setState);
+    setTimeout(async () => {
+      await connectFirebase(setState);
+    }, 500);
   }
 }
