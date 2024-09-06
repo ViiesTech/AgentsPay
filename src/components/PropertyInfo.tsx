@@ -47,7 +47,7 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
     return (
         <Pressable onPress={onPress} style={{ width: width * 0.85, alignSelf: 'center', position: 'relative' }}>
             <View style={{ backgroundColor: Color('propertyPrice'), position: 'absolute', zIndex: 1, paddingHorizontal: width * 0.05, top: height * 0.02, paddingTop: height * 0.004 }}>
-                <Small style={{ fontFamily: 'Poppins-SemiBold' }}>${amountFormat(data?.property_value)}</Small>
+                <Pera style={{ fontFamily: 'Poppins-SemiBold' }}>${amountFormat(data?.property_value)}</Pera>
             </View>
             <Pressable onPress={markBookmark} style={{ borderRadius: 100, backgroundColor: bookmarked ? Color('btnBackground') : Color('gray'), position: 'absolute', zIndex: 1, padding: width * 0.02, top: height * 0.015, right: width * 0.035 }}>
                 <ArchiveAdd size="20" color={Color('textColor')} />

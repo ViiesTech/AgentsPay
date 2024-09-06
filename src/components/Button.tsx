@@ -12,14 +12,16 @@ interface Props {
     fontSize?: number,
     onPress: any,
     icon?: any,
-    loading?: boolean
+    loading?: boolean,
+    color?: any,
+    textStyle?: any
 }
 
 const Loading = ({color}: {color?: any}) => {
     return <ActivityIndicator color={color || Color('btnText')} />;
 };
 
-export const Button = ({loading, children, style, fontSize, onPress}: Props) => {
+export const Button = ({loading, children, style, fontSize, onPress, color, textStyle}: Props) => {
     return (
         <TouchableOpacity disabled={loading} onPress={() => onPress()} style={[styles.btn, style]}>
             {
@@ -27,13 +29,13 @@ export const Button = ({loading, children, style, fontSize, onPress}: Props) => 
                 ?
                 <Loading />
                 :
-                <Text style={{ fontSize: RFValue(fontSize || 16, height), color: Color('textColor'), textAlign: 'center', fontFamily: 'Poppins-SemiBold' }}>{children}</Text>
+                <Text style={{ fontSize: RFValue(fontSize || 16, height), color: color || Color('textColor'), textAlign: 'center', fontFamily: 'Poppins-SemiBold', ...textStyle }}>{children}</Text>
             }
         </TouchableOpacity>
     );
 };
 
-export const ButtonOutline = ({loading, children, style, fontSize, onPress}: Props) => {
+export const ButtonOutline = ({loading, children, style, fontSize, onPress, color, textStyle}: Props) => {
     return (
         <TouchableOpacity disabled={loading} onPress={() => onPress()} style={[styles.btnOutline, style]}>
             {
@@ -41,7 +43,7 @@ export const ButtonOutline = ({loading, children, style, fontSize, onPress}: Pro
                 ?
                 <Loading />
                 :
-                <Text style={{ fontSize: RFValue(fontSize || 16, height), color: Color('btnText'), textAlign: 'center', fontFamily: 'Poppins-SemiBold' }}>{children}</Text>
+                <Text style={{ fontSize: RFValue(fontSize || 16, height), color: color || Color('btnText'), textAlign: 'center', fontFamily: 'Poppins-SemiBold', ...textStyle }}>{children}</Text>
             }
         </TouchableOpacity>
     );

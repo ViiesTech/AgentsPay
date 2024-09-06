@@ -40,6 +40,7 @@ const Home = ({ navigation }) => {
         }
     };
 
+
     if (!homepageData) {
         return <Loading />;
     }

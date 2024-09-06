@@ -13,12 +13,12 @@ import { Button, ButtonOutline } from '../components/Button';
 import Dropdown from '../components/Dropdown';
 import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { api, errHandler } from '../API';
+import { api, baseUrl, errHandler } from '../API';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 
 const { width, height } = Dimensions.get('window');
-const UploadProperty = ({ navigation }) => {
+const EditProperty = ({ navigation, route }) => {
     const isFocused = useIsFocused();
     const validator = require('validator');
 
@@ -73,8 +73,81 @@ const UploadProperty = ({ navigation }) => {
     }, [property.agent_amount]);
 
     useEffect(() => {
-        if (isFocused) {loadData();}
+        if (isFocused) {loadProperty();}
     }, [isFocused]);
+
+    async function convertImageToBase64(url) {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        const base64data = await new Promise(resolve => {
+            reader.onloadend = () => {
+                resolve(reader.result);
+            };
+        });
+        return base64data;
+    }
+
+    const loadProperty = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            const res = await api.get('/user/properties/edit?id=' + route?.params?.id, {headers: {Authorization: `Bearer ${token}`}});
+            const data = res.data.data;
+            const tagList = data?.tags.toLowerCase().split(', ');
+            setTags(tagList);
+            setProperty({
+                title: data?.title,
+                city: data?.city,
+                state: data?.state,
+                address: data?.address,
+                property_size: data?.property_size.toString(),
+                property_value: data?.property_value.toString(),
+                agent_percentage: data?.agent_percentage.toString(),
+                agent_amount: data?.agent_amount,
+                no_of_bedrooms: data?.no_of_bedrooms.toString(),
+                no_of_bathrooms: data?.no_of_bathrooms.toString(),
+                property_description: data?.property_description,
+                property_type: data?.tbl_property_type?.label,
+            });
+            if (cities.length === 0 || states.length === 0) {loadData();}
+
+            const imgsArr = [];
+            for (let x = 0; x < data?.tbl_property_images.length; x++) {
+                convertImageToBase64(`${baseUrl}/images/properties/${data?.tbl_property_images[x].url}`)
+                .then(base64data => {
+                    imgsArr.push({
+                        type: `image/${data?.tbl_property_images[x].url.split('.').pop()}`,
+                        base64: base64data.split(';base64,').pop(),
+                    });
+
+                    if (imgsArr.length === data?.tbl_property_images.length) {
+                        setImages(imgsArr);
+                    }
+                });
+
+            }
+
+            const docsArr = [];
+            for (let x = 0; x < data?.tbl_property_documents.length; x++) {
+                convertImageToBase64(`${baseUrl}/documents/properties/${data?.tbl_property_documents[x].url}`)
+                .then(base64data => {
+                    docsArr.push({
+                        fileName: data?.tbl_property_documents[x].url,
+                        type: `image/${data?.tbl_property_documents[x].url.split('.').pop()}`,
+                        base64: base64data.split(';base64,').pop(),
+                    });
+
+                    if (docsArr.length === data?.tbl_property_documents.length) {
+                        setDocuments(docsArr);
+                    }
+                });
+
+            }
+        } catch(err) {
+            await errHandler(err);
+        }
+    };
 
     const loadData = async () => {
         try {
@@ -83,7 +156,7 @@ const UploadProperty = ({ navigation }) => {
             setCities(res.data.data[0]);
             setStates(res.data.data[1]);
 
-            loadPropertyTypes();
+            if (propertyTypes.length === 0) {loadPropertyTypes();}
         } catch(err) {
             await errHandler(err);
         }
@@ -249,7 +322,7 @@ const UploadProperty = ({ navigation }) => {
         return true;
     };
 
-    const onAddProperty = async () => {
+    const onUpdateProperty = async () => {
         const validation = isValid();
 
         if (validation) {
@@ -258,7 +331,7 @@ const UploadProperty = ({ navigation }) => {
             try {
                 const token = await AsyncStorage.getItem('token');
                 const propertyType = propertyTypes.filter(val => val.label === property?.property_type)[0].id;
-                const res = await api.post('/user/properties/upload', {
+                const res = await api.post('/user/properties/update', {
                     tags: JSON.stringify(tags),
                     documents: JSON.stringify(documents),
                     images: JSON.stringify(images),
@@ -274,6 +347,7 @@ const UploadProperty = ({ navigation }) => {
                     no_of_bathrooms: property?.no_of_bathrooms,
                     property_description: property?.property_description,
                     property_type: propertyType,
+                    id: route?.params?.id,
                 }, {headers: {Authorization: `Bearer ${token}`}});
 
                 Dialog.show({
@@ -303,10 +377,11 @@ const UploadProperty = ({ navigation }) => {
                 <Backbtn position="static" onPress={() => navigation.goBack()} />
             </View>
             <Br space={0.05} />
-            <H5 theme="light" style={{fontFamily: 'Poppins-Medium', textAlign: 'center'}}>Upload Property</H5>
+            <H5 theme="light" style={{fontFamily: 'Poppins-Medium', textAlign: 'center'}}>Edit Property</H5>
             <Pera theme="transparent" style={{textAlign: 'center', width: width * 0.85, alignSelf: 'center'}}>We have sent you an email containing 6 digits verification code. Please enter the code to verify your identity</Pera>
             <Br space={0.02} />
             <Input
+                defaultValue={property?.title}
                 value={property?.title}
                 labelText="Property Title"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
@@ -331,6 +406,7 @@ const UploadProperty = ({ navigation }) => {
                 icon={undefined}
             />
             <Input
+                defaultValue={property?.address}
                 value={property?.address}
                 labelText="Address"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
@@ -346,6 +422,7 @@ const UploadProperty = ({ navigation }) => {
                 icon={undefined}
             />
             <Input
+                defaultValue={property?.property_size}
                 keyboardType="numeric"
                 value={property?.property_size}
                 labelText="Property Area"
@@ -353,6 +430,7 @@ const UploadProperty = ({ navigation }) => {
                 onChange={(value) => setProperty({...property, property_size: value})}
             />
             <Input
+                defaultValue={property?.property_value}
                 keyboardType="numeric"
                 value={property?.property_value}
                 labelText="Property Price"
@@ -360,6 +438,7 @@ const UploadProperty = ({ navigation }) => {
                 onChange={(value) => setProperty({...property, property_value: value})}
             />
             <Input
+                defaultValue={property?.agent_percentage}
                 readOnly={disableAgentPercentage}
                 keyboardType="numeric"
                 value={property?.agent_percentage}
@@ -368,6 +447,7 @@ const UploadProperty = ({ navigation }) => {
                 onChange={(value) => setProperty({...property, agent_percentage: value})}
             />
             <Input
+                defaultValue={property?.agent_amount}
                 readOnly={disableAgentAmount}
                 keyboardType="numeric"
                 value={property?.agent_amount}
@@ -380,26 +460,27 @@ const UploadProperty = ({ navigation }) => {
             <Br space={0.02} />
             <View style={{flexDirection: 'row', flexWrap: 'wrap', columnGap: 15, width: width * 0.85, alignSelf: 'center'}}>
                 <Pressable onPress={uploadImage} style={{flexGrow: 1, marginBottom: height * 0.025}}>
-                    <Image source={images[0] ? {uri: `data:${images[0].type};base64,${images[0].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
+                    <Image source={images[0] ? {uri: images[0].base64.includes(';base64,') ? images[0].base64 : `data:${images[0].type};base64,${images[0].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
                 </Pressable>
                 <Pressable onPress={uploadImage} style={{flexGrow: 1, marginBottom: height * 0.025}}>
-                    <Image source={images[1] ? {uri: `data:${images[1].type};base64,${images[1].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
+                    <Image source={images[1] ? {uri: images[1].base64.includes(';base64,') ? images[1].base64 : `data:${images[1].type};base64,${images[1].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
                 </Pressable>
                 <Pressable onPress={uploadImage} style={{flexGrow: 1, marginBottom: height * 0.025}}>
-                    <Image source={images[2] ? {uri: `data:${images[2].type};base64,${images[2].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
+                    <Image source={images[2] ? {uri: images[2].base64.includes(';base64,') ? images[2].base64 : `data:${images[2].type};base64,${images[2].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
                 </Pressable>
                 <Pressable onPress={uploadImage} style={{flexGrow: 1, marginBottom: height * 0.025}}>
-                    <Image source={images[3] ? {uri: `data:${images[3].type};base64,${images[3].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
+                    <Image source={images[3] ? {uri: images[3].base64.includes(';base64,') ? images[3].base64 : `data:${images[3].type};base64,${images[3].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
                 </Pressable>
                 <Pressable onPress={uploadImage} style={{flexGrow: 1, marginBottom: height * 0.025}}>
-                    <Image source={images[4] ? {uri: `data:${images[4].type};base64,${images[4].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
+                    <Image source={images[4] ? {uri: images[4].base64.includes(';base64,') ? images[4].base64 : `data:${images[4].type};base64,${images[4].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
                 </Pressable>
                 <Pressable onPress={uploadImage} style={{flexGrow: 1, marginBottom: height * 0.025}}>
-                    <Image source={images[5] ? {uri: `data:${images[5].type};base64,${images[5].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
+                    <Image source={images[5] ? {uri: images[5].base64.includes(';base64,') ? images[5].base64 : `data:${images[5].type};base64,${images[5].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
                 </Pressable>
             </View>
             <Br space={0.03} />
             <Input
+                defaultValue={property?.no_of_bedrooms}
                 keyboardType="numeric"
                 value={property?.no_of_bedrooms}
                 labelText="Number of Bedrooms"
@@ -407,6 +488,7 @@ const UploadProperty = ({ navigation }) => {
                 onChange={(value) => setProperty({...property, no_of_bedrooms: value})}
             />
             <Input
+                defaultValue={property?.no_of_bathrooms}
                 keyboardType="numeric"
                 value={property?.no_of_bathrooms}
                 labelText="Number of Bathrooms"
@@ -474,10 +556,10 @@ const UploadProperty = ({ navigation }) => {
                 })
             }
             <Br space={0.05} />
-            <ButtonOutline loading={loading} style={{width: width * 0.85, alignSelf: 'center'}} onPress={onAddProperty}>Submit</ButtonOutline>
+            <ButtonOutline loading={loading} style={{width: width * 0.85, alignSelf: 'center'}} onPress={onUpdateProperty}>Update Property</ButtonOutline>
             <Br space={0.05} />
         </Background>
     );
 };
 
-export default UploadProperty;
+export default EditProperty;

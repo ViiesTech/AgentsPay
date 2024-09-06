@@ -77,7 +77,7 @@ const UploadedProperties = ({ navigation }) => {
                             }).map((val, index) => {
                                 return (
                                     <View key={index} style={{flexBasis: '50%'}}>
-                                        <PropertyListing onPress={() => navigation.navigate('PropertyDetails', { data: val })} style={{ marginBottom: height * 0.01 }} data={val} />
+                                        <PropertyListing own onPress={() => navigation.navigate('PropertyDetails', { data: val })} style={{ marginBottom: height * 0.01 }} data={val} />
                                     </View>
                                 );
                             })

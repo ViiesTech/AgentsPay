@@ -32,9 +32,9 @@ export const errHandler = async (err) => {
             'Please make sure that the API (' + calledAPI + ") you're calling is already exists!",
         );
     }else
-    if (status === 511) // NOT FOUND
+    if (status === 511) // MALFORMED TOKEN
     {
-        Toast.show('Your session has been expired!!', Toast.SHORT);
+        Toast.show('Your session has been ended!!', Toast.SHORT);
         RNRestart.restart();
     }else {
         Alert.alert(

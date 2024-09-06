@@ -119,7 +119,7 @@ const PropertyDetails = ({ navigation, route }) => {
                     <PropertyInfo data={route?.params?.data} isSwiper />
                     <Br space={0.07} />
                     <View style={{alignSelf: 'center', position: 'absolute', width: width * 0.85, paddingVertical: height * 0.005, bottom: 0, backgroundColor: Color('btnBackground'), alignItems: 'center'}}>
-                        <Pera numberOfLines={1}>Agent Commission {details?.agent_percentage}% (${details?.agent_amount.toLocaleString('en')}/-)</Pera>
+                        <Pera numberOfLines={1}>Agent Commission {details?.agent_percentage > 0 && `${details?.agent_percentage}%`} {details?.agent_amount > 0 && `(${details?.agent_amount.toLocaleString('en')}/-)`}</Pera>
                     </View>
                 </View>
                 <View style={{width: width * 0.85, alignSelf: 'center'}}>

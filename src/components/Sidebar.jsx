@@ -2,7 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
-import { Animated, Dimensions, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Animated, Dimensions, Image, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideDrawer } from '../redux/Reducers/drawerSlice';
 import { Color } from '../utils/Colors';
@@ -19,7 +19,7 @@ const { width, height } = Dimensions.get('screen');
 const Sidebar = ({ user }) => {
     // Create animated value for the horizontal position
     const slideAnim = new Animated.Value(-width);
-    const showDrawer = useSelector(({drawer}) => drawer?.drawer);
+    const showDrawer = useSelector(({ drawer }) => drawer?.drawer);
     const dispatch = useDispatch();
     const { navigate } = useNavigation();
 
@@ -31,7 +31,7 @@ const Sidebar = ({ user }) => {
         }).start();
     }, [slideAnim, showDrawer]);
 
-    if (!showDrawer) {return;}
+    if (!showDrawer) { return; }
 
     const DrawerItem = ({ label, screen }) => {
         const clicked = () => {
@@ -49,7 +49,7 @@ const Sidebar = ({ user }) => {
                         borderRadius: 30,
                         marginBottom: height * 0.01,
                     }}>
-                        <Pera style={{fontFamily: 'Poppins-SemiBold'}}>{label}</Pera>
+                        <Pera style={{ fontFamily: 'Poppins-SemiBold' }}>{label}</Pera>
                     </View>
                 </TouchableOpacity>
             </>
@@ -69,13 +69,16 @@ const Sidebar = ({ user }) => {
             <Backbtn style={{ marginLeft: width * 0.03 }} position="static" onPress={() => dispatch(hideDrawer())} />
             <Br space={0.03} />
             <ScrollView showsVerticalScrollIndicator={false}>
-                <View style={{width: width * 0.9, alignSelf: 'center'}}>
+                <View style={{ width: width * 0.9, alignSelf: 'center' }}>
                     <View style={{
                         flexDirection: 'row',
                         alignItems: 'center',
                     }}>
-                        <View style={{flex: 1}}>
-                            <View style={{
+                        <View style={{ flex: 1 }}>
+                            <Pressable onPress={() => {
+                                dispatch(hideDrawer());
+                                navigate('EditProfile');
+                            }} style={{
                                 alignItems: 'center',
                                 position: 'relative',
                                 width: width * 0.25,
@@ -104,83 +107,83 @@ const Sidebar = ({ user }) => {
                                         color={Color('textColor')}
                                     />
                                 </View>
-                            </View>
+                            </Pressable>
                         </View>
-                        <View style={{flex: 1}}>
+                        <View style={{ flex: 1 }}>
                             <H6 style={{ textTransform: 'capitalize' }} numberOfLines={1}>{user?.full_name}</H6>
                             <Hr style={{ width: width * 0.3 }} />
-                            <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005}}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005 }}>
                                 <SmsNotification
                                     size="25"
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{width: width * 0.35}} numberOfLines={1}>{user?.email}</Small>
+                                <Small style={{ width: width * 0.35 }} numberOfLines={1}>{user?.email}</Small>
                             </View>
-                            <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005}}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005 }}>
                                 <Call
                                     size="25"
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{width: width * 0.35}} numberOfLines={1}>{user?.phone}</Small>
+                                <Small style={{ width: width * 0.35 }} numberOfLines={1}>{user?.phone}</Small>
                             </View>
-                            <View style={{flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005}}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005 }}>
                                 <Personalcard
                                     size="25"
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{width: width * 0.35}} numberOfLines={1}>{user?.license_number}</Small>
+                                <Small style={{ width: width * 0.35 }} numberOfLines={1}>{user?.license_number}</Small>
                             </View>
-                            <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                                 <Notepad
                                     size="25"
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{width: width * 0.35}} numberOfLines={1}>{user?.broker_name}</Small>
+                                <Small style={{ width: width * 0.35 }} numberOfLines={1}>{user?.broker_name}</Small>
                             </View>
                         </View>
                     </View>
                     <Br space={0.03} />
                     <DrawerItem
-                        icon={<Home size="25" color={Color('whiteText')} variant="Bold"/>}
+                        icon={<Home size="25" color={Color('whiteText')} variant="Bold" />}
                         label="Uploaded Properties"
                         screen="UploadedProperties"
                     />
                     <DrawerItem
-                        icon={<Profile size="25" color={Color('whiteText')} variant="Bold"/>}
+                        icon={<Profile size="25" color={Color('whiteText')} variant="Bold" />}
                         label="Add Property"
                         screen="UploadProperty"
                     />
                     <DrawerItem
-                        icon={<MessageNotif size="25" color={Color('whiteText')} variant="Bold"/>}
+                        icon={<MessageNotif size="25" color={Color('whiteText')} variant="Bold" />}
                         label="Bookmarks"
                         screen="BookmarkedProperties"
                     />
                     <DrawerItem
-                        icon={<Profile2User size="25" color={Color('whiteText')} variant="Bold"/>}
+                        icon={<Profile2User size="25" color={Color('whiteText')} variant="Bold" />}
                         label="Subscription"
                         screen="MySubscription"
                     />
                     <DrawerItem
-                        icon={<Reserve size="25" color={Color('whiteText')} variant="Bold"/>}
+                        icon={<Reserve size="25" color={Color('whiteText')} variant="Bold" />}
                         label="Payment Cards"
                         screen="PaymentCards"
                     />
                     <DrawerItem
-                        icon={<ProfileTick size="25" color={Color('whiteText')} variant="Bold"/>}
+                        icon={<ProfileTick size="25" color={Color('whiteText')} variant="Bold" />}
                         label="Contact Admin"
                         screen="ContactAdmin"
                     />
                     <DrawerItem
-                        icon={<Card size="25" color={Color('whiteText')} variant="Bold"/>}
+                        icon={<Card size="25" color={Color('whiteText')} variant="Bold" />}
                         label="User Terms"
                         screen="UserTerms"
                     />
                     <DrawerItem
-                        icon={<Cards size="25" color={Color('whiteText')} variant="Bold"/>}
+                        icon={<Cards size="25" color={Color('whiteText')} variant="Bold" />}
                         label="Privacy Policy"
                         screen="PrivacyPolicy"
                     />

@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { Dimensions, View } from 'react-native';
@@ -20,6 +21,7 @@ const BookmarkedProperties = ({ navigation }) => {
 
     const [ keywords, setKeywords ] = useState('');
     const [ list, setlist ] = useState();
+    const [ User, setUser ] = useState();
 
     useEffect(() => {
         if (isFocused) {loadProperties();}
@@ -29,7 +31,8 @@ const BookmarkedProperties = ({ navigation }) => {
         try {
             const token = await AsyncStorage.getItem('token');
             const res = await api.get('/user/properties/bookmarked', {headers: {Authorization: `Bearer ${token}`}});
-            setlist(res.data?.data);
+            setUser(res.data?.data[1]);
+            setlist(res.data?.data[0]);
         } catch(err) {
             await errHandler(err);
         }
@@ -74,9 +77,10 @@ const BookmarkedProperties = ({ navigation }) => {
                                     return false;
                                 }
                             }).map((val, index) => {
+                                const isBookmarked = parseInt(val.user_id) === parseInt(User);
                                 return (
                                     <View key={index} style={{flexBasis: '50%'}}>
-                                        <PropertyListing onPress={() => navigation.navigate('PropertyDetails', { data: val?.tbl_property })} style={{ marginBottom: height * 0.01 }} data={val?.tbl_property} />
+                                        <PropertyListing isBookmarked={isBookmarked} onPress={() => navigation.navigate('PropertyDetails', { data: val?.tbl_property })} style={{ marginBottom: height * 0.01 }} data={val?.tbl_property} />
                                     </View>
                                 );
                             })
