@@ -3,8 +3,8 @@ import { Alert } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import RNRestart from 'react-native-restart';
 
-export const baseUrl = 'http://192.168.18.190:8080';
-// export const baseUrl = 'https://agentspay.predemo.site';
+// export const baseUrl = 'http://192.168.18.190:8080';
+export const baseUrl = 'https://agentspay.predemo.site';
 export const api = axios.create({
     baseURL: baseUrl,
     timeout: 5000,
