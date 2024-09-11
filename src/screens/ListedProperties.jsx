@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, Pressable, Text, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import Notificationbtn from '../components/Notificationbtn';
 import Br from '../components/Br';
@@ -13,7 +13,7 @@ import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import Loading from './Loading';
-import { Pera } from '../utils/Text';
+import { Pera, Small, XSmall } from '../utils/Text';
 
 const { width, height } = Dimensions.get('window');
 const ListedProperties = ({ navigation, route }) => {
@@ -23,19 +23,20 @@ const ListedProperties = ({ navigation, route }) => {
     const [ keywords, setKeywords ] = useState('');
     const [ list, setlist ] = useState();
     const [page, setPage] = useState(1);
+    const [maxPage, setMaxPage] = useState(1);
 
     useEffect(() => {
         if (isFocused) {loadProperties();}
-    }, [isFocused]);
+    }, [isFocused, page]);
 
     const loadProperties = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
             const res = await api.get('/user/properties/listing?page=' + page, {headers: {Authorization: `Bearer ${token}`}});
-            setlist(res.data?.data);
-            setPage(page + 1);
+            setlist(res.data?.data[0]);
+            setMaxPage(res.data?.data[1]);
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadProperties());
         }
     };
 
@@ -46,7 +47,7 @@ const ListedProperties = ({ navigation, route }) => {
             setlist([...list, ...res.data?.data]);
             setPage(page + 1);
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadMore());
         }
     };
 
@@ -131,13 +132,27 @@ const ListedProperties = ({ navigation, route }) => {
                             }).map((val, index) => {
                                 return (
                                     <View key={index} style={{flexBasis: '50%'}}>
-                                        <PropertyListing onPress={() => navigation.navigate('PropertyDetails', { data: val })} style={{ marginBottom: height * 0.01 }} data={val} />
+                                        <PropertyListing route={route} routeShouldBe="ListedProperties" onPress={() => navigation.navigate('PropertyDetails', { data: val })} style={{ marginBottom: height * 0.01 }} data={val} />
                                     </View>
                                 );
                             })
                         }
                     </View>
                 }
+                <View style={{flexDirection: 'row', width: width * 0.75, flexWrap: 'wrap', alignSelf: 'center', justifyContent: 'center', gap: 10, marginTop: height * 0.02}}>
+                    {
+                        Array.from({ length: maxPage }, (_, i) => i).map((_, index) => {
+                            return (
+                                <TouchableOpacity onPress={() => setPage(index + 1)}>
+                                    <View style={{ lineHeight: 1, alignItems: 'center' }}>
+                                        <Pera style={{fontWeight: 'bold'}}>{index + 1}</Pera>
+                                        <XSmall>Page</XSmall>
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        })
+                    }
+                </View>
                 <Br space={0.1} />
             </Background>
             <NavigationBar />

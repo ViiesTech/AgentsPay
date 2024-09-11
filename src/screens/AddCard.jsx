@@ -14,7 +14,7 @@ import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import { encryption, getCardType, getServiceType } from '../utils/defaultValues';
 
 const { width, height } = Dimensions.get('window');
-const AddCard = ({ navigation }) => {
+const AddCard = ({ navigation, route }) => {
     const validator = require('validator');
 
     const [loading, setLoading] = useState(false);
@@ -88,15 +88,17 @@ const AddCard = ({ navigation }) => {
                     cvv: encryption(card?.cvv, token),
                 }, {headers: {Authorization: `Bearer ${token}`}});
 
-                Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    gravity: 'center',
-                    title: res.data?.title,
-                    textBody: res.data?.message,
-                    button: 'Great',
-                    onPressButton: () => navigation.navigate('PaymentCards'),
-                    onHide: () => navigation.navigate('PaymentCards'),
-                });
+                if (route.name === 'AddCard') {
+                    Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        gravity: 'center',
+                        title: res.data?.title,
+                        textBody: res.data?.message,
+                        button: 'Great',
+                        onPressButton: () => navigation.navigate('PaymentCards'),
+                        onHide: () => navigation.navigate('PaymentCards'),
+                    });
+                }
             } catch(err) {
                 await errHandler(err);
             }
@@ -144,6 +146,7 @@ const AddCard = ({ navigation }) => {
                         <Input
                             value={card?.cvv}
                             labelText="CVV"
+                            keyboardType="numeric"
                             style={{ marginBottom: height * 0.015, width: width * 0.35 }}
                             onChange={(value) => setCard({...card, cvv: value})}
                             secure

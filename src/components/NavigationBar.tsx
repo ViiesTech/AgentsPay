@@ -13,7 +13,7 @@ const NavigationBar = () => {
     const dispatch = useDispatch();
     const { navigate } = useNavigation();
     return (
-        <View style={{ position: 'absolute', bottom: height * 0.02, flexDirection: 'row', alignItems: 'center', backgroundColor: Color('navigationBackground'), width: width * 0.85, paddingVertical: height * 0.02, borderRadius: 15, alignSelf: 'center' }}>
+        <View style={{ position: 'absolute', bottom: height * 0.02, flexDirection: 'row', alignItems: 'center', backgroundColor: Color('navigationBackground'), width: width * 0.85, paddingVertical: height * 0.02, borderRadius: 15, alignSelf: 'center', zIndex: 1 }}>
             <TouchableOpacity style={{flex: 1, alignItems: 'center'}} onPress={() => navigate('Home')}>
                 <View style={{ backgroundColor: Color('btnBackground'), borderRadius: 100, padding: width * 0.02 }}>
                     <Home

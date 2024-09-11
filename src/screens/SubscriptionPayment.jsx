@@ -40,15 +40,23 @@ const SubscriptionPayment = ({ navigation, route }) => {
                     subscription_id: route?.params?.package?.subscription_id,
                 }, {headers: {Authorization: `Bearer ${token}`}});
 
-                Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    gravity: 'center',
-                    title: res.data?.title,
-                    textBody: res.data?.message,
-                    button: 'Great',
-                    onPressButton: () => navigation.navigate('Home'),
-                    onHide: () => navigation.navigate('Home'),
-                });
+                if (route.name === 'SubscriptionPayment') {
+                    Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        gravity: 'center',
+                        title: res.data?.title,
+                        textBody: res.data?.message,
+                        button: 'Great',
+                        onPressButton: () => {
+                            navigation.replace('Home');
+                            Dialog.hide();
+                        },
+                        onHide: () => {
+                            navigation.replace('Home');
+                            Dialog.hide();
+                        },
+                    });
+                }
             } catch(err) {
                 await errHandler(err);
             }

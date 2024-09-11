@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, TouchableOpacity, View } from 'react-native';
@@ -36,7 +37,7 @@ const Home = ({ navigation }) => {
             const res = await api.get('/user/properties/home',{headers: {Authorization: `Bearer ${token}`}});
             setHomepageData(res.data?.data);
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadProperties());
         }
     };
 

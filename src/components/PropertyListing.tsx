@@ -15,7 +15,7 @@ import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 
 const { height, width } = Dimensions.get('window');
 
-const PropertyListing = ({ isBookmarked, own, style, data, onPress }: { own?: boolean, style?: any, onPress?: any, data?: any, isBookmarked?: any }) => {
+const PropertyListing = ({ route, routeShouldBe, isBookmarked, own, style, data, onPress }: { own?: boolean, style?: any, onPress?: any, data?: any, isBookmarked?: any, route?: any, routeShouldBe?: any }) => {
     const [ bookmarked, setBookmarked ]: any = useState(null);
     const [ deleted, setDeleted ]: any = useState(false);
     const { navigate } = useNavigation();
@@ -49,21 +49,24 @@ const PropertyListing = ({ isBookmarked, own, style, data, onPress }: { own?: bo
     };
 
     const del = () => {
-        Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: 'Confirm To Delete?',
-            textBody: 'Please confirm to delete the property.',
-            button: 'Confirm',
-            onPressButton: async () => await deleteProperty(),
-        });
+        if (route.name === routeShouldBe) {
+            Dialog.show({
+                type: ALERT_TYPE.SUCCESS,
+                title: 'Confirm To Delete?',
+                textBody: 'Please confirm to delete the property.',
+                button: 'Confirm',
+                onPressButton: async () => await deleteProperty(),
+            });
+        }
     };
 
     const deleteProperty = async () => {
         try {
+            Dialog.hide();
+            Toast.show('Deleting....', Toast.SHORT);
             const token = await AsyncStorage.getItem('token');
             const res = await api.delete('/user/properties/delete?id=' + data?.id, {headers: {Authorization: `Bearer ${token}`}});
             Toast.show(res.data?.title, Toast.SHORT);
-            Dialog.hide();
             setDeleted(true);
         } catch(err) {
             await errHandler(err);

@@ -18,7 +18,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 
 const { width, height } = Dimensions.get('window');
-const UploadProperty = ({ navigation }) => {
+const UploadProperty = ({ navigation, route }) => {
     const isFocused = useIsFocused();
     const validator = require('validator');
 
@@ -85,7 +85,7 @@ const UploadProperty = ({ navigation }) => {
 
             loadPropertyTypes();
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadData());
         }
     };
 
@@ -103,7 +103,7 @@ const UploadProperty = ({ navigation }) => {
             }
             setPropertyTypes(arr);
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadPropertyTypes());
         }
     };
 
@@ -276,15 +276,17 @@ const UploadProperty = ({ navigation }) => {
                     property_type: propertyType,
                 }, {headers: {Authorization: `Bearer ${token}`}});
 
-                Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    gravity: 'center',
-                    title: res.data?.title,
-                    textBody: res.data?.message,
-                    button: 'Okay',
-                    onPressButton: () => navigation.replace('UploadedProperties'),
-                    onHide: () => navigation.replace('UploadedProperties'),
-                });
+                if (route.name === 'UploadProperty') {
+                    Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        gravity: 'center',
+                        title: res.data?.title,
+                        textBody: res.data?.message,
+                        button: 'Okay',
+                        onPressButton: () => navigation.replace('UploadedProperties'),
+                        onHide: () => navigation.replace('UploadedProperties'),
+                    });
+                }
             } catch(err) {
                 await errHandler(err);
             }

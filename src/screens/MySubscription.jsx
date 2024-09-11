@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { Dimensions, View } from 'react-native';
@@ -25,7 +26,7 @@ const MySubscription = ({ navigation }) => {
 
             setSubscription(res.data?.data);
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadSubscription());
         }
     };
 

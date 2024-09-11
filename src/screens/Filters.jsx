@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Pressable, TextInput, View } from 'react-native';
@@ -40,7 +41,7 @@ const Filters = ({ navigation }) => {
             const res = await api.get('/user/properties/filter/data', {headers: {Authorization: `Bearer ${token}`}});
             setFilterOptions(res.data?.data);
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadData());
         }
     };
 

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { Dimensions, ImageBackground, Pressable, View } from 'react-native';
@@ -32,7 +33,7 @@ const PaymentCards = ({ navigation }) => {
             setKey(token);
             setPaymentCards(res.data?.data);
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadCards());
         }
     };
 

@@ -7,10 +7,10 @@ import RNRestart from 'react-native-restart';
 export const baseUrl = 'https://agentspay.predemo.site';
 export const api = axios.create({
     baseURL: baseUrl,
-    timeout: 5000,
+    timeout: 8000,
 });
 
-export const errHandler = async (err) => {
+export const errHandler = async (err, callBack) => {
     const status = err?.response?.status;
     if (status === 417 || status === 500 || status === 406 || status === 502 || status === 401)
     {
@@ -38,9 +38,11 @@ export const errHandler = async (err) => {
         Toast.show('Your session has been ended!!', Toast.SHORT);
         RNRestart.restart();
     }else {
-        Alert.alert(
-            'Request Failed',
-            'Request failed due to internet problem, please try again later.'
-        );
+        if (callBack) {
+            callBack();
+            Toast.show('Detecting Slow Internet, Retrying...', Toast.SHORT);
+        }else {
+            Toast.show('Detecting Slow Internet...', Toast.SHORT);
+        }
     }
 };

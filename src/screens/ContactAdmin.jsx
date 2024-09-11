@@ -14,7 +14,7 @@ import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width, height } = Dimensions.get('window');
-const ContactAdmin = ({ navigation }) => {
+const ContactAdmin = ({ navigation, route }) => {
     const validator = require('validator');
 
     const [loading, setLoading] = useState(false);
@@ -63,15 +63,18 @@ const ContactAdmin = ({ navigation }) => {
                     email: user?.email,
                     message: user?.message,
                 }, {headers: {Authorization: `Bearer ${token}`}});
-                Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    gravity: 'center',
-                    title: res.data?.title,
-                    textBody: res.data?.message,
-                    button: 'Great',
-                    onPressButton: () => navigation.replace('Home'),
-                    onHide: () => navigation.replace('Home'),
-                });
+
+                if (route.name === 'ContactAdmin') {
+                    Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        gravity: 'center',
+                        title: res.data?.title,
+                        textBody: res.data?.message,
+                        button: 'Great',
+                        onPressButton: () => navigation.replace('Home'),
+                        onHide: () => navigation.replace('Home'),
+                    });
+                }
             } catch(err) {
                 setLoading(false);
                 await errHandler(err);

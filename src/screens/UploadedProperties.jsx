@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { Dimensions, View } from 'react-native';
@@ -15,7 +16,7 @@ import Loading from './Loading';
 import { Pera } from '../utils/Text';
 
 const { width, height } = Dimensions.get('window');
-const UploadedProperties = ({ navigation }) => {
+const UploadedProperties = ({ navigation, route }) => {
     const isFocused = useIsFocused();
 
     const [ keywords, setKeywords ] = useState('');
@@ -31,7 +32,7 @@ const UploadedProperties = ({ navigation }) => {
             const res = await api.get('/user/properties/own', {headers: {Authorization: `Bearer ${token}`}});
             setlist(res.data?.data);
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadProperties());
         }
     };
 
@@ -77,7 +78,7 @@ const UploadedProperties = ({ navigation }) => {
                             }).map((val, index) => {
                                 return (
                                     <View key={index} style={{flexBasis: '50%'}}>
-                                        <PropertyListing own onPress={() => navigation.navigate('PropertyDetails', { data: val })} style={{ marginBottom: height * 0.01 }} data={val} />
+                                        <PropertyListing route={route} routeShouldBe="UploadedProperties" own onPress={() => navigation.navigate('PropertyDetails', { data: val })} style={{ marginBottom: height * 0.01 }} data={val} />
                                     </View>
                                 );
                             })

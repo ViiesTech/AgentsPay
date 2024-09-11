@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
@@ -34,7 +35,7 @@ const PropertyDetails = ({ navigation, route }) => {
 
             setDetails(res.data?.data);
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadDetails(id));
         }
     };
 

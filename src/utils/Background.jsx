@@ -45,30 +45,29 @@ const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, o
                 },
             ]}>
                 <Sidebar user={data} />
-                <TouchableWithoutFeedback onPress={() => {
-                    Keyboard.dismiss();
-                }}>
-                    <SafeAreaView style={styles.safeAreaView}>
-                        {!noBackground && <Image source={require('../assets/images/background.png')} style={styles.backgroundImage} />}
-                        <View style={styles.content}>
-                            <KeyboardView>
-                                {
-                                    noScroll
-                                    ?
-                                    children
-                                    :
-                                    flex
-                                    ?
-                                    <FlatList
-                                        showsVerticalScrollIndicator={false}
-                                        showsHorizontalScrollIndicator={false}
-                                        onScrollEndDrag={scrollEnd}
-                                        data={[children]}
-                                        renderItem={({ item }) => item}
-                                        keyExtractor={(item, index) => index}
-                                    />
-                                    :
+                <SafeAreaView style={styles.safeAreaView}>
+                    {!noBackground && <Image source={require('../assets/images/background.png')} style={styles.backgroundImage} />}
+                    <View style={styles.content}>
+                        <KeyboardView>
+                            {
+                                noScroll
+                                ?
+                                children
+                                :
+                                flex
+                                ?
+                                <FlatList
+                                    showsVerticalScrollIndicator={false}
+                                    showsHorizontalScrollIndicator={false}
+                                    onScrollEndDrag={scrollEnd}
+                                    data={[children]}
+                                    renderItem={({ item }) => item}
+                                    keyExtractor={(item, index) => index}
+                                />
+                                :
+                                <View>
                                     <ScrollView
+                                        keyboardShouldPersistTaps="handled"
                                         showsVerticalScrollIndicator={false}
                                         onScrollEndDrag={(e) => {
                                             const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
@@ -78,13 +77,19 @@ const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, o
                                             }
                                         }}
                                     >
-                                        {children}
+                                        <TouchableWithoutFeedback onPress={() => {
+                                            Keyboard.dismiss();
+                                        }}>
+                                            <View>
+                                                {children}
+                                            </View>
+                                        </TouchableWithoutFeedback>
                                     </ScrollView>
-                                }
-                            </KeyboardView>
-                        </View>
-                    </SafeAreaView>
-                </TouchableWithoutFeedback>
+                                </View>
+                            }
+                        </KeyboardView>
+                    </View>
+                </SafeAreaView>
             </AlertNotificationRoot>
         </>
     );

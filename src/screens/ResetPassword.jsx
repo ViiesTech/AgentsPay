@@ -53,15 +53,17 @@ const ResetPassword = ({ navigation, route }) => {
                     password: user?.password,
                 });
 
-                Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    gravity: 'center',
-                    title: res.data?.title,
-                    textBody: res.data?.message,
-                    button: 'Okay',
-                    onPressButton: () => navigation.replace('Login'),
-                    onHide: () => navigation.replace('Login'),
-                });
+                if (route.name === 'ResetPassword') {
+                    Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        gravity: 'center',
+                        title: res.data?.title,
+                        textBody: res.data?.message,
+                        button: 'Okay',
+                        onPressButton: () => navigation.replace('Login'),
+                        onHide: () => navigation.replace('Login'),
+                    });
+                }
             } catch(err) {
                 await errHandler(err);
             }

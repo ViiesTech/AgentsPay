@@ -12,7 +12,6 @@ import SubscriptionCard from '../components/SubscriptionCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import Loading from './Loading';
-import Toast from 'react-native-simple-toast';
 
 const { width, height } = Dimensions.get('window');
 const Subscriptions = ({ navigation }) => {
@@ -28,11 +27,7 @@ const Subscriptions = ({ navigation }) => {
 
             setSubscriptions(res.data?.data);
         } catch(err) {
-            await errHandler(err);
-            Toast.show('Reloading...', Toast.SHORT);
-            setTimeout(() => {
-                loadSubscriptions();
-            }, 1000);
+            await errHandler(err, () => loadSubscriptions());
         }
     };
 

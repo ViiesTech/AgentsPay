@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { Alert, Dimensions, Image, TouchableOpacity, View } from 'react-native';
@@ -17,7 +18,7 @@ import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import { useIsFocused } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('window');
-const EditProfile = ({ navigation }) => {
+const EditProfile = ({ navigation, route }) => {
     const validator = require('validator');
     const isFocused = useIsFocused();
 
@@ -46,7 +47,7 @@ const EditProfile = ({ navigation }) => {
                 broker_name: res.data.data.broker_name,
             });
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadProfileData());
         }
     };
 
@@ -90,15 +91,17 @@ const EditProfile = ({ navigation }) => {
                     profile_image: JSON.stringify(profile.profile_image),
                 }, {headers: {Authorization: `Bearer ${token}`}});
 
-                Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    gravity: 'center',
-                    title: res.data?.title,
-                    textBody: res.data?.message,
-                    button: 'Okay',
-                    onPressButton: () => navigation.replace('Home'),
-                    onHide: () => navigation.replace('Home'),
-                });
+                if (route.name === 'EditProfile') {
+                    Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        gravity: 'center',
+                        title: res.data?.title,
+                        textBody: res.data?.message,
+                        button: 'Okay',
+                        onPressButton: () => navigation.replace('Home'),
+                        onHide: () => navigation.replace('Home'),
+                    });
+                }
             } catch(err) {
                 await errHandler(err);
             }

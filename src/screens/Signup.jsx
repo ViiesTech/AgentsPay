@@ -12,7 +12,7 @@ import { api, errHandler } from '../API';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 
 const { width, height } = Dimensions.get('window');
-const Signup = ({ navigation }) => {
+const Signup = ({ navigation, route }) => {
     const validator = require('validator');
 
     const [ user, setUser ] = useState({
@@ -89,15 +89,18 @@ const Signup = ({ navigation }) => {
                     phone: user?.phone.toString(),
                     password: user?.password.toString(),
                 });
-                Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    gravity: 'center',
-                    title: res.data?.title,
-                    textBody: res.data?.message,
-                    button: 'Great',
-                    onPressButton: () => navigation.replace('Login', { email: user?.email }),
-                    onHide: () => navigation.replace('Login', { email: user?.email }),
-                });
+
+                if (route.name === 'Signup') {
+                    Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        gravity: 'center',
+                        title: res.data?.title,
+                        textBody: res.data?.message,
+                        button: 'Great',
+                        onPressButton: () => navigation.replace('Login', { email: user?.email }),
+                        onHide: () => navigation.replace('Login', { email: user?.email }),
+                    });
+                }
             } catch(err) {
                 setLoading(false);
                 await errHandler(err);

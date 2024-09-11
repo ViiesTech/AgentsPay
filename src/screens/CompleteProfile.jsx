@@ -1,7 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useEffect, useState } from 'react';
-import { Alert, Dimensions, Image, PermissionsAndroid, Platform, TouchableOpacity, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, Dimensions, Image, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -10,7 +9,6 @@ import { ButtonOutline } from '../components/Button';
 import Input from '../components/Input';
 import { Edit2 } from 'iconsax-react-native';
 import Dropdown from '../components/Dropdown';
-import Geolocation from 'react-native-geolocation-service';
 import { api, errHandler } from '../API';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {launchImageLibrary} from 'react-native-image-picker';
@@ -18,11 +16,10 @@ import { noImage } from '../utils/defaultValues';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 
 const { width, height } = Dimensions.get('window');
-const CompleteProfile = ({ navigation }) => {
+const CompleteProfile = ({ navigation, route }) => {
     const validator = require('validator');
 
     const [loading, setLoading] = useState(false);
-    const [ permissionGranted, setPermissionGranted ] = useState(false);
     const [ profile, setProfile ] = useState({
         profile_image: noImage,
         gender: 'Gender',
@@ -30,55 +27,6 @@ const CompleteProfile = ({ navigation }) => {
         license_number: '',
         broker_name: '',
     });
-
-    useEffect(() => {
-        if (!permissionGranted) {requestLocationPermission();}
-    }, [permissionGranted]);
-
-    const requestLocationPermission = async () => {
-        if (Platform.OS === 'android') {
-            try {
-                const granted = await PermissionsAndroid.request(
-                    PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-                    {
-                        title: 'Location Permission',
-                        message: 'This app needs access to your location',
-                    }
-                );
-                if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                    Geolocation.getCurrentPosition(
-                        async (position) => {
-                            fetch(`https://nominatim.openstreetmap.org/reverse?lat=${position?.coords?.latitude}&lon=${position?.coords?.longitude}&&format=json`)
-                            .then(res => res.json())
-                            .then(res => {
-                                const address = [
-                                    res?.address?.road,
-                                    res?.address?.city,
-                                    res?.address?.state,
-                                ];
-                                setProfile({...profile, location: address.join(', ')});
-                                setPermissionGranted(true);
-                            });
-                        },
-                        (error) => {
-                            console.log(error);
-                        },
-                        {
-                            enableHighAccuracy: true,
-                            forceRequestLocation: true,
-                            forceLocationManager: true,
-                        }
-                    );
-                } else {
-                    console.log('Location permission denied');
-                }
-            } catch (err) {
-                console.log(err);
-            }
-        } else if (Platform.OS === 'ios') {
-            Geolocation.requestAuthorization('whenInUse');
-        }
-    };
 
     const isValid = () => {
         if (validator.isEmpty(profile?.gender) || (profile?.gender !== 'male' && profile?.gender !== 'female')) {
@@ -120,15 +68,17 @@ const CompleteProfile = ({ navigation }) => {
                     profile_image: JSON.stringify(profile.profile_image),
                 }, {headers: {Authorization: `Bearer ${token}`}});
 
-                Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    gravity: 'center',
-                    title: res.data?.title,
-                    textBody: res.data?.message,
-                    button: 'Okay',
-                    onPressButton: () => navigation.replace('Subscriptions'),
-                    onHide: () => navigation.replace('Subscriptions'),
-                });
+                if (route.name === 'CompleteProfile') {
+                    Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        gravity: 'center',
+                        title: res.data?.title,
+                        textBody: res.data?.message,
+                        button: 'Okay',
+                        onPressButton: () => navigation.replace('Subscriptions'),
+                        onHide: () => navigation.replace('Subscriptions'),
+                    });
+                }
             } catch(err) {
                 await errHandler(err);
             }
@@ -206,12 +156,10 @@ const CompleteProfile = ({ navigation }) => {
                     icon={undefined}
                 />
                 <Input
-                    defaultValue={profile?.location}
                     value={profile?.location}
                     labelText="Location"
                     style={{ marginBottom: height * 0.015 }}
                     onChange={(value) => setProfile({...profile, location: value})}
-                    isDefaultFocused
                 />
                 <Input
                     value={profile?.license_number}

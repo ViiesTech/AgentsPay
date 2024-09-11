@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable radix */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
@@ -16,7 +17,7 @@ import Loading from './Loading';
 import { Pera } from '../utils/Text';
 
 const { width, height } = Dimensions.get('window');
-const BookmarkedProperties = ({ navigation }) => {
+const BookmarkedProperties = ({ navigation, route }) => {
     const isFocused = useIsFocused();
 
     const [ keywords, setKeywords ] = useState('');
@@ -34,7 +35,7 @@ const BookmarkedProperties = ({ navigation }) => {
             setUser(res.data?.data[1]);
             setlist(res.data?.data[0]);
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadProperties());
         }
     };
 
@@ -80,7 +81,7 @@ const BookmarkedProperties = ({ navigation }) => {
                                 const isBookmarked = parseInt(val.user_id) === parseInt(User);
                                 return (
                                     <View key={index} style={{flexBasis: '50%'}}>
-                                        <PropertyListing isBookmarked={isBookmarked} onPress={() => navigation.navigate('PropertyDetails', { data: val?.tbl_property })} style={{ marginBottom: height * 0.01 }} data={val?.tbl_property} />
+                                        <PropertyListing route={route} routeShouldBe="BookmarkedProperties" isBookmarked={isBookmarked} onPress={() => navigation.navigate('PropertyDetails', { data: val?.tbl_property })} style={{ marginBottom: height * 0.01 }} data={val?.tbl_property} />
                                     </View>
                                 );
                             })

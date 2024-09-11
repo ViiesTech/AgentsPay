@@ -55,6 +55,7 @@ const EditProperty = ({ navigation, route }) => {
     // }, [property.agent_percentage, property.property_value]);
 
     useEffect(() => {
+        console.log('property.agent_percentage', property.agent_percentage);
         if (property.agent_percentage > 0) {
             setDisableAgentAmount(true);
             setProperty({...property, agent_amount: 0});
@@ -64,6 +65,7 @@ const EditProperty = ({ navigation, route }) => {
     }, [property.agent_percentage]);
 
     useEffect(() => {
+        console.log('property.agent_amount', property.agent_amount);
         if (property.agent_amount > 0) {
             setDisableAgentPercentage(true);
             setProperty({...property, agent_percentage: 0});
@@ -145,7 +147,7 @@ const EditProperty = ({ navigation, route }) => {
 
             }
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadProperty());
         }
     };
 
@@ -158,7 +160,7 @@ const EditProperty = ({ navigation, route }) => {
 
             if (propertyTypes.length === 0) {loadPropertyTypes();}
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadData());
         }
     };
 
@@ -176,7 +178,7 @@ const EditProperty = ({ navigation, route }) => {
             }
             setPropertyTypes(arr);
         } catch(err) {
-            await errHandler(err);
+            await errHandler(err, () => loadPropertyTypes());
         }
     };
 
@@ -350,15 +352,17 @@ const EditProperty = ({ navigation, route }) => {
                     id: route?.params?.id,
                 }, {headers: {Authorization: `Bearer ${token}`}});
 
-                Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    gravity: 'center',
-                    title: res.data?.title,
-                    textBody: res.data?.message,
-                    button: 'Okay',
-                    onPressButton: () => navigation.replace('UploadedProperties'),
-                    onHide: () => navigation.replace('UploadedProperties'),
-                });
+                if (route.name === 'EditProperty') {
+                    Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        gravity: 'center',
+                        title: res.data?.title,
+                        textBody: res.data?.message,
+                        button: 'Okay',
+                        onPressButton: () => navigation.replace('UploadedProperties'),
+                        onHide: () => navigation.replace('UploadedProperties'),
+                    });
+                }
             } catch(err) {
                 await errHandler(err);
             }
@@ -439,7 +443,7 @@ const EditProperty = ({ navigation, route }) => {
                 onChange={(value) => setProperty({...property, property_value: value})}
             />
             <Input
-                defaultValue={property?.agent_percentage}
+                defaultValue={property?.agent_percentage.toString()}
                 readOnly={disableAgentPercentage}
                 keyboardType="numeric"
                 value={property?.agent_percentage}
@@ -448,7 +452,7 @@ const EditProperty = ({ navigation, route }) => {
                 onChange={(value) => setProperty({...property, agent_percentage: value})}
             />
             <Input
-                defaultValue={property?.agent_amount}
+                defaultValue={property?.agent_amount.toString()}
                 readOnly={disableAgentAmount}
                 keyboardType="numeric"
                 value={property?.agent_amount}
