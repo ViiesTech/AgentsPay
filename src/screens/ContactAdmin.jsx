@@ -65,6 +65,7 @@ const ContactAdmin = ({ navigation }) => {
                 }, {headers: {Authorization: `Bearer ${token}`}});
                 Dialog.show({
                     type: ALERT_TYPE.SUCCESS,
+                    gravity: 'center',
                     title: res.data?.title,
                     textBody: res.data?.message,
                     button: 'Great',

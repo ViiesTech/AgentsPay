@@ -113,15 +113,16 @@ const CompleteProfile = ({ navigation }) => {
             try {
                 const token = await AsyncStorage.getItem('token');
                 const res = await api.put('/user/profile/complete', {
-                    gender: profile?.gender,
-                    location: profile?.location,
-                    license_number: profile?.license_number,
-                    broker_name: profile?.broker_name,
+                    gender: profile?.gender.toString(),
+                    location: profile?.location.toString(),
+                    license_number: profile?.license_number.toString(),
+                    broker_name: profile?.broker_name.toString(),
                     profile_image: JSON.stringify(profile.profile_image),
                 }, {headers: {Authorization: `Bearer ${token}`}});
 
                 Dialog.show({
                     type: ALERT_TYPE.SUCCESS,
+                    gravity: 'center',
                     title: res.data?.title,
                     textBody: res.data?.message,
                     button: 'Okay',

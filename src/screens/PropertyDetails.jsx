@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, Pressable, View } from 'react-native';
+import { Dimensions, Image, Linking, Pressable, View } from 'react-native';
 import Background from '../utils/Background';
 import { H6, Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -13,7 +13,6 @@ import { Button } from '../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, baseUrl, errHandler } from '../API';
 import Loading from './Loading';
-import RNFS from 'react-native-fs';
 import Toast from 'react-native-simple-toast';
 import Hr from '../components/Hr';
 
@@ -40,17 +39,8 @@ const PropertyDetails = ({ navigation, route }) => {
     };
 
     const downloadDocument = async (url) => {
-        const downloadUrl = `${baseUrl}/documents/properties/${url}`;
-        const filePath = `${RNFS.DocumentDirectoryPath}/${url}`;
-
-        await RNFS.downloadFile({ fromUrl: downloadUrl, toFile: filePath });
-        const isFile = await RNFS.exists(filePath);
-
-        if (isFile) {
-            Toast.show('Document has been downloaded', Toast.SHORT);
-        }else {
-            Toast.show('Could not download the document!', Toast.SHORT);
-        }
+        Linking.openURL(`${baseUrl}/download?file=${url}`);
+        Toast.show('Document has been downloaded', Toast.SHORT);
     };
     const AgentDetailsModal = () => {
         return (
@@ -113,7 +103,7 @@ const PropertyDetails = ({ navigation, route }) => {
 
     return (
         <>
-            <Background>
+            <Background flex>
                 <View style={{position: 'relative'}}>
                     <Br space={0.03} />
                     <PropertyInfo data={route?.params?.data} isSwiper />

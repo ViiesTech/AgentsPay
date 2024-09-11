@@ -208,7 +208,6 @@ const Filters = ({ navigation }) => {
                 </View>
             </View>
             <Br space={0.05} />
-
             <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Amenities</H6>
             <Br space={0.02} />
             <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 15}}>

@@ -40,7 +40,7 @@ const PropertyCard = ({ data }: { data?: any }) => {
         }
     };
     return (
-        <Pressable onPress={() => navigate('PropertyDetails')} style={{ width: width * 0.85, alignSelf: 'center', position: 'relative' }}>
+        <Pressable onPress={() => navigate('PropertyDetails', { data: data })} style={{ width: width * 0.85, alignSelf: 'center', position: 'relative' }}>
             <Pressable onPress={markBookmark} style={{ borderRadius: 100, backgroundColor: bookmarked ? Color('btnBackground') : Color('gray'), position: 'absolute', zIndex: 1, padding: width * 0.02, top: height * 0.015, right: width * 0.035 }}>
                 <ArchiveAdd size="15" color={Color('textColor')} />
             </Pressable>

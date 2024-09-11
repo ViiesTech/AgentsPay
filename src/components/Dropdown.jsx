@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     dropdownButtonText: {
-        color: Color('textLight'),
+        color: Color('textColor'),
     },
     modalOverlay: {
         flex: 1,

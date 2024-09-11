@@ -3,8 +3,8 @@ import { Alert } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import RNRestart from 'react-native-restart';
 
-export const baseUrl = 'http://192.168.18.190:8080';
-// export const baseUrl = 'https://agentspay.predemo.site';
+// export const baseUrl = 'http://192.168.1.21:8080';
+export const baseUrl = 'https://agentspay.predemo.site';
 export const api = axios.create({
     baseURL: baseUrl,
     timeout: 5000,
@@ -39,8 +39,8 @@ export const errHandler = async (err) => {
         RNRestart.restart();
     }else {
         Alert.alert(
-            'Unknown Error',
-            'Please contact IT Support.'
+            'Request Failed',
+            'Request failed due to internet problem, please try again later.'
         );
     }
 };

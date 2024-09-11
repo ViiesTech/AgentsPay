@@ -1,7 +1,7 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Animated, Dimensions, Image, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideDrawer } from '../redux/Reducers/drawerSlice';
@@ -22,6 +22,7 @@ const Sidebar = ({ user }) => {
     const showDrawer = useSelector(({ drawer }) => drawer?.drawer);
     const dispatch = useDispatch();
     const { navigate } = useNavigation();
+    const [ userData, setUserData ] = useState();
 
     useEffect(() => {
         Animated.timing(slideAnim, {
@@ -31,8 +32,24 @@ const Sidebar = ({ user }) => {
         }).start();
     }, [slideAnim, showDrawer]);
 
-    if (!showDrawer) { return; }
+    useEffect(() => {
+        if (!showDrawer) {
+            if (user) {
+                saveUserData();
+            }else {
+                loadUserData();
+            }
+        }
+    }, [user, showDrawer]);
 
+    const saveUserData = async () => {
+        await AsyncStorage.setItem('user', JSON.stringify(user));
+        setUserData(user);
+    };
+    const loadUserData = async () => {
+        const data = await AsyncStorage.getItem('user');
+        setUserData(JSON.parse(data));
+    };
     const DrawerItem = ({ label, screen }) => {
         const clicked = () => {
             navigate(screen);
@@ -55,6 +72,8 @@ const Sidebar = ({ user }) => {
             </>
         );
     };
+
+    if (!showDrawer) { return; }
 
     return (
         <Animated.View
@@ -84,7 +103,7 @@ const Sidebar = ({ user }) => {
                                 width: width * 0.25,
                                 alignSelf: 'center',
                             }}>
-                                <Image source={{ uri: user ? `${JSON.parse(user?.profile_image).prefix}${JSON.parse(user?.profile_image).uri}` : 'https://random.imagecdn.app/500/150' }} resizeMode="cover" style={{
+                                <Image source={{ uri: userData ? `${JSON.parse(userData?.profile_image).prefix}${JSON.parse(userData?.profile_image).uri}` : 'https://random.imagecdn.app/500/150' }} resizeMode="cover" style={{
                                     width: width * 0.25,
                                     height: width * 0.25,
                                     borderRadius: 500,
@@ -110,7 +129,7 @@ const Sidebar = ({ user }) => {
                             </Pressable>
                         </View>
                         <View style={{ flex: 1 }}>
-                            <H6 style={{ textTransform: 'capitalize' }} numberOfLines={1}>{user?.full_name}</H6>
+                            <H6 style={{ textTransform: 'capitalize' }} numberOfLines={1}>{userData?.full_name}</H6>
                             <Hr style={{ width: width * 0.3 }} />
                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005 }}>
                                 <SmsNotification
@@ -118,7 +137,7 @@ const Sidebar = ({ user }) => {
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{ width: width * 0.35 }} numberOfLines={1}>{user?.email}</Small>
+                                <Small style={{ width: width * 0.35 }} numberOfLines={1}>{userData?.email}</Small>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005 }}>
                                 <Call
@@ -126,7 +145,7 @@ const Sidebar = ({ user }) => {
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{ width: width * 0.35 }} numberOfLines={1}>{user?.phone}</Small>
+                                <Small style={{ width: width * 0.35 }} numberOfLines={1}>{userData?.phone}</Small>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005 }}>
                                 <Personalcard
@@ -134,7 +153,7 @@ const Sidebar = ({ user }) => {
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{ width: width * 0.35 }} numberOfLines={1}>{user?.license_number}</Small>
+                                <Small style={{ width: width * 0.35 }} numberOfLines={1}>{userData?.license_number}</Small>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                                 <Notepad
@@ -142,7 +161,7 @@ const Sidebar = ({ user }) => {
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{ width: width * 0.35 }} numberOfLines={1}>{user?.broker_name}</Small>
+                                <Small style={{ width: width * 0.35 }} numberOfLines={1}>{userData?.broker_name}</Small>
                             </View>
                         </View>
                     </View>

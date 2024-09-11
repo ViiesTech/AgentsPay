@@ -14,7 +14,6 @@ import { api, errHandler } from '../API';
 import DeviceInfo from 'react-native-device-info';
 import { connectFirebase } from '../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Loading from './Loading';
 
 const { width, height } = Dimensions.get('window');
 const Login = ({ navigation, route }) => {
@@ -84,6 +83,11 @@ const Login = ({ navigation, route }) => {
             return false;
         }
 
+        if (!FCM) {
+            Alert.alert('FCM Not Found!', 'Please close and reopen the app!');
+            return false;
+        }
+
         return true;
     };
     const onSignin = async () => {
@@ -121,9 +125,6 @@ const Login = ({ navigation, route }) => {
             setLoading(false);
         }
     };
-    if (!FCM) {
-        return <Loading />;
-    }
     return (
         <Background noAuth>
             <Backbtn onPress={() => navigation.goBack()} />

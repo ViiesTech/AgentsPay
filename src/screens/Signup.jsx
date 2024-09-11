@@ -30,7 +30,7 @@ const Signup = ({ navigation }) => {
             Alert.alert('Full Name is required!', 'Please enter your full name.');
             return false;
         }
-        if (!validator.isAlpha(user?.full_name.replace(' ', '')) || user?.full_name?.length < 3) {
+        if (user?.full_name?.length < 3) {
             Alert.alert('Full Name is not valid!', 'Name can only contains letters, minimum 3 letters are required.');
             return false;
         }
@@ -84,13 +84,14 @@ const Signup = ({ navigation }) => {
             setLoading(true);
             try {
                 const res = await api.post('/auth/signup', {
-                    full_name: user?.full_name,
-                    email: user?.email,
-                    phone: user?.phone,
-                    password: user?.password,
+                    full_name: user?.full_name.toString(),
+                    email: user?.email.toString(),
+                    phone: user?.phone.toString(),
+                    password: user?.password.toString(),
                 });
                 Dialog.show({
                     type: ALERT_TYPE.SUCCESS,
+                    gravity: 'center',
                     title: res.data?.title,
                     textBody: res.data?.message,
                     button: 'Great',

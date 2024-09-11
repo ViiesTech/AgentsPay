@@ -352,6 +352,7 @@ const EditProperty = ({ navigation, route }) => {
 
                 Dialog.show({
                     type: ALERT_TYPE.SUCCESS,
+                    gravity: 'center',
                     title: res.data?.title,
                     textBody: res.data?.message,
                     button: 'Okay',

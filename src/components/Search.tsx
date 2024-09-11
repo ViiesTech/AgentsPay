@@ -56,13 +56,13 @@ const Search = ({noFilters, propertyType, propertyTypes, label, navigation, setK
                         showsHorizontalScrollIndicator={false}
                         data={propertyTypes}
                         horizontal
-                        renderItem={({ item }: { item?: any }) => {
-                            return (
+                        renderItem={({ item, index }: { item?: any, index?: any }) => {
+                            const all = (
                                 <Pressable
-                                    onPress={() => setPropertyType(item?.label.toLowerCase())}
+                                    onPress={() => setPropertyType('')}
                                     style={{
                                         borderColor: Color('textColor'),
-                                        backgroundColor: propertyType === item?.label.toLowerCase() ? Color('textColor') : null,
+                                        backgroundColor: propertyType === '' ? Color('textColor') : null,
                                         borderWidth: 1,
                                         paddingTop: height * 0.01,
                                         paddingBottom: height * 0.007,
@@ -71,8 +71,28 @@ const Search = ({noFilters, propertyType, propertyTypes, label, navigation, setK
                                         borderRadius: 30,
                                     }}
                                 >
-                                    <Small style={{ color: propertyType === item?.label.toLowerCase() ? Color('btnText') : Color('textColor') }}>{item?.label}</Small>
+                                    <Small style={{ color: propertyType === '' ? Color('btnText') : Color('textColor') }}>Any</Small>
                                 </Pressable>
+                            )
+                            return (
+                                <>
+                                    {index === 0 && all}
+                                    <Pressable
+                                        onPress={() => setPropertyType(item?.label.toLowerCase())}
+                                        style={{
+                                            borderColor: Color('textColor'),
+                                            backgroundColor: propertyType === item?.label.toLowerCase() ? Color('textColor') : null,
+                                            borderWidth: 1,
+                                            paddingTop: height * 0.01,
+                                            paddingBottom: height * 0.007,
+                                            paddingHorizontal: width * 0.05,
+                                            marginRight: width * 0.02,
+                                            borderRadius: 30,
+                                        }}
+                                    >
+                                        <Small style={{ color: propertyType === item?.label.toLowerCase() ? Color('btnText') : Color('textColor') }}>{item?.label}</Small>
+                                    </Pressable>
+                                </>
                             );
                         }}
                         keyExtractor={(item, index: any) => index}

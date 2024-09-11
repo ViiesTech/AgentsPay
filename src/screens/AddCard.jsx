@@ -51,7 +51,7 @@ const AddCard = ({ navigation }) => {
             Alert.alert('Name is Required!', 'Please enter your name on card.');
             return false;
         }
-        if (!validator.isAlpha(card?.owner.replace(' ', '')) || card?.owner?.length < 3) {
+        if (card?.owner?.length < 3) {
             Alert.alert('Name is not valid!', 'Name can only contains letters, minimum 3 letters are required.');
             return false;
         }
@@ -83,13 +83,14 @@ const AddCard = ({ navigation }) => {
                     card_type: type,
                     card_service: service,
                     card_number: encryption(card?.card_number, token),
-                    owner_name: encryption(card?.owner, token),
+                    owner_name: encryption(card?.owner.toString(), token),
                     expiry: encryption(card?.expiry, token),
                     cvv: encryption(card?.cvv, token),
                 }, {headers: {Authorization: `Bearer ${token}`}});
 
                 Dialog.show({
                     type: ALERT_TYPE.SUCCESS,
+                    gravity: 'center',
                     title: res.data?.title,
                     textBody: res.data?.message,
                     button: 'Great',

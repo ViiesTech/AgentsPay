@@ -115,7 +115,7 @@ const PaymentCards = ({ navigation }) => {
                                                 )
                                             }
                                         </View>
-                                        <View style={{ marginBottom: height < 650 ? (height * 0.04) : (height * 0.06), marginLeft: width * 0.06 }}>
+                                        <View style={{ marginBottom: height < 650 ? (height * 0.04) : (height * 0.06), marginLeft: width * 0.06, paddingRight: width * 0.06 }}>
                                             <Pera style={{ fontFamily: 'IBMPlexMono-Regular', textTransform: 'capitalize' }}>{card_owner_name}</Pera>
                                             <Pera style={{ fontFamily: 'IBMPlexMono-Regular' }}>{card_number_format.join(' - ')}</Pera>
                                         </View>

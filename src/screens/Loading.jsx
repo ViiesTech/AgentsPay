@@ -1,14 +1,18 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { ActivityIndicator, Platform, View } from 'react-native';
+import { ActivityIndicator, Dimensions, Platform, View } from 'react-native';
 import { Color } from '../utils/Colors';
+import Background from '../utils/Background';
 
+const { height } = Dimensions.get('window');
 const Loading = () => {
     return (
-        <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: Color('background')}}>
-            <ActivityIndicator size={Platform.OS === 'ios' ? 'large' : 70} color={Color('primary')} />
-        </View>
-    )
-}
+        <Background>
+            <View style={{height: height * 0.9, alignItems: 'center', justifyContent: 'center'}}>
+                <ActivityIndicator size={Platform.OS === 'ios' ? 'large' : 70} color={Color('btnBackground')} />
+            </View>
+        </Background>
+    );
+};
 
 export default Loading;

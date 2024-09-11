@@ -94,7 +94,7 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                     },
                     shadowOpacity: 0.41,
                     shadowRadius: 9.11,
-                }} source={{ uri: `${baseUrl}/images/properties/${data?.tbl_property_images[0].url}` }} resizeMode="cover" />
+                }} source={{ uri: `${baseUrl}/images/properties/${data?.tbl_property_images.filter((val: any) => val.cover_image === 1)[0].url}` }} resizeMode="cover" />
             }
             <View style={{ paddingHorizontal: width * 0.03, paddingTop: height * 0.02 }}>
                 <View style={{

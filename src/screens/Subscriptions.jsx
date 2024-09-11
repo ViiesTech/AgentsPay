@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { Dimensions, View } from 'react-native';
@@ -11,6 +12,7 @@ import SubscriptionCard from '../components/SubscriptionCard';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import Loading from './Loading';
+import Toast from 'react-native-simple-toast';
 
 const { width, height } = Dimensions.get('window');
 const Subscriptions = ({ navigation }) => {
@@ -27,6 +29,10 @@ const Subscriptions = ({ navigation }) => {
             setSubscriptions(res.data?.data);
         } catch(err) {
             await errHandler(err);
+            Toast.show('Reloading...', Toast.SHORT);
+            setTimeout(() => {
+                loadSubscriptions();
+            }, 1000);
         }
     };
 
@@ -61,9 +67,9 @@ const Subscriptions = ({ navigation }) => {
                 <Swiper
                     centerContent
                     showsButtons={false}
-                    style={{ height: height < 650 ? (height * 0.4) :  (height * 0.33) }}
-                    showsPagination={true}
+                    style={{ height: height * 0.7 }}
                     activeDotColor={Color('btnBackground')}
+                    showsPagination
                     loop
                 >
                     {

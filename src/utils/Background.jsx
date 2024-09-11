@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
-import { Dimensions, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { Dimensions, FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import KeyboardView from './KeyboardView';
 import Sidebar from '../components/Sidebar';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
@@ -11,7 +11,7 @@ import { useIsFocused } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('screen');
 
-const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, onScrollEnd, noAuth }) => {
+const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, onScrollEnd, noAuth, flex }) => {
     const { navigate } = useNavigation();
     const isFocused = useIsFocused();
 
@@ -57,6 +57,17 @@ const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, o
                                     ?
                                     children
                                     :
+                                    flex
+                                    ?
+                                    <FlatList
+                                        showsVerticalScrollIndicator={false}
+                                        showsHorizontalScrollIndicator={false}
+                                        onScrollEndDrag={scrollEnd}
+                                        data={[children]}
+                                        renderItem={({ item }) => item}
+                                        keyExtractor={(item, index) => index}
+                                    />
+                                    :
                                     <ScrollView
                                         showsVerticalScrollIndicator={false}
                                         onScrollEndDrag={(e) => {
@@ -95,6 +106,7 @@ const styles = StyleSheet.create({
     },
     content: {
         zIndex: 1,
+        flex: 1,
         paddingTop: height * 0.030,
         paddingHorizontal: width * 0.040,
     },
