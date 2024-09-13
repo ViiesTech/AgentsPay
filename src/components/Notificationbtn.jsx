@@ -14,6 +14,7 @@ const Notificationbtn = ({ unSeen, position, onPress, style }) => {
                     height: width * 0.07,
                     position: position || 'absolute',
                     top: 0, left: !position ? width * 0.02 : 0,
+                    zIndex: 1,
                 }}
                 resizeMode="contain"
             />

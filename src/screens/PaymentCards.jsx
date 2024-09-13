@@ -128,7 +128,7 @@ const PaymentCards = ({ navigation }) => {
                 }
                 <Br space={0.08} />
             </Background>
-            <Button onPress={() => navigation.navigate('AddCard')} style={{ width: width * 0.85, alignSelf: 'center', position: 'absolute', bottom: height * 0.05 }}>Add New Card</Button>
+            <Button onPress={() => navigation.navigate('AddCard')} style={{ width: width * 0.85, alignSelf: 'center', position: 'absolute', bottom: height * 0.05, zIndex: 1 }}>Add New Card</Button>
         </>
     );
 };

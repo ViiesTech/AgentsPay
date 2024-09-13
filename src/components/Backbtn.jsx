@@ -12,6 +12,7 @@ const Backbtn = ({ position, style, onPress, dark }) => {
                     height: width * 0.07,
                     position: position || 'absolute',
                     top: 0, left: width * 0.02,
+                    zIndex: 1,
                 }}
                 resizeMode="contain"
             />

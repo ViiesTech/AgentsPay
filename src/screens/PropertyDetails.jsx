@@ -45,7 +45,7 @@ const PropertyDetails = ({ navigation, route }) => {
     };
     const AgentDetailsModal = () => {
         return (
-            <View style={{ paddingVertical: height * 0.03, position: 'absolute', width: width * 0.85, top: height * 0.2, left: width * 0.075, backgroundColor: Color('textColor'), borderRadius: 20, borderWidth: 2, borderColor: Color('btnText') }}>
+            <View style={{ paddingVertical: height * 0.03, position: 'absolute', width: width * 0.85, top: height * 0.2, left: width * 0.075, backgroundColor: Color('textColor'), borderRadius: 20, borderWidth: 2, borderColor: Color('btnText'), zIndex: 1 }}>
                 <Image source={{ uri: `${JSON.parse(details?.tbl_user?.profile_image).prefix}${JSON.parse(details?.tbl_user?.profile_image).uri}` }}
                     style={{
                         width: width * 0.42,

@@ -155,7 +155,7 @@ const AddCard = ({ navigation, route }) => {
                 </View>
                 <Br space={0.08} />
             </Background>
-            <ButtonOutline loading={loading} onPress={addCard} style={{ width: width * 0.85, alignSelf: 'center', position: 'absolute', bottom: height * 0.05 }}>Add Card</ButtonOutline>
+            <ButtonOutline loading={loading} onPress={addCard} style={{ width: width * 0.85, alignSelf: 'center', position: 'absolute', bottom: height * 0.05, zIndex: 1 }}>Add Card</ButtonOutline>
         </>
     );
 };

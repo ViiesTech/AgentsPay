@@ -27,7 +27,7 @@ const Sidebar = ({ user }) => {
     useEffect(() => {
         Animated.timing(slideAnim, {
             toValue: showDrawer ? 0 : -width, // End position (i.e., slide to the right side)
-            duration: 1000, // Duration of the animation in milliseconds
+            duration: 500, // Duration of the animation in milliseconds
             useNativeDriver: true, // Use native driver for better performance
         }).start();
     }, [slideAnim, showDrawer]);

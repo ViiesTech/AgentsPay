@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import Notificationbtn from '../components/Notificationbtn';
 import Br from '../components/Br';
@@ -13,7 +13,7 @@ import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import Loading from './Loading';
-import { Pera, Small, XSmall } from '../utils/Text';
+import { Pera, XSmall } from '../utils/Text';
 
 const { width, height } = Dimensions.get('window');
 const ListedProperties = ({ navigation, route }) => {

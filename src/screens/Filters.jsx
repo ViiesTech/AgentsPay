@@ -134,12 +134,12 @@ const Filters = ({ navigation }) => {
             <Br space={0.02} />
             <View style={{flexDirection: 'row', gap: 10, justifyContent: 'space-between'}}>
                 <View style={{alignItems: 'center'}}>
-                    <TextInput value={min} onChangeText={(value) => setMin(parseFloat(value))} keyboardType="numeric" placeholder="$300" style={{borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05}} />
+                    <TextInput value={min} onChangeText={(value) => setMin(parseFloat(value))} keyboardType="numeric" placeholder="$300" placeholderTextColor={Color('gray')} style={{borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05}} />
                     <Br space={0.01} />
                     <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Min</H6>
                 </View>
                 <View style={{alignItems: 'center'}}>
-                    <TextInput value={max} onChangeText={(value) => setMax(parseFloat(value))} keyboardType="numeric" placeholder="$300" style={{borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05}} />
+                    <TextInput value={max} onChangeText={(value) => setMax(parseFloat(value))} keyboardType="numeric" placeholder="$300" placeholderTextColor={Color('gray')} style={{borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05}} />
                     <Br space={0.01} />
                     <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Max</H6>
                 </View>
@@ -198,12 +198,12 @@ const Filters = ({ navigation }) => {
             <Br space={0.02} />
             <View style={{flexDirection: 'row', gap: 10, justifyContent: 'space-between'}}>
                 <View style={{alignItems: 'center'}}>
-                    <TextInput value={areaMin} onChangeText={(value) => setAreaMin(parseFloat(value))} keyboardType="numeric" placeholder="$300" style={{borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05}} />
+                    <TextInput value={areaMin} onChangeText={(value) => setAreaMin(parseFloat(value))} placeholderTextColor={Color('gray')} keyboardType="numeric" placeholder="$300" style={{borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05}} />
                     <Br space={0.01} />
                     <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Min</H6>
                 </View>
                 <View style={{alignItems: 'center'}}>
-                    <TextInput value={areaMax} onChangeText={(value) => setAreaMax(parseFloat(value))} keyboardType="numeric" placeholder="$300" style={{borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05}} />
+                    <TextInput value={areaMax} onChangeText={(value) => setAreaMax(parseFloat(value))} placeholderTextColor={Color('gray')} keyboardType="numeric" placeholder="$300" style={{borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05}} />
                     <Br space={0.01} />
                     <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Max</H6>
                 </View>
