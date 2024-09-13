@@ -11,10 +11,13 @@ import { Button } from '../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import Loading from './Loading';
+import { useDispatch } from 'react-redux';
+import { showDrawer } from '../redux/Reducers/drawerSlice';
 
 const { width } = Dimensions.get('window');
 const MySubscription = ({ navigation }) => {
     const [ subscription, setSubscription ] = useState();
+    const dispatch = useDispatch()
     useEffect(() => {
         loadSubscription();
     }, []);
@@ -42,7 +45,8 @@ const MySubscription = ({ navigation }) => {
                 width: width * 0.85,
                 alignSelf: 'center',
             }}>
-                <Backbtn position="static" onPress={() => navigation.goBack()} />
+                <Backbtn position="static" onPress={() => {
+                    navigation.goBack()}} />
             </View>
             <Br space={0.05} />
             <H5 theme="light" style={{fontFamily: 'Poppins-Medium', textAlign: 'center'}}>Subscribed Plan</H5>

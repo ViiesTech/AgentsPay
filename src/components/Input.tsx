@@ -19,13 +19,14 @@ interface Props {
     defaultValue?: any,
     secure?: boolean,
     isDefaultFocused?: boolean,
-    keyboardType?: any
+    keyboardType?: any,
+    plceHolderTextClr: string
 }
 const inputHeight = Platform.OS === 'ios' ? 60 : height * 0.05;
 
-const Input = ({secure, defaultValue, onBlur, labelText, style, numberOfLines, onChange, value, isDefaultFocused, keyboardType, ...props}: Props) => {
-    const [ isFocused, setIsFocused ] = useState(false);
-    const [ inputValue, setInputValue ] = useState('');
+const Input = ({ secure, defaultValue, onBlur, labelText, style, numberOfLines, onChange, value, isDefaultFocused, keyboardType, plceHolderTextClr, ...props }: Props) => {
+    const [isFocused, setIsFocused] = useState(false);
+    const [inputValue, setInputValue] = useState('');
     const halfHeight = inputHeight / 20;
     const labelMovement = useRef(new Animated.Value(halfHeight)).current;
 
@@ -53,7 +54,7 @@ const Input = ({secure, defaultValue, onBlur, labelText, style, numberOfLines, o
             }).start();
             setIsFocused(false);
         }
-        if (onBlur) {onBlur();}
+        if (onBlur) { onBlur(); }
     };
 
     const onChangeHandler = (value: any) => {
@@ -72,19 +73,28 @@ const Input = ({secure, defaultValue, onBlur, labelText, style, numberOfLines, o
                 }}>
                     {
                         isFocused
-                        ?
-                        <XSmall style={{
-                            color: Color('textLight'),
-                            fontFamily: 'Poppins-Regular',
-                        }}>{labelText}</XSmall>
-                        :
-                        <Pera style={{
-                            color: Color('textLight'),
-                            fontFamily: 'Poppins-Regular',
-                        }}>{labelText}</Pera>
+                            ?
+                            <XSmall style={{
+                                color: Color('textLight'),
+                                fontFamily: 'Poppins-Regular',
+                            }}>{labelText}</XSmall>
+                            :
+                            <Pera style={{
+                                color: Color('textLight'),
+                                fontFamily: 'Poppins-Regular',
+                            }}>{labelText}</Pera>
                     }
                 </Animated.View>
-                <TextInput {...props} keyboardType={keyboardType} secureTextEntry={secure} onFocus={focused} defaultValue={defaultValue} onBlur={unFocused} value={value} onChangeText={onChangeHandler} multiline={numberOfLines && numberOfLines > 0 ? true : false} numberOfLines={numberOfLines} style={[styles.field, {color: Color('textColor'), textAlignVertical: numberOfLines && numberOfLines > 0 ? 'top' : 'center'}]} />
+                <TextInput
+                    {...props}
+                    keyboardType={keyboardType}
+                    secureTextEntry={secure}
+                    onFocus={focused}
+                    defaultValue={defaultValue}
+                    onBlur={unFocused} value={value} onChangeText={onChangeHandler} multiline={numberOfLines && numberOfLines > 0 ? true : false}
+                    numberOfLines={numberOfLines}
+                    style={[styles.field, { color: Color('textColor'), textAlignVertical: numberOfLines && numberOfLines > 0 ? 'top' : 'center' }]}
+                    placeholderTextColor={plceHolderTextClr} />
             </View>
         </>
     );
@@ -96,7 +106,7 @@ const styles = StyleSheet.create({
     input: {
         borderColor: Color('btnOutline'),
         borderBottomWidth: 1,
-        paddingHorizontal: width * 0.04,
+        // paddingHorizontal: width * 0.04,
         display: 'flex',
         justifyContent: 'space-between',
         flexDirection: 'row',

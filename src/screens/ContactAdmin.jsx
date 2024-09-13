@@ -12,13 +12,16 @@ import { ButtonOutline } from '../components/Button';
 import { api, errHandler } from '../API';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useDispatch } from 'react-redux';
+import { showDrawer } from '../redux/Reducers/drawerSlice';
 
 const { width, height } = Dimensions.get('window');
 const ContactAdmin = ({ navigation, route }) => {
     const validator = require('validator');
+    const dispatch = useDispatch()
 
     const [loading, setLoading] = useState(false);
-    const [ user, setUser ] = useState({
+    const [user, setUser] = useState({
         full_name: '',
         email: '',
         message: '',
@@ -62,7 +65,7 @@ const ContactAdmin = ({ navigation, route }) => {
                     full_name: user?.full_name,
                     email: user?.email,
                     message: user?.message,
-                }, {headers: {Authorization: `Bearer ${token}`}});
+                }, { headers: { Authorization: `Bearer ${token}` } });
 
                 if (route.name === 'ContactAdmin') {
                     Dialog.show({
@@ -75,7 +78,7 @@ const ContactAdmin = ({ navigation, route }) => {
                         onHide: () => navigation.replace('Home'),
                     });
                 }
-            } catch(err) {
+            } catch (err) {
                 setLoading(false);
                 await errHandler(err);
             }
@@ -91,28 +94,30 @@ const ContactAdmin = ({ navigation, route }) => {
                 width: width * 0.85,
                 alignSelf: 'center',
             }}>
-                <Backbtn position="static" onPress={() => navigation.goBack()} />
+                <Backbtn position="static" onPress={() => {
+                    navigation.goBack()
+                }} />
                 <Notificationbtn unSeen position="static" onPress={() => navigation.goBack()} />
             </View>
             <View style={{ width: width * 0.85, alignSelf: 'center' }}>
                 <Br space={0.08} />
-                <H5 theme="light" style={{fontFamily: 'Poppins-Medium', textAlign: 'center'}}>Contact Admin</H5>
-                <Pera theme="transparent" style={{textAlign: 'center'}}>Please enter below details to complete your profile</Pera>
+                <H5 theme="light" style={{ fontFamily: 'Poppins-Medium', textAlign: 'center' }}>Contact Admin</H5>
+                <Pera theme="transparent" style={{ textAlign: 'center' }}>Please enter below details to complete your profile</Pera>
                 <Br space={0.02} />
                 <Input
                     value={user?.full_name}
                     labelText="Name"
                     style={{ marginBottom: height * 0.015 }}
-                    onChange={(value) => setUser({...user, full_name: value})}
+                    onChange={(value) => setUser({ ...user, full_name: value })}
                 />
                 <Input
                     value={user?.email}
                     labelText="Email"
                     style={{ marginBottom: height * 0.015 }}
-                    onChange={(value) => setUser({...user, email: value})}
+                    onChange={(value) => setUser({ ...user, email: value })}
                 />
                 <Br space={0.02} />
-                <Small theme="transparent" style={{paddingLeft: width * 0.02}}>Message</Small>
+                <Small theme="transparent" style={{ paddingLeft: width * 0.02 }}>Message</Small>
                 <Br space={0.01} />
                 <View style={{
                     padding: width * 0.05,
@@ -120,7 +125,7 @@ const ContactAdmin = ({ navigation, route }) => {
                     backgroundColor: Color('btnOutline'),
                     borderRadius: 20,
                 }}>
-                    <TextInput value={user?.message} onChangeText={(value) => setUser({...user, message: value})} multiline placeholder="Enter Your Message Here" numberOfLines={height < 650 ? 8 : 10} style={{textAlignVertical: 'top', color: Color('darkTheme')}} placeholderTextColor={Color('gray')} />
+                    <TextInput value={user?.message} onChangeText={(value) => setUser({ ...user, message: value })} multiline placeholder="Enter Your Message Here" numberOfLines={height < 650 ? 8 : 10} style={{ textAlignVertical: 'top', color: Color('darkTheme') }} placeholderTextColor={Color('gray')} />
                 </View>
                 <Br space={0.05} />
                 <ButtonOutline onPress={onContact} loading={loading}>

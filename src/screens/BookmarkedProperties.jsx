@@ -15,10 +15,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import Loading from './Loading';
 import { Pera } from '../utils/Text';
+import { useDispatch } from 'react-redux';
+import { showDrawer } from '../redux/Reducers/drawerSlice';
 
 const { width, height } = Dimensions.get('window');
 const BookmarkedProperties = ({ navigation, route }) => {
     const isFocused = useIsFocused();
+    const dispatch = useDispatch()
 
     const [ keywords, setKeywords ] = useState('');
     const [ list, setlist ] = useState();
@@ -51,7 +54,8 @@ const BookmarkedProperties = ({ navigation, route }) => {
                     justifyContent: 'space-between',
                     width: width * 0.9,
                 }}>
-                    <Backbtn position="static" onPress={() => navigation.goBack()} />
+                    <Backbtn position="static" onPress={() =>{
+                        navigation.goBack()}} />
                     <Notificationbtn unSeen position="static" style={{marginTop: height * 0.01}} />
                 </View>
                 <Br space={0.03} />

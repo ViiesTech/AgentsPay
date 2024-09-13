@@ -59,6 +59,7 @@ const Search = ({noFilters, propertyType, propertyTypes, label, navigation, setK
                         renderItem={({ item, index }: { item?: any, index?: any }) => {
                             const all = (
                                 <Pressable
+                                key={index}
                                     onPress={() => setPropertyType('')}
                                     style={{
                                         borderColor: Color('textColor'),
@@ -71,7 +72,7 @@ const Search = ({noFilters, propertyType, propertyTypes, label, navigation, setK
                                         borderRadius: 30,
                                     }}
                                 >
-                                    <Small style={{ color: propertyType === '' ? Color('btnText') : Color('textColor') }}>Any</Small>
+                                    <Small style={{ color: propertyType === '' ? Color('btnText') : Color('textColor') }}>All</Small>
                                 </Pressable>
                             )
                             return (
@@ -95,7 +96,6 @@ const Search = ({noFilters, propertyType, propertyTypes, label, navigation, setK
                                 </>
                             );
                         }}
-                        keyExtractor={(item, index: any) => index}
                     />
                 )
             }

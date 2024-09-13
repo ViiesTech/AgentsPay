@@ -7,7 +7,7 @@ import RNRestart from 'react-native-restart';
 export const baseUrl = 'https://agentspay.predemo.site';
 export const api = axios.create({
     baseURL: baseUrl,
-    timeout: 8000,
+    // timeout: 100,
 });
 
 export const errHandler = async (err, callBack) => {

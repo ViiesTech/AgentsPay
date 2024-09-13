@@ -31,13 +31,13 @@ const Dropdown = ({ style, data, selectedValue, onValueChange, defaultStyle, lab
     return (
         <View style={style}>
             <TouchableOpacity style={[styles.dropdownButton, defaulDropdownButton]} onPress={() => setIsVisible(true)}>
-                <View style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Pera style={[styles.dropdownButtonText, defaultDropdownButtonText]}>{selectedValue || 'Select an option'}</Pera>
                 </View>
                 <ArrowDown2
-                    size="20"
-                    color={Color(defaultStyle ? 'primary_100' : 'background')}
-                    variant="Bold"
+                    size="15"
+                    color="#FFF"
+                    style={{ right: 10 }}
                 />
             </TouchableOpacity>
             <Modal visible={isVisible} transparent={true} animationType="slide">
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     dropdownButtonText: {
-        color: Color('textColor'),
+        color:  Color("textLight"),
     },
     modalOverlay: {
         flex: 1,

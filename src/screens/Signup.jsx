@@ -77,10 +77,13 @@ const Signup = ({ navigation, route }) => {
 
         return true;
     };
+
+    console.log('rout=-->',route.name);
+    
     const onSignup = async () => {
         const validation = isValid();
 
-        if (validation) {
+        if (validation) {            
             setLoading(true);
             try {
                 const res = await api.post('/auth/signup', {

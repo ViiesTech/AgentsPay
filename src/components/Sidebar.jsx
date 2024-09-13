@@ -13,7 +13,6 @@ import { useNavigation } from '../utils/NavigationContext';
 import Backbtn from './Backbtn';
 import Hr from './Hr';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 const { width, height } = Dimensions.get('screen');
 
 const Sidebar = ({ user }) => {
@@ -23,6 +22,8 @@ const Sidebar = ({ user }) => {
     const dispatch = useDispatch();
     const { navigate } = useNavigation();
     const [ userData, setUserData ] = useState();
+
+
 
     useEffect(() => {
         Animated.timing(slideAnim, {
@@ -55,6 +56,7 @@ const Sidebar = ({ user }) => {
             navigate(screen);
             dispatch(hideDrawer());
         };
+ 
         return (
             <>
                 <TouchableOpacity onPress={clicked}>
@@ -74,6 +76,8 @@ const Sidebar = ({ user }) => {
     };
 
     if (!showDrawer) { return; }
+
+
 
     return (
         <Animated.View

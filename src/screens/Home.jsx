@@ -75,7 +75,7 @@ const Home = ({ navigation }) => {
                             borderWidth: 2,
                             borderColor: Color('textColor'),
                         }} />
-                        <H6 numberOfLines={1} style={{marginTop: height * 0.01, fontFamily: 'Poppins-SemiBold', textTransform: 'capitalize'}}>Welcome {user.full_name},</H6>
+                        <H6 numberOfLines={1} style={{marginTop: height * 0.01, fontFamily: 'Poppins-SemiBold', textTransform: 'capitalize'}}>{user.full_name?.split(' ')?.shift()}</H6>
                     </TouchableOpacity>
                     <Notificationbtn unSeen position="static" style={{marginTop: height * 0.01}} />
                 </View>
@@ -95,16 +95,24 @@ const Home = ({ navigation }) => {
                     <Pera style={{textAlign: 'center'}}>No Property Available</Pera>
                     :
                     <View>
-                        {
-                            filteredRecentProperties && filteredRecentProperties.length > 1
+                         <View style={{ width: width * 0.85, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', alignSelf: 'center', marginBottom: height * 0.025 }}>
+                            <Pera theme="light">Recent</Pera>
+                            {/* <TouchableOpacity onPress={() => navigation.navigate('ListedProperties')}>
+                                <Pera style={{ color: Color('gray') }}>See All</Pera>
+                            </TouchableOpacity> */}
+                        </View>
+                        {filteredRecentProperties && filteredRecentProperties.length > 1
                             ?
                             <Swiper
                                 centerContent
                                 showsButtons={false}
                                 style={{ height: height * 0.55 }}
-                                showsPagination={true}
+                                showsPagination={true }
                                 activeDotColor={Color('btnBackground')}
-                                loop
+                                loop={true}
+                                autoplay={true}
+                                autoplayTimeout={3}
+                                autoplayDirection={true}
                             >
                                 {
                                     filteredRecentProperties?.map((val, index) => {

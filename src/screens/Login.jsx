@@ -95,7 +95,6 @@ const Login = ({ navigation, route }) => {
 
         if (validation) {
             setLoading(true);
-
             try {
                 const res = await api.post('/auth/signin', {
                     email: user?.email,

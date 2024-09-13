@@ -11,20 +11,20 @@ import { useIsFocused } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get('screen');
 
-const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, onScrollEnd, noAuth, flex }) => {
+const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, onScrollEnd, noAuth, flex,contenStyle }) => {
     const { navigate } = useNavigation();
     const isFocused = useIsFocused();
 
     useEffect(() => {
-        if (!noAuth) {hasToken();}
+        // if (!noAuth) {hasToken();}
     }, [isFocused]);
 
-    const hasToken = async () => {
-        const token = await AsyncStorage.getItem('token');
-        if (!token) {
-            navigate('Login');
-        }
-    };
+    // const hasToken = async () => {
+    //     const token = await AsyncStorage.getItem('token');
+    //     if (!token) {
+    //         navigate('Welcome');
+    //     }
+    // };
 
     const scrollEnd = () => {
         if (detectScrollEnd) {
@@ -47,45 +47,45 @@ const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, o
                 <Sidebar user={data} />
                 <SafeAreaView style={styles.safeAreaView}>
                     {!noBackground && <Image source={require('../assets/images/background.png')} style={styles.backgroundImage} />}
-                    <View style={styles.content}>
+                    <View style={[styles.content,contenStyle]}>
                         <KeyboardView>
                             {
                                 noScroll
-                                ?
-                                children
-                                :
-                                flex
-                                ?
-                                <FlatList
-                                    showsVerticalScrollIndicator={false}
-                                    showsHorizontalScrollIndicator={false}
-                                    onScrollEndDrag={scrollEnd}
-                                    data={[children]}
-                                    renderItem={({ item }) => item}
-                                    keyExtractor={(item, index) => index}
-                                />
-                                :
-                                <View>
-                                    <ScrollView
-                                        keyboardShouldPersistTaps="handled"
-                                        showsVerticalScrollIndicator={false}
-                                        onScrollEndDrag={(e) => {
-                                            const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
-                                            const end = contentOffset.y + layoutMeasurement.height >= contentSize.height - 20;
-                                            if (end) {
-                                                scrollEnd();
-                                            }
-                                        }}
-                                    >
-                                        <TouchableWithoutFeedback onPress={() => {
-                                            Keyboard.dismiss();
-                                        }}>
-                                            <View>
-                                                {children}
-                                            </View>
-                                        </TouchableWithoutFeedback>
-                                    </ScrollView>
-                                </View>
+                                    ?
+                                    children
+                                    :
+                                    flex
+                                        ?
+                                        <FlatList
+                                            showsVerticalScrollIndicator={false}
+                                            showsHorizontalScrollIndicator={false}
+                                            onScrollEndDrag={scrollEnd}
+                                            data={[children]}
+                                            renderItem={({ item }) => item}
+                                            keyExtractor={(item, index) => index}
+                                        />
+                                        :
+                                        <View>
+                                            <ScrollView
+                                                keyboardShouldPersistTaps="handled"
+                                                showsVerticalScrollIndicator={false}
+                                                onScrollEndDrag={(e) => {
+                                                    const { contentOffset, contentSize, layoutMeasurement } = e.nativeEvent;
+                                                    const end = contentOffset.y + layoutMeasurement.height >= contentSize.height - 20;
+                                                    if (end) {
+                                                        scrollEnd();
+                                                    }
+                                                }}
+                                            >
+                                                <TouchableWithoutFeedback onPress={() => {
+                                                    Keyboard.dismiss();
+                                                }}>
+                                                    <View>
+                                                        {children}
+                                                    </View>
+                                                </TouchableWithoutFeedback>
+                                            </ScrollView>
+                                        </View>
                             }
                         </KeyboardView>
                     </View>
@@ -113,6 +113,6 @@ const styles = StyleSheet.create({
         zIndex: 1,
         flex: 1,
         paddingTop: height * 0.030,
-        paddingHorizontal: width * 0.040,
+        paddingHorizontal:  width * 0.040,
     },
 });

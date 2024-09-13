@@ -13,16 +13,18 @@ const Splash = ({ navigation }: { navigation: any }) => {
   const [top, setTop]: any = useState(height * 0.3);
   const [showBtn, setShowBtn] = useState(false);
   const [start, setStart] = useState(false);
+
   useEffect(() => {
     setTimeout(() => {
       setStart(true);
-    }, 2000);
+    }, 500);
   }, []);
+
   useEffect(() => {
     if (start) {
       setTimeout(() => {
         moveUpwards();
-      }, 0.9);
+      }, 0.1);
     }
   }, [top, start]);
   const moveUpwards = () => {
@@ -33,6 +35,8 @@ const Splash = ({ navigation }: { navigation: any }) => {
       setShowBtn(true);
     }
   };
+
+  
 
   return (
     <View>
@@ -59,7 +63,11 @@ const Splash = ({ navigation }: { navigation: any }) => {
                 <Br space={0.03} />
                 <Button textStyle={{ letterSpacing: 3 }} color={Color('navigationBackground')} onPress={() => navigation.navigate('Login')}>LOGIN</Button>
                 <Br space={0.03} />
-                <ButtonOutline textStyle={{ letterSpacing: 3 }} style={{ backgroundColor: null, borderColor: Color('btnBackground'), borderWidth: 2 }} color={Color('btnBackground')} onPress={() => navigation.navigate('Signup')}>SIGN UP</ButtonOutline>
+                <ButtonOutline
+                 textStyle={{ letterSpacing: 3 }} 
+                 style={{ backgroundColor: null, borderColor: Color('btnBackground'), borderWidth: 2 }} 
+                 color={Color('btnBackground')} 
+                 onPress={() => navigation.navigate('Signup')}>SIGN UP</ButtonOutline>
               </View>
             </>
           )

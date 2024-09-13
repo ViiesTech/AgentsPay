@@ -15,12 +15,15 @@ import { api, errHandler } from '../API';
 import Loading from './Loading';
 import Toast from 'react-native-simple-toast';
 import { encryption } from '../utils/defaultValues';
+import { useDispatch } from 'react-redux';
+import { showDrawer } from '../redux/Reducers/drawerSlice';
 
 const { width, height } = Dimensions.get('window');
 const PaymentCards = ({ navigation }) => {
     const isFocused = useIsFocused();
     const [ paymentCards, setPaymentCards ] = useState();
     const [ key, setKey ] = useState('');
+    const dispatch = useDispatch()
 
     useEffect(() => {
         if (isFocused) {loadCards();}
@@ -81,7 +84,8 @@ const PaymentCards = ({ navigation }) => {
                     width: width * 0.85,
                     alignSelf: 'center',
                 }}>
-                    <Backbtn position="static" onPress={() => navigation.goBack()} />
+                    <Backbtn position="static" onPress={() => {
+                        navigation.goBack()}} />
                     <Notificationbtn unSeen position="static" onPress={() => navigation.goBack()} />
                 </View>
                 <Br space={0.05} />

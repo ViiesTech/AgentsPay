@@ -55,10 +55,11 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
             {
                 isSwiper
                 ?
+                <>
                 <Swiper
                     centerContent
                     showsButtons={false}
-                    style={{ height: height * 0.3 }}
+                    style={{ height: height * 0.3, }}
                     showsPagination={false}
                     activeDotColor={Color('btnBackground')}
                     loop
@@ -82,6 +83,7 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                         })
                     }
                 </Swiper>
+                </>
                 :
                 <Image style={{
                     width: width * 0.85,

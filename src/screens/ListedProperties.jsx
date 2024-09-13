@@ -27,7 +27,7 @@ const ListedProperties = ({ navigation, route }) => {
 
     useEffect(() => {
         if (isFocused) {loadProperties();}
-    }, [isFocused, page]);
+    }, [isFocused]);
 
     const loadProperties = async () => {
         try {
@@ -35,19 +35,22 @@ const ListedProperties = ({ navigation, route }) => {
             const res = await api.get('/user/properties/listing?page=' + page, {headers: {Authorization: `Bearer ${token}`}});
             setlist(res.data?.data[0]);
             setMaxPage(res.data?.data[1]);
+            setPage(page + 1);
         } catch(err) {
             await errHandler(err, () => loadProperties());
         }
     };
 
     const loadMore = async () => {
-        try {
-            const token = await AsyncStorage.getItem('token');
-            const res = await api.get('/user/properties/listing?page=' + page, {headers: {Authorization: `Bearer ${token}`}});
-            setlist([...list, ...res.data?.data]);
-            setPage(page + 1);
-        } catch(err) {
-            await errHandler(err, () => loadMore());
+        if (page < maxPage) {
+            try {
+                const token = await AsyncStorage.getItem('token');
+                const res = await api.get('/user/properties/listing?page=' + page, {headers: {Authorization: `Bearer ${token}`}});
+                setlist([...list, ...res.data.data[0]]);
+                setPage(page + 1);
+            } catch(err) {
+                await errHandler(err, () => loadMore());
+            }
         }
     };
 
@@ -78,8 +81,7 @@ const ListedProperties = ({ navigation, route }) => {
                     noFilters
                 />
                 <Br space={0.03} />
-                {
-                    list.length === 0
+                {list.length === 0
                     ?
                     <Pera style={{textAlign: 'center'}}>No Property Listed</Pera>
                     :
@@ -132,14 +134,19 @@ const ListedProperties = ({ navigation, route }) => {
                             }).map((val, index) => {
                                 return (
                                     <View key={index} style={{flexBasis: '50%'}}>
-                                        <PropertyListing route={route} routeShouldBe="ListedProperties" onPress={() => navigation.navigate('PropertyDetails', { data: val })} style={{ marginBottom: height * 0.01 }} data={val} />
+                                        <PropertyListing 
+                                        route={route} 
+                                        routeShouldBe="ListedProperties" 
+                                        onPress={() => navigation.navigate('PropertyDetails', { data: val })}
+                                         style={{ marginBottom: height * 0.01 }} 
+                                         data={val} />
                                     </View>
                                 );
                             })
                         }
                     </View>
                 }
-                <View style={{flexDirection: 'row', width: width * 0.75, flexWrap: 'wrap', alignSelf: 'center', justifyContent: 'center', gap: 10, marginTop: height * 0.02}}>
+                {/* <View style={{flexDirection: 'row', width: width * 0.75, flexWrap: 'wrap', alignSelf: 'center', justifyContent: 'center', gap: 10, marginTop: height * 0.02}}>
                     {
                         Array.from({ length: maxPage }, (_, i) => i).map((_, index) => {
                             return (
@@ -152,7 +159,7 @@ const ListedProperties = ({ navigation, route }) => {
                             );
                         })
                     }
-                </View>
+                </View> */}
                 <Br space={0.1} />
             </Background>
             <NavigationBar />

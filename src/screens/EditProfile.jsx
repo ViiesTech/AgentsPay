@@ -16,6 +16,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import { noImage } from '../utils/defaultValues';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import { useIsFocused } from '@react-navigation/native';
+import Backbtn from '../components/Backbtn';
 
 const { width, height } = Dimensions.get('window');
 const EditProfile = ({ navigation, route }) => {
@@ -128,6 +129,8 @@ const EditProfile = ({ navigation, route }) => {
     return (
         <Background>
             <View style={{width: width * 0.85, alignSelf: 'center'}}>
+            <Backbtn position="static" onPress={() => {
+                        navigation.goBack()}} />
                 <Br space={0.1} />
                 <H5 theme="light" style={{ fontFamily: 'Poppins-SemiBold', textAlign: 'center' }}>Edit Your Profile</H5>
                 <Pera theme="transparent" style={{ textAlign: 'center' }}>Please change the details below to edit your profile</Pera>
@@ -167,7 +170,6 @@ const EditProfile = ({ navigation, route }) => {
                 <Br space={0.02} />
                 <Dropdown
                     data={[
-                        {label: 'Gender', value: ''},
                         {label: 'Male', value: 'male'},
                         {label: 'Female', value: 'female'},
                     ]}
