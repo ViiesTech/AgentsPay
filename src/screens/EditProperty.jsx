@@ -55,7 +55,6 @@ const EditProperty = ({ navigation, route }) => {
     // }, [property.agent_percentage, property.property_value]);
 
     useEffect(() => {
-        console.log('property.agent_percentage', property.agent_percentage);
         if (property.agent_percentage > 0) {
             setDisableAgentAmount(true);
             setProperty({...property, agent_amount: 0});
@@ -65,7 +64,6 @@ const EditProperty = ({ navigation, route }) => {
     }, [property.agent_percentage]);
 
     useEffect(() => {
-        console.log('property.agent_amount', property.agent_amount);
         if (property.agent_amount > 0) {
             setDisableAgentPercentage(true);
             setProperty({...property, agent_percentage: 0});

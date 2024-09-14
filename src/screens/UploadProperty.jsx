@@ -16,13 +16,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
-import { useDispatch } from 'react-redux';
+// import DocumentPicker from 'react-native-document-picker';
 
 const { width, height } = Dimensions.get('window');
 const UploadProperty = ({ navigation, route }) => {
     const isFocused = useIsFocused();
     const validator = require('validator');
-    const dispatch = useDispatch();
     const [disableAgentPercentage, setDisableAgentPercentage] = useState(false);
     const [disableAgentAmount, setDisableAgentAmount] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -83,7 +82,6 @@ const UploadProperty = ({ navigation, route }) => {
             const res = await api.get('/user/states&cities', { headers: { Authorization: `Bearer ${token}` } });
             setCities(res.data.data[0]);
             setStates(res.data.data[1]);
-
             loadPropertyTypes();
         } catch (err) {
             await errHandler(err, () => loadData());
@@ -129,6 +127,26 @@ const UploadProperty = ({ navigation, route }) => {
             setImages(imgs);
         }
     };
+
+    // const selectFile = async () => {
+    //     try {
+    //         let docs = documents.slice();
+    //         const result = await DocumentPicker.pick({
+    //             type: [DocumentPicker.types.pdf, DocumentPicker.types.docx, DocumentPicker.types.images],
+    //             allowMultiSelection: true,
+    //         });
+    //         for (let x = 0; x < result.length; x++) {
+    //             docs.push(result[x]);
+    //         }
+
+    //         if (docs.length > 6) {
+    //             docs.splice(0, docs.length - 6);
+    //         }
+    //         setDocuments(docs);
+    //     } catch (err) {
+    //         console.log(null);
+    //     }
+    // };
 
     const uploadDocuments = async () => {
         let docs = documents.slice();
@@ -375,8 +393,8 @@ const UploadProperty = ({ navigation, route }) => {
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
                 onChange={(value) => setProperty({ ...property, agent_percentage: value })}
             />
-            <View style={{ justifyContent: "center", alignItems: 'center', top: '0.5%' }}>
-                <Text style={{ fontSize: 14, color: Color("textColor"), fontWeight: '800' }}>OR</Text>
+            <View style={{ justifyContent: 'center', alignItems: 'center', top: '0.5%' }}>
+                <Text style={{ fontSize: 14, color: Color('textColor'), fontWeight: '800' }}>OR</Text>
             </View>
             <Input
                 readOnly={disableAgentAmount}
@@ -440,13 +458,12 @@ const UploadProperty = ({ navigation, route }) => {
             <Input
                 value={tag}
                 labelText="Amenities"
-                placeholder={tags.length > 0 ? "You can add more" : ''}
-                plceHolderTextClr='rgba(255, 255, 255, 0.4)'
-                style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015, fontSize: 12, }}
+                placeholder={tags.length > 0 ? 'You can add more' : ''}
+                plceHolderTextClr="rgba(255, 255, 255, 0.4)"
+                style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015, fontSize: 12 }}
                 onChange={(value) => setTag(value)}
                 onBlur={addTag}
             />
-            {console.log('=p=p=>', tag)}
             <View style={{ width: width * 0.85, alignSelf: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
                 {
                     tags.map((label, index) => {

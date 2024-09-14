@@ -17,14 +17,14 @@ const Splash = ({ navigation }: { navigation: any }) => {
   useEffect(() => {
     setTimeout(() => {
       setStart(true);
-    }, 500);
+    }, 1500);
   }, []);
 
   useEffect(() => {
     if (start) {
       setTimeout(() => {
         moveUpwards();
-      }, 0.1);
+      }, 0.99);
     }
   }, [top, start]);
   const moveUpwards = () => {
@@ -36,7 +36,7 @@ const Splash = ({ navigation }: { navigation: any }) => {
     }
   };
 
-  
+
 
   return (
     <View>
@@ -64,9 +64,9 @@ const Splash = ({ navigation }: { navigation: any }) => {
                 <Button textStyle={{ letterSpacing: 3 }} color={Color('navigationBackground')} onPress={() => navigation.navigate('Login')}>LOGIN</Button>
                 <Br space={0.03} />
                 <ButtonOutline
-                 textStyle={{ letterSpacing: 3 }} 
-                 style={{ backgroundColor: null, borderColor: Color('btnBackground'), borderWidth: 2 }} 
-                 color={Color('btnBackground')} 
+                 textStyle={{ letterSpacing: 3 }}
+                 style={{ backgroundColor: null, borderColor: Color('btnBackground'), borderWidth: 2 }}
+                 color={Color('btnBackground')}
                  onPress={() => navigation.navigate('Signup')}>SIGN UP</ButtonOutline>
               </View>
             </>
