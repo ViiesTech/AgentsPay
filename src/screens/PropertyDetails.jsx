@@ -113,7 +113,9 @@ const PropertyDetails = ({ navigation, route }) => {
                     style={{ position: 'relative' }}
                 >
                     <Br space={0.03} />
+                    <View>
                     <PropertyInfo data={route?.params?.data} isSwiper />
+                    </View>
                     <Br space={0.07} />
                     <View
                         style={{
@@ -141,14 +143,16 @@ const PropertyDetails = ({ navigation, route }) => {
                         Amenities
                     </H6>
                     <Br space={0.01} />
-                    <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-around' }}>
+                    <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-around',flexWrap:'wrap' }}>
                         {
                             details?.tags.split(', ').map((tag, index) => {
                                 return (
-                                    <React.Fragment key={index}>
-                                        <Pera style={{ textTransform: 'capitalize' }}>{tag}</Pera>
-                                        {(index + 1) < details?.tags.split(', ')?.length && <Pera theme="light">|</Pera>}
-                                    </React.Fragment>
+                                  
+                                        <React.Fragment key={index}>
+                                            <Pera style={{ textTransform: 'capitalize' }}>{tag}</Pera>
+                                            {(index + 1) < details?.tags.split(', ')?.length && <Pera theme="light">|</Pera>}
+                                        </React.Fragment>
+                                  
                                 );
                             })
                         }

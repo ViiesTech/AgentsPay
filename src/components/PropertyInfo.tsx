@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, Pressable, View } from 'react-native';
+import { Dimensions, Image, Pressable, ScrollView, View } from 'react-native';
 import { Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
 import Br from './Br';
@@ -11,12 +11,13 @@ import { api, baseUrl, errHandler } from '../API';
 import Swiper from 'react-native-swiper';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import SwiperFlatList from 'react-native-swiper-flatlist';
 
 const { height, width } = Dimensions.get('window');
 
 const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: boolean, isSwiper?: boolean }) => {
     const { navigate } = useNavigation();
-    const [ bookmarked, setBookmarked ]: any = useState(null);
+    const [bookmarked, setBookmarked]: any = useState(null);
 
     useEffect(() => {
         if (data) {
@@ -25,7 +26,7 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
     }, [data]);
 
     const onPress = () => {
-        if (clickable) {navigate('PropertyDetails', { data: data });}
+        if (clickable) { navigate('PropertyDetails', { data: data }); }
     };
     const markBookmark = async () => {
         try {
@@ -33,14 +34,14 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
             const res = await api.post('/user/properties/bookmark', {
                 id: data?.id,
                 isActive: bookmarked ? 1 : 0,
-            }, {headers: {Authorization: `Bearer ${token}`}});
+            }, { headers: { Authorization: `Bearer ${token}` } });
             Toast.show(res.data?.title, Toast.SHORT);
             if (bookmarked) {
                 setBookmarked(null);
-            }else {
+            } else {
                 setBookmarked(1);
             }
-        } catch(err) {
+        } catch (err) {
             await errHandler(err);
         }
     };
@@ -52,38 +53,43 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
             <Pressable onPress={markBookmark} style={{ borderRadius: 100, backgroundColor: bookmarked ? Color('btnBackground') : Color('gray'), position: 'absolute', zIndex: 1, padding: width * 0.02, top: height * 0.015, right: width * 0.035 }}>
                 <ArchiveAdd size="20" color={Color('textColor')} />
             </Pressable>
-            {
-                isSwiper
+
+            {isSwiper
                 ?
-                <>
                 <Swiper
                     centerContent
                     showsButtons={false}
-                    style={{ height: height * 0.3, }}
+                    style={{ height: height * 0.3 }}
                     showsPagination={false}
                     activeDotColor={Color('btnBackground')}
-                    loop
+                    loop={true}
+
                 >
                     {
                         data?.tbl_property_images?.map((val: any, index: any) => {
                             return (
-                                <Image style={{
-                                    width: width * 0.85,
-                                    height: height * 0.3,
-                                    borderRadius: 20,
-                                    shadowColor: Color('btnText'),
-                                    shadowOffset: {
-                                        width: 0,
-                                        height: 7,
-                                    },
-                                    shadowOpacity: 0.41,
-                                    shadowRadius: 9.11,
-                                }} key={index} source={{ uri: `${baseUrl}/images/properties/${val.url}` }} resizeMode="cover" />
+                                <View>
+                                    <Image style={{
+                                        width: width * 0.85,
+                                        height: height * 0.3,
+                                        borderRadius: 20,
+                                        shadowColor: Color('btnText'),
+                                        shadowOffset: {
+                                            width: 0,
+                                            height: 7,
+                                        },
+                                        shadowOpacity: 0.41,
+                                        shadowRadius: 9.11,
+
+                                    }}
+                                        key={index}
+                                        source={{ uri: `${baseUrl}/images/properties/${val.url}` }} resizeMode="cover" />
+
+                                </View>
                             );
                         })
                     }
                 </Swiper>
-                </>
                 :
                 <Image style={{
                     width: width * 0.85,
