@@ -83,7 +83,6 @@ const UploadProperty = ({ navigation, route }) => {
             const res = await api.get('/user/states&cities', { headers: { Authorization: `Bearer ${token}` } });
             setCities(res.data.data[0]);
             setStates(res.data.data[1]);
-
             loadPropertyTypes();
         } catch (err) {
             await errHandler(err, () => loadData());
