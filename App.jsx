@@ -2,7 +2,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationProvider, useNavigation } from './src/utils/NavigationContext';
-import { lazy, Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 
 import { Provider } from 'react-redux';
 import { store } from './src/redux/Store';
@@ -76,16 +76,6 @@ function App() {
   const Sus = ({component}) => {
     return <Suspense fallback={<Loading />}>{component}</Suspense>;
   };
-  
-  // useEffect(() => {
-  //   if (Platform.OS === 'android') {
-  //     forbidAndroidShare(); // This function blocks the Screen share/Recording and taking screenshot for android devices.
-  //     // allowAndroidShare(); // This function allows to provide back the Screen share/Recording and screenshot functionality for android devices
-  //   }
-    
-  // }, []);
-
-  
   return (
     <>
       <Provider store={store} >
@@ -112,14 +102,6 @@ function App() {
             </Stack.Screen>
             <Stack.Screen name="ResetPassword">
               {props => <Sus component={<ResetPassword {...props} />} />}
-            </Stack.Screen>
-
-            {/* ACT & RIGHTS */}
-            <Stack.Screen name="PrivacyPolicy">
-              {props => <Sus component={<PrivacyPolicy {...props} />} />}
-            </Stack.Screen>
-            <Stack.Screen name="UserTerms">
-              {props => <Sus component={<UserTerms {...props} />} />}
             </Stack.Screen>
 
             {/* AFTER AUTHENTICATION */}
@@ -179,6 +161,14 @@ function App() {
             </Stack.Screen>
             <Stack.Screen name="EditProperty">
               {props => <Sus component={<EditProperty {...props} />} />}
+            </Stack.Screen>
+
+            {/* ACT & RIGHTS */}
+            <Stack.Screen name="PrivacyPolicy">
+              {props => <Sus component={<PrivacyPolicy {...props} />} />}
+            </Stack.Screen>
+            <Stack.Screen name="UserTerms">
+              {props => <Sus component={<UserTerms {...props} />} />}
             </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>

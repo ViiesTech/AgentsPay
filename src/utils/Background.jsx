@@ -1,30 +1,56 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from 'react';
-import { Dimensions, FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { BackHandler, Dimensions, FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import KeyboardView from './KeyboardView';
 import Sidebar from '../components/Sidebar';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
 import { Color } from './Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from './NavigationContext';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useRoute } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { hideDrawer, showDrawer } from '../redux/Reducers/drawerSlice';
 
 const { width, height } = Dimensions.get('screen');
 
 const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, onScrollEnd, noAuth, flex,contenStyle }) => {
-    const { navigate } = useNavigation();
     const isFocused = useIsFocused();
+    const route = useRoute();
+    const navigation = useNavigation();
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        // if (!noAuth) {hasToken();}
+        const backAction = () => {
+            const routes = navigation.navigationRef.current.getState().routes;
+            const name = routes[routes.length - 2].name;
+            const backToSidebar = route?.params?.backToSidebar;
+            navigation.navigate(name);
+            if (backToSidebar) {
+                dispatch(showDrawer());
+            }else {
+                dispatch(hideDrawer());
+            }
+            return true;
+        };
+
+        const backHandler = BackHandler.addEventListener(
+            'hardwareBackPress',
+            backAction,
+        );
+
+        return () => backHandler.remove();
+    }, []);
+
+    useEffect(() => {
+        if (!noAuth) {hasToken();}
     }, [isFocused]);
 
-    // const hasToken = async () => {
-    //     const token = await AsyncStorage.getItem('token');
-    //     if (!token) {
-    //         navigate('Welcome');
-    //     }
-    // };
+    const hasToken = async () => {
+        const token = await AsyncStorage.getItem('token');
+        if (!token) {
+            navigation.navigate('Splash');
+        }
+    };
 
     const scrollEnd = () => {
         if (detectScrollEnd) {
@@ -43,7 +69,9 @@ const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, o
                     danger: Color('danger'),
                     warning: Color('warning'),
                 },
-            ]}>
+            ]}
+            toastConfig={{ titleStyle: { textAlign: 'center' }, textBodyStyle: { textAlign: 'center' } }}
+            >
                 <Sidebar user={data} />
                 <SafeAreaView style={styles.safeAreaView}>
                     {!noBackground && <Image source={require('../assets/images/background.png')} style={styles.backgroundImage} />}
@@ -100,6 +128,7 @@ export default Background;
 const styles = StyleSheet.create({
     safeAreaView: {
         flex: 1,
+        backgroundColor: Color('navigationBackground'),
         paddingTop: Platform.OS === 'android' ? 25 : 0,
     },
     backgroundImage: {

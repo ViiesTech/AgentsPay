@@ -6,8 +6,6 @@ export function NavigationProvider({ children }) {
     const navigationRef = useRef(null);
 
     const navigate = (name, params) => {
-        console.log('NAME ==>',name,params);
-        
         if (navigationRef.current) {
             navigationRef.current.navigate(name, params);
         }

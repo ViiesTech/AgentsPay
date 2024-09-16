@@ -28,13 +28,11 @@ const Login = ({ navigation, route }) => {
     });
 
     useEffect(() => {
-        if (route?.params?.email) {setUser({...user, email: route?.params?.email.toLowerCase()});}
+        if (route?.params?.email.length > 0) {setUser({...user, email: route?.params?.email.toLowerCase()});}
     }, [route?.params?.email]);
     useEffect(() => {
-        getFCM();
-    }, []);
-    useEffect(() => {
         getDeviceInfo();
+        getFCM();
     }, []);
 
     async function getFCM() {

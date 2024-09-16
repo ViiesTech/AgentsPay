@@ -124,6 +124,7 @@ const AddCard = ({ navigation, route }) => {
                 <Br space={0.07} />
                 <View style={{ width: width * 0.85, alignSelf: 'center' }}>
                     <Input
+                        keyboardType="numeric"
                         value={card?.card_number}
                         labelText="Card Number"
                         style={{ marginBottom: height * 0.015 }}
@@ -138,6 +139,7 @@ const AddCard = ({ navigation, route }) => {
 
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                         <Input
+                            keyboardType="numeric"
                             value={card?.expiry}
                             labelText="Expiry"
                             style={{ marginBottom: height * 0.015, width: width * 0.35 }}
