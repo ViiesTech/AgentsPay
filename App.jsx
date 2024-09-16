@@ -9,6 +9,8 @@ import { store } from './src/redux/Store';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'react-native';
 
+
+
 import Splash from './src/screens/Splash';
 import Loading from './src/screens/Loading';
 // const Welcome = lazy(() => import('./src/screens/Welcome'));
@@ -74,10 +76,9 @@ function App() {
   const Sus = ({component}) => {
     return <Suspense fallback={<Loading />}>{component}</Suspense>;
   };
-
   return (
     <>
-      <Provider store={store}>
+      <Provider store={store} >
         <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
         <NavigationContainer ref={navigationRef}>
           <Stack.Navigator screenOptions={{ headerShown: false }}>

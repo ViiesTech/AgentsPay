@@ -17,6 +17,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
+import { useDispatch } from 'react-redux';
+import { allCity } from '../utils/defaultValues';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 
@@ -33,6 +35,7 @@ const UploadProperty = ({ navigation, route }) => {
     const [images, setImages] = useState([]);
     const [cities, setCities] = useState([]);
     const [states, setStates] = useState([]);
+    const [searchCity, SetSearchCity] = useState({})
     const [propertyTypes, setPropertyTypes] = useState([]);
     const [property, setProperty] = useState({
         title: '',
@@ -78,17 +81,59 @@ const UploadProperty = ({ navigation, route }) => {
         if (isFocused) { loadData(); }
     }, [isFocused]);
 
+    useEffect(() => {
+        const states = [];
+        const searchCity = [];
+        const result = Object.keys(allCity).map((key) => {
+            searchCity.push({
+                serachState: key,
+                allCity: allCity[key]
+            })
+            states.push({
+                label: key,
+                value: key,
+            });
+        });
+        setStates(states);
+        SetSearchCity(searchCity);
+    }, [allCity])
+
     const loadData = async () => {
-        try {
-            const token = await AsyncStorage.getItem('token');
-            const res = await api.get('/user/states&cities', { headers: { Authorization: `Bearer ${token}` } });
-            setCities(res.data.data[0]);
-            setStates(res.data.data[1]);
-            loadPropertyTypes();
-        } catch (err) {
-            await errHandler(err, () => loadData());
-        }
+        // try {
+        //     const token = await AsyncStorage.getItem('token');
+        //     const res = await api.get('/user/states&cities', { headers: { Authorization: `Bearer ${token}` } });
+        //     setCities(res.data.data[0]);
+        //     setStates(res.data.data[1]);
+        // } catch (err) {
+        //     await errHandler(err, () => loadData());
+        // }
+        loadPropertyTypes();
     };
+
+
+    // const onLoadState = (key) => {
+    //     console.log('key',key);
+    //     // const aquaticCreatures =  searchCity.filter(function(creature) {
+    //     //     return creature.serachState == key;
+    //     //   });
+
+    //     //   console.log(aquaticCreatures);
+    //     //   console.log('filter ARR',aquaticCreatures);
+
+    //     // const cities = [];
+    //     // for (let x = 0; x < allCity[key]?.length; x++) {
+    //     //     cities.push({
+    //     //         label: allCity[key][x],
+    //     //         value: allCity[key][x],
+    //     //         id:x
+
+    //     //     });
+    //     // }
+    //     // console.log('=cities=>',cities);
+
+    // }
+
+
 
     const loadPropertyTypes = async () => {
         try {
@@ -291,6 +336,9 @@ const UploadProperty = ({ navigation, route }) => {
         }
     };
 
+    console.log('s', cities.length);
+
+
     return (
         <Background>
             <View style={{
@@ -318,21 +366,37 @@ const UploadProperty = ({ navigation, route }) => {
             <Dropdown
                 data={states}
                 selectedValue={property.state}
-                onValueChange={(value) => setProperty({ ...property, state: value })}
+                onValueChange={(value) => {
+                    setProperty({ ...property, state: value })
+                    const selectedCities = searchCity.filter(function (creature) {
+                        return creature.serachState == value;
+                    });
+                    let filterCities = []
+                    selectedCities[0]?.allCity?.map((item) => {
+                        filterCities.push({
+                            label: item,
+                            value: item
+                        })
+                        setCities(filterCities)
+                    })
+                }}
                 style={{ width: width * 0.86, alignSelf: 'center' }}
                 defaultStyle={undefined}
                 label={undefined}
                 icon={undefined}
             />
-            <Dropdown
-                data={cities}
-                selectedValue={property.city}
-                onValueChange={(value) => setProperty({ ...property, city: value })}
-                style={{ width: width * 0.86, alignSelf: 'center' }}
-                defaultStyle={undefined}
-                label={undefined}
-                icon={undefined}
-            />
+            {cities.length != 0 &&
+                <Dropdown
+                    data={cities}
+                    selectedValue={property.city}
+                    onValueChange={(value) => { setProperty({ ...property, city: value }) }}
+                    style={{ width: width * 0.86, alignSelf: 'center' }}
+                    defaultStyle={undefined}
+                    label={undefined}
+                    icon={undefined}
+                />
+            }
+
 
             <Input
                 value={property?.address}
