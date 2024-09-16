@@ -61,7 +61,7 @@ const Splash = ({ navigation }: { navigation: any }) => {
             <>
               <View>
                 <Br space={0.03} />
-                <Button textStyle={{ letterSpacing: 3 }} color={Color('navigationBackground')} onPress={() => navigation.navigate('Login')}>LOGIN</Button>
+                <Button textStyle={{ letterSpacing: 3 }} color={Color('navigationBackground')} onPress={() => navigation.navigate('Home')}>LOGIN</Button>
                 <Br space={0.03} />
                 <ButtonOutline
                  textStyle={{ letterSpacing: 3 }}

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { BackHandler, Dimensions, FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import KeyboardView from './KeyboardView';
 import Sidebar from '../components/Sidebar';
@@ -8,16 +8,17 @@ import { Color } from './Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from './NavigationContext';
 import { useIsFocused, useRoute } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { hideDrawer, showDrawer } from '../redux/Reducers/drawerSlice';
 
 const { width, height } = Dimensions.get('screen');
 
-const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, onScrollEnd, noAuth, flex,contenStyle }) => {
+const Background = ({ home, children, noBackground, data, noScroll, detectScrollEnd, onScrollEnd, noAuth, flex,contenStyle }) => {
     const isFocused = useIsFocused();
     const route = useRoute();
     const navigation = useNavigation();
     const dispatch = useDispatch();
+    const isOpen = useSelector(({ drawer }) => drawer?.drawer);
 
     useEffect(() => {
         const backAction = () => {
@@ -72,7 +73,11 @@ const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, o
             ]}
             toastConfig={{ titleStyle: { textAlign: 'center' }, textBodyStyle: { textAlign: 'center' } }}
             >
-                <Sidebar user={data} />
+                {
+                    useMemo(() => {
+                        return <Sidebar user={data} isOpen={isOpen} />;
+                    }, [home, isOpen])
+                }
                 <SafeAreaView style={styles.safeAreaView}>
                     {!noBackground && <Image source={require('../assets/images/background.png')} style={styles.backgroundImage} />}
                     <View style={[styles.content,contenStyle]}>

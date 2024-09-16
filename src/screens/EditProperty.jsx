@@ -19,6 +19,7 @@ import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import { allCity } from '../utils/defaultValues';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
+import Loading from './Loading';
 
 const { width, height } = Dimensions.get('window');
 const EditProperty = ({ navigation, route }) => {
@@ -34,7 +35,7 @@ const EditProperty = ({ navigation, route }) => {
     const [images, setImages] = useState([]);
     const [cities, setCities] = useState([]);
     const [states, setStates] = useState([]);
-    const [searchCity, SetSearchCity] = useState({})
+    const [searchCity, SetSearchCity] = useState({});
     const [propertyTypes, setPropertyTypes] = useState([]);
     const [property, setProperty] = useState({
         title: '',
@@ -107,7 +108,7 @@ const EditProperty = ({ navigation, route }) => {
                 property_description: data?.property_description,
                 property_type: data?.tbl_property_type?.label,
             });
-            if (cities.length === 0 || states.length === 0) { loadData(); }
+            if (cities.length === 0 || states.length === 0) { loadPropertyTypes(); }
 
             const imgsArr = [];
             for (let x = 0; x < data?.tbl_property_images.length; x++) {
@@ -147,38 +148,21 @@ const EditProperty = ({ navigation, route }) => {
     };
 
     useEffect(() => {
-        const states = [];
-        const searchCity = [];
-        const result = Object.keys(allCity).map((key) => {
-            searchCity.push({
+        const statesDropdown = [];
+        const searchCityDropdown = [];
+        Object.keys(allCity).map((key) => {
+            searchCityDropdown.push({
                 serachState: key,
-                allCity: allCity[key]
-            })
-            states.push({
+                allCity: allCity[key],
+            });
+            statesDropdown.push({
                 label: key,
                 value: key,
             });
         });
-        setStates(states);
-        SetSearchCity(searchCity);
-    }, [allCity])
-
-    const loadData = async () => {
-        // try {
-        //     const token = await AsyncStorage.getItem('token');
-        //     const res = await api.get('/user/states&cities', {headers: {Authorization: `Bearer ${token}`}});
-        //     setCities(res.data.data[0]);
-        //     setStates(res.data.data[1]);
-
-        //     if (propertyTypes.length === 0) {
-        //     }
-        // loadPropertyTypes();
-        // } catch(err) {
-        //     await errHandler(err, () => 
-            // loadData()
-    // );
-        // }
-    };
+        setStates(statesDropdown);
+        SetSearchCity(searchCityDropdown);
+    }, [allCity]);
 
     const loadPropertyTypes = async () => {
         try {
@@ -382,6 +366,10 @@ const EditProperty = ({ navigation, route }) => {
         }
     };
 
+    if (property?.title?.length === 0) {
+        return <Loading />;
+    }
+
     return (
         <Background>
             <View style={{
@@ -408,29 +396,29 @@ const EditProperty = ({ navigation, route }) => {
                data={states}
                selectedValue={property.state}
                onValueChange={(value) => {
-                   setProperty({ ...property, state: value })
+                   setProperty({ ...property, state: value });
                    const selectedCities = searchCity.filter(function (creature) {
-                       return creature.serachState == value;
+                       return creature.serachState === value;
                    });
-                   let filterCities = []
+                   let filterCities = [];
                    selectedCities[0]?.allCity?.map((item) => {
                        filterCities.push({
                            label: item,
-                           value: item
-                       })
-                       setCities(filterCities)
-                   })
+                           value: item,
+                       });
+                       setCities(filterCities);
+                   });
                }}
                style={{ width: width * 0.86, alignSelf: 'center' }}
                defaultStyle={undefined}
                label={undefined}
                icon={undefined}
             />
-            {cities.length != 0 ?
+            {cities.length !== 0 ?
                 <Dropdown
                     data={cities}
                     selectedValue={property.city}
-                    onValueChange={(value) => { setProperty({ ...property, city: value }) }}
+                    onValueChange={(value) => { setProperty({ ...property, city: value }); }}
                     style={{ width: width * 0.86, alignSelf: 'center' }}
                     defaultStyle={undefined}
                     label={undefined}
