@@ -9,10 +9,10 @@ import { Color } from '../utils/Colors';
 import { Call, Card, Cards, Edit2, Home, MessageNotif, Notepad, Personalcard, Profile, Profile2User, ProfileTick, Reserve, SmsNotification } from 'iconsax-react-native';
 import { H6, Pera, Small } from '../utils/Text';
 import Br from './Br';
-import { useNavigation } from '../utils/NavigationContext';
 import Backbtn from './Backbtn';
 import Hr from './Hr';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 const { width, height } = Dimensions.get('screen');
 
 const Sidebar = ({ user }) => {
@@ -20,16 +20,14 @@ const Sidebar = ({ user }) => {
     const slideAnim = new Animated.Value(-width);
     const showDrawer = useSelector(({ drawer }) => drawer?.drawer);
     const dispatch = useDispatch();
-    const { navigate } = useNavigation();
+    const navigation = useNavigation();
     const [ userData, setUserData ] = useState();
-
-
 
     useEffect(() => {
         Animated.timing(slideAnim, {
-            toValue: showDrawer ? 0 : -width, // End position (i.e., slide to the right side)
-            duration: 500, // Duration of the animation in milliseconds
-            useNativeDriver: true, // Use native driver for better performance
+            toValue: showDrawer ? 0 : -width,
+            duration: 500,
+            useNativeDriver: true,
         }).start();
     }, [slideAnim, showDrawer]);
 
@@ -53,10 +51,10 @@ const Sidebar = ({ user }) => {
     };
     const DrawerItem = ({ label, screen }) => {
         const clicked = () => {
-            navigate(screen);
+            navigation.navigate(screen, { backToSidebar: true });
             dispatch(hideDrawer());
         };
- 
+
         return (
             <>
                 <TouchableOpacity onPress={clicked}>
@@ -75,9 +73,7 @@ const Sidebar = ({ user }) => {
         );
     };
 
-    if (!showDrawer) { return; }
-
-
+    if (!showDrawer || !userData) { return; }
 
     return (
         <Animated.View
@@ -100,7 +96,7 @@ const Sidebar = ({ user }) => {
                         <View style={{ flex: 1 }}>
                             <Pressable onPress={() => {
                                 dispatch(hideDrawer());
-                                navigate('EditProfile');
+                                navigation.navigate('EditProfile');
                             }} style={{
                                 alignItems: 'center',
                                 position: 'relative',
@@ -214,7 +210,7 @@ const Sidebar = ({ user }) => {
                     <TouchableOpacity onPress={async () => {
                         dispatch(hideDrawer());
                         await AsyncStorage.removeItem('token');
-                        navigate('Logout');
+                        navigation.navigate('Logout');
                     }}>
                         <View style={{
                             flexDirection: 'row',

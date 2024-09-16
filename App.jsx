@@ -2,7 +2,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationProvider, useNavigation } from './src/utils/NavigationContext';
-import { lazy, Suspense } from 'react';
+import { Suspense } from 'react';
 
 import { Provider } from 'react-redux';
 import { store } from './src/redux/Store';
@@ -74,8 +74,7 @@ function App() {
   const Sus = ({component}) => {
     return <Suspense fallback={<Loading />}>{component}</Suspense>;
   };
-  
-  
+
   return (
     <>
       <Provider store={store}>
@@ -102,14 +101,6 @@ function App() {
             </Stack.Screen>
             <Stack.Screen name="ResetPassword">
               {props => <Sus component={<ResetPassword {...props} />} />}
-            </Stack.Screen>
-
-            {/* ACT & RIGHTS */}
-            <Stack.Screen name="PrivacyPolicy">
-              {props => <Sus component={<PrivacyPolicy {...props} />} />}
-            </Stack.Screen>
-            <Stack.Screen name="UserTerms">
-              {props => <Sus component={<UserTerms {...props} />} />}
             </Stack.Screen>
 
             {/* AFTER AUTHENTICATION */}
@@ -169,6 +160,14 @@ function App() {
             </Stack.Screen>
             <Stack.Screen name="EditProperty">
               {props => <Sus component={<EditProperty {...props} />} />}
+            </Stack.Screen>
+
+            {/* ACT & RIGHTS */}
+            <Stack.Screen name="PrivacyPolicy">
+              {props => <Sus component={<PrivacyPolicy {...props} />} />}
+            </Stack.Screen>
+            <Stack.Screen name="UserTerms">
+              {props => <Sus component={<UserTerms {...props} />} />}
             </Stack.Screen>
           </Stack.Navigator>
         </NavigationContainer>

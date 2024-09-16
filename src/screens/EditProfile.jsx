@@ -17,6 +17,7 @@ import { noImage } from '../utils/defaultValues';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import { useIsFocused } from '@react-navigation/native';
 import Backbtn from '../components/Backbtn';
+import Loading from './Loading';
 
 const { width, height } = Dimensions.get('window');
 const EditProfile = ({ navigation, route }) => {
@@ -26,7 +27,7 @@ const EditProfile = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false);
     const [ profile, setProfile ] = useState({
         profile_image: noImage,
-        gender: 'Gender',
+        gender: '',
         location: '',
         license_number: '',
         broker_name: '',
@@ -126,11 +127,14 @@ const EditProfile = ({ navigation, route }) => {
         }
     };
 
+    if (profile.license_number === '' || profile.location === '' || profile.gender === '') {
+        return <Loading />;
+    }
+
     return (
         <Background>
             <View style={{width: width * 0.85, alignSelf: 'center'}}>
-            <Backbtn position="static" onPress={() => {
-                        navigation.goBack()}} />
+            <Backbtn position="static" onPress={() => navigation.goBack()} />
                 <Br space={0.1} />
                 <H5 theme="light" style={{ fontFamily: 'Poppins-SemiBold', textAlign: 'center' }}>Edit Your Profile</H5>
                 <Pera theme="transparent" style={{ textAlign: 'center' }}>Please change the details below to edit your profile</Pera>

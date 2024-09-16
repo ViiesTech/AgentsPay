@@ -10,13 +10,10 @@ import Hr from '../components/Hr';
 import { useIsFocused } from '@react-navigation/native';
 import { api, errHandler } from '../API';
 import Loading from './Loading';
-import { useDispatch } from 'react-redux';
-import { showDrawer } from '../redux/Reducers/drawerSlice';
 
 const { width, height } = Dimensions.get('window');
-const PrivacyPolicy = ({ navigation }) => {
+const PrivacyPolicy = ({ navigation, route }) => {
     const isFocused = useIsFocused();
-    const dispatch = useDispatch();
 
     const [ content, setContent ] = useState('');
 
@@ -40,8 +37,7 @@ const PrivacyPolicy = ({ navigation }) => {
 
     return (
         <Background noAuth>
-            <Backbtn onPress={() => {
-                navigation.goBack()}} />
+            <Backbtn onPress={() => navigation.goBack()} backToSidebar={route?.params?.backToSidebar} />
             <View style={{width: width * 0.85, alignSelf: 'center'}}>
                 <Image source={require('../assets/images/icon.png')} style={{ alignSelf: 'center', width: width * 0.4, height: width * 0.4, resizeMode: 'contain', marginTop: height * 0.05 }} />
                 <Br space={0.01} />

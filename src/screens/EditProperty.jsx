@@ -16,6 +16,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, baseUrl, errHandler } from '../API';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
+import DocumentPicker from 'react-native-document-picker';
+import RNFS from 'react-native-fs';
 
 const { width, height } = Dimensions.get('window');
 const EditProperty = ({ navigation, route }) => {
@@ -46,13 +48,6 @@ const EditProperty = ({ navigation, route }) => {
         property_description: '',
         property_type: 'Property Type',
     });
-
-    // useEffect(() => {
-    //     if (property.agent_percentage > 0 && property.property_value > 0) {
-    //         const amount = property.property_value * (property.agent_percentage / 100);
-    //         setProperty({...property, agent_amount: amount});
-    //     }
-    // }, [property.agent_percentage, property.property_value]);
 
     useEffect(() => {
         if (property.agent_percentage > 0) {
@@ -203,24 +198,25 @@ const EditProperty = ({ navigation, route }) => {
     };
 
     const uploadDocuments = async () => {
-        let docs = documents.slice();
-        const result = await launchImageLibrary({
-            mediaType: 'photo',
-            maxWidth: 300,
-            maxHeight: 300,
-            includeBase64: true,
-            selectionLimit: 6,
-        });
-
-        if (result?.assets) {
-            for (let x = 0; x < result?.assets.length; x++) {
-                docs.push(result?.assets[x]);
+        try {
+            let docs = documents.slice();
+            const result = await DocumentPicker.pick({
+                type: [DocumentPicker.types.pdf],
+                allowMultiSelection: true,
+            });
+            for (let x = 0; x < result.length; x++) {
+                const base64 = await RNFS.readFile(result[x].uri, 'base64');
+                result[x].base64 = base64;
+                result[x].fileName = result[x].name;
+                docs.push(result[x]);
             }
 
             if (docs.length > 6) {
                 docs.splice(0, docs.length - 6);
             }
             setDocuments(docs);
+        } catch (err) {
+            console.log(null);
         }
     };
 
@@ -278,11 +274,6 @@ const EditProperty = ({ navigation, route }) => {
             Alert.alert('Agent Percentage or Amount is required!', 'Please enter agent percentage or amount.');
             return false;
         }
-
-        // if (property?.agent_amount < 1) {
-        //     Alert.alert('Agent Percentage is required!', 'Please enter agent percentage.');
-        //     return false;
-        // }
 
         if (property?.no_of_bedrooms < 1) {
             Alert.alert('Number of Bedrooms is required!', 'Please enter number of bedrooms.');

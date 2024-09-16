@@ -22,7 +22,7 @@ const CompleteProfile = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false);
     const [ profile, setProfile ] = useState({
         profile_image: noImage,
-        gender: 'Gender',
+        gender: '',
         location: '',
         license_number: '',
         broker_name: '',
@@ -144,7 +144,6 @@ const CompleteProfile = ({ navigation, route }) => {
                 <Br space={0.02} />
                 <Dropdown
                     data={[
-                        {label: 'Gender', value: ''},
                         {label: 'Male', value: 'male'},
                         {label: 'Female', value: 'female'},
                     ]}

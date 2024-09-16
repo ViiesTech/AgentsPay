@@ -1,11 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { Dimensions, Image, TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { showDrawer } from '../redux/Reducers/drawerSlice';
 
 const { width } = Dimensions.get('window');
-const Backbtn = ({ position, style, onPress, dark }) => {
+const Backbtn = ({ position, style, onPress, dark, backToSidebar }) => {
+    const dispatch = useDispatch();
     return (
-        <TouchableOpacity style={style} onPress={() => onPress()}>
+        <TouchableOpacity style={style} onPress={() => {
+            onPress();
+            if (backToSidebar) {
+                dispatch(showDrawer());
+            }
+        }}>
             <Image source={dark ? require('../assets/images/back_btn_dark.png') : require('../assets/images/back_btn.png')}
                 style={{
                     width: width * 0.07,

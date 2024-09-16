@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
@@ -16,7 +17,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
-// import DocumentPicker from 'react-native-document-picker';
+import DocumentPicker from 'react-native-document-picker';
+import RNFS from 'react-native-fs';
 
 const { width, height } = Dimensions.get('window');
 const UploadProperty = ({ navigation, route }) => {
@@ -128,45 +130,26 @@ const UploadProperty = ({ navigation, route }) => {
         }
     };
 
-    // const selectFile = async () => {
-    //     try {
-    //         let docs = documents.slice();
-    //         const result = await DocumentPicker.pick({
-    //             type: [DocumentPicker.types.pdf, DocumentPicker.types.docx, DocumentPicker.types.images],
-    //             allowMultiSelection: true,
-    //         });
-    //         for (let x = 0; x < result.length; x++) {
-    //             docs.push(result[x]);
-    //         }
-
-    //         if (docs.length > 6) {
-    //             docs.splice(0, docs.length - 6);
-    //         }
-    //         setDocuments(docs);
-    //     } catch (err) {
-    //         console.log(null);
-    //     }
-    // };
-
     const uploadDocuments = async () => {
-        let docs = documents.slice();
-        const result = await launchImageLibrary({
-            mediaType: 'photo',
-            maxWidth: 300,
-            maxHeight: 300,
-            includeBase64: true,
-            selectionLimit: 6,
-        });
-
-        if (result?.assets) {
-            for (let x = 0; x < result?.assets.length; x++) {
-                docs.push(result?.assets[x]);
+        try {
+            let docs = documents.slice();
+            const result = await DocumentPicker.pick({
+                type: [DocumentPicker.types.pdf],
+                allowMultiSelection: true,
+            });
+            for (let x = 0; x < result.length; x++) {
+                const base64 = await RNFS.readFile(result[x].uri, 'base64');
+                result[x].base64 = base64;
+                result[x].fileName = result[x].name;
+                docs.push(result[x]);
             }
 
             if (docs.length > 6) {
                 docs.splice(0, docs.length - 6);
             }
             setDocuments(docs);
+        } catch (err) {
+            console.log(null);
         }
     };
 
@@ -210,32 +193,27 @@ const UploadProperty = ({ navigation, route }) => {
             return false;
         }
 
-        if (property?.property_size < 1) {
+        if (parseFloat(property?.property_size) < 1) {
             Alert.alert('Property Size/Area is required!', 'Please enter property size/area.');
             return false;
         }
 
-        if (property?.property_value < 1) {
+        if (parseFloat(property?.property_value) < 1) {
             Alert.alert('Property Value is required!', 'Please enter property value.');
             return false;
         }
 
-        if (property?.agent_percentage < 1 && property?.agent_amount < 1) {
+        if (parseFloat(property?.agent_percentage) < 1 && parseFloat(property?.agent_amount) < 1) {
             Alert.alert('Agent Percentage or Amount is required!', 'Please enter agent percentage or amount.');
             return false;
         }
 
-        // if (property?.agent_amount < 1) {
-        //     Alert.alert('Agent Percentage is required!', 'Please enter agent percentage.');
-        //     return false;
-        // }
-
-        if (property?.no_of_bedrooms < 1) {
+        if (parseInt(property?.no_of_bedrooms) < 1) {
             Alert.alert('Number of Bedrooms is required!', 'Please enter number of bedrooms.');
             return false;
         }
 
-        if (property?.no_of_bathrooms < 1) {
+        if (parseInt(property?.no_of_bathrooms) < 1) {
             Alert.alert('Number of Bathrooms is required!', 'Please enter number of bathrooms.');
             return false;
         }
@@ -279,8 +257,8 @@ const UploadProperty = ({ navigation, route }) => {
                 const propertyType = propertyTypes.filter(val => val.label === property?.property_type)[0].id;
                 const res = await api.post('/user/properties/upload', {
                     tags: JSON.stringify(tags),
-                    documents: JSON.stringify(documents),
                     images: JSON.stringify(images),
+                    documents: JSON.stringify(documents),
                     title: property?.title.toString(),
                     city: property?.city.toString(),
                     state: property?.state.toString(),
@@ -408,37 +386,16 @@ const UploadProperty = ({ navigation, route }) => {
             <Pera theme="transparent" style={{ width: width * 0.85, alignSelf: 'center' }}>Upload Property Images</Pera>
             <Br space={0.02} />
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 15, width: width * 0.85, alignSelf: 'center' }}>
-
-                {/* <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 15, width: width * 0.85, alignSelf: 'center', }}> */}
-                    {images.map((item, index) => (
-                        <Image source={{ uri: `data:${images[index].type};base64,${images[index].base64}` }}
-                            style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20, marginBottom: 10 }}
-                            resizeMode="stretch" />
-                    ))}
-                {/* </View> */}
+                {images.map((item, index) => (
+                    <Image source={{ uri: `data:${images[index].type};base64,${images[index].base64}` }}
+                        style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20, marginBottom: 10 }}
+                        resizeMode="stretch" />
+                ))}
                 {images.length <= 5 ? <Pressable
                     onPress={uploadImage}
                     style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
                     <Image source={require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
                 </Pressable> : null}
-                {/* <Pressable onPress={uploadImage} style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
-                    <Image source={images[0] ? { uri: `data:${images[0].type};base64,${images[0].base64}` } : require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
-                </Pressable>
-                <Pressable onPress={uploadImage} style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
-                    <Image source={images[1] ? { uri: `data:${images[1].type};base64,${images[1].base64}` } : require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
-                </Pressable>
-                <Pressable onPress={uploadImage} style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
-                    <Image source={images[2] ? { uri: `data:${images[2].type};base64,${images[2].base64}` } : require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
-                </Pressable>
-                <Pressable onPress={uploadImage} style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
-                    <Image source={images[3] ? { uri: `data:${images[3].type};base64,${images[3].base64}` } : require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
-                </Pressable>
-                <Pressable onPress={uploadImage} style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
-                    <Image source={images[4] ? { uri: `data:${images[4].type};base64,${images[4].base64}` } : require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
-                </Pressable>
-                <Pressable onPress={uploadImage} style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
-                    <Image source={images[5] ? { uri: `data:${images[5].type};base64,${images[5].base64}` } : require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
-                </Pressable> */}
             </View>
             <Br space={0.03} />
             <Input
