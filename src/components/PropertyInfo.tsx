@@ -1,21 +1,22 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, Pressable, ScrollView, View } from 'react-native';
+import { Dimensions, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
 import Br from './Br';
-import { ArchiveAdd } from 'iconsax-react-native';
+import { ArchiveAdd, ArrowLeft2, ArrowRight2 } from 'iconsax-react-native';
 import { useNavigation } from '../utils/NavigationContext';
 import { amountFormat } from '../utils/defaultValues';
 import { api, baseUrl, errHandler } from '../API';
 import Swiper from 'react-native-swiper';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import SwiperFlatList from 'react-native-swiper-flatlist';
 
 const { height, width } = Dimensions.get('window');
+export const SLIDER_WIDTH = Dimensions.get('window').width + 80
+export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
 
-const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: boolean, isSwiper?: boolean }) => {
+const PropertyInfo = ({ data, clickable, isSwiper, isCarousel }: { data?: any, clickable?: boolean, isSwiper?: boolean, isCarousel?: boolean }) => {
     const { navigate } = useNavigation();
     const [bookmarked, setBookmarked]: any = useState(null);
 
@@ -45,6 +46,9 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
             await errHandler(err);
         }
     };
+    const isCarouselred = React.useRef(null)
+
+
     return (
         <Pressable onPress={onPress} style={{ width: width * 0.85, alignSelf: 'center', position: 'relative' }}>
             <View style={{ backgroundColor: Color('propertyPrice'), position: 'absolute', zIndex: 1, paddingHorizontal: width * 0.05, top: height * 0.02, paddingTop: height * 0.004 }}>
@@ -58,12 +62,30 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                 ?
                 <Swiper
                     centerContent
-                    showsButtons={false}
-                    style={{ height: height * 0.3 }}
-                    showsPagination={false}
+                    showsButtons={isSwiper}
+                    style={{
+                        height: height * 0.4
+                    }}
+                    showsPagination={isSwiper}
                     activeDotColor={Color('btnBackground')}
                     loop={true}
+                    buttonWrapperStyle={{
+                        backgroundColor: 'transparent',
+                        // padding: 10, borderRadius: 10
+                    }}
 
+                    nextButton={
+                        <View style={{ backgroundColor: 'transparent', transform: [{ translateY: -45 }] }}>
+                            <ArrowRight2 size="32" color={Color('btnBackground')} />
+                        </View>
+                    }
+                    prevButton={
+                        <View style={{ backgroundColor: 'transparent', transform: [{ translateY: -45 }] }}>
+                            <ArrowLeft2
+                                size="32"
+                                color={Color('btnBackground')}
+                            />
+                        </View>}
                 >
                     {
                         data?.tbl_property_images?.map((val: any, index: any) => {
@@ -84,7 +106,6 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                                     }}
                                         key={index}
                                         source={{ uri: `${baseUrl}/images/properties/${val.url}` }} resizeMode="cover" />
-
                                 </View>
                             );
                         })

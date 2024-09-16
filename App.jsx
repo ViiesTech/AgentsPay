@@ -2,12 +2,14 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationProvider, useNavigation } from './src/utils/NavigationContext';
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 
 import { Provider } from 'react-redux';
 import { store } from './src/redux/Store';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'react-native';
+
+
 
 import Splash from './src/screens/Splash';
 import Loading from './src/screens/Loading';
@@ -75,10 +77,18 @@ function App() {
     return <Suspense fallback={<Loading />}>{component}</Suspense>;
   };
   
+  // useEffect(() => {
+  //   if (Platform.OS === 'android') {
+  //     forbidAndroidShare(); // This function blocks the Screen share/Recording and taking screenshot for android devices.
+  //     // allowAndroidShare(); // This function allows to provide back the Screen share/Recording and screenshot functionality for android devices
+  //   }
+    
+  // }, []);
+
   
   return (
     <>
-      <Provider store={store}>
+      <Provider store={store} >
         <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
         <NavigationContainer ref={navigationRef}>
           <Stack.Navigator screenOptions={{ headerShown: false }}>

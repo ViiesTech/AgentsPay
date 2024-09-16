@@ -16,6 +16,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, baseUrl, errHandler } from '../API';
 import { launchImageLibrary } from 'react-native-image-picker';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
+import { allCity } from '../utils/defaultValues';
 
 const { width, height } = Dimensions.get('window');
 const EditProperty = ({ navigation, route }) => {
@@ -25,14 +26,15 @@ const EditProperty = ({ navigation, route }) => {
     const [disableAgentPercentage, setDisableAgentPercentage] = useState(false);
     const [disableAgentAmount, setDisableAgentAmount] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [ tag, setTag ] = useState('');
-    const [ tags, setTags ] = useState([]);
-    const [ documents, setDocuments ] = useState([]);
-    const [ images, setImages ] = useState([]);
-    const [ cities, setCities ] = useState([]);
-    const [ states, setStates ] = useState([]);
-    const [ propertyTypes, setPropertyTypes ] = useState([]);
-    const [ property, setProperty ] = useState({
+    const [tag, setTag] = useState('');
+    const [tags, setTags] = useState([]);
+    const [documents, setDocuments] = useState([]);
+    const [images, setImages] = useState([]);
+    const [cities, setCities] = useState([]);
+    const [states, setStates] = useState([]);
+    const [searchCity, SetSearchCity] = useState({})
+    const [propertyTypes, setPropertyTypes] = useState([]);
+    const [property, setProperty] = useState({
         title: '',
         city: 'Select City',
         state: 'Select State',
@@ -58,8 +60,8 @@ const EditProperty = ({ navigation, route }) => {
         console.log('property.agent_percentage', property.agent_percentage);
         if (property.agent_percentage > 0) {
             setDisableAgentAmount(true);
-            setProperty({...property, agent_amount: 0});
-        }else {
+            setProperty({ ...property, agent_amount: 0 });
+        } else {
             setDisableAgentAmount(false);
         }
     }, [property.agent_percentage]);
@@ -68,14 +70,14 @@ const EditProperty = ({ navigation, route }) => {
         console.log('property.agent_amount', property.agent_amount);
         if (property.agent_amount > 0) {
             setDisableAgentPercentage(true);
-            setProperty({...property, agent_percentage: 0});
-        }else {
+            setProperty({ ...property, agent_percentage: 0 });
+        } else {
             setDisableAgentPercentage(false);
         }
     }, [property.agent_amount]);
 
     useEffect(() => {
-        if (isFocused) {loadProperty();}
+        if (isFocused) { loadProperty(); }
     }, [isFocused]);
 
     async function convertImageToBase64(url) {
@@ -94,7 +96,7 @@ const EditProperty = ({ navigation, route }) => {
     const loadProperty = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
-            const res = await api.get('/user/properties/edit?id=' + route?.params?.id, {headers: {Authorization: `Bearer ${token}`}});
+            const res = await api.get('/user/properties/edit?id=' + route?.params?.id, { headers: { Authorization: `Bearer ${token}` } });
             const data = res.data.data;
             const tagList = data?.tags.toLowerCase().split(', ');
             setTags(tagList);
@@ -112,62 +114,83 @@ const EditProperty = ({ navigation, route }) => {
                 property_description: data?.property_description,
                 property_type: data?.tbl_property_type?.label,
             });
-            if (cities.length === 0 || states.length === 0) {loadData();}
+            if (cities.length === 0 || states.length === 0) { loadData(); }
 
             const imgsArr = [];
             for (let x = 0; x < data?.tbl_property_images.length; x++) {
                 convertImageToBase64(`${baseUrl}/images/properties/${data?.tbl_property_images[x].url}`)
-                .then(base64data => {
-                    imgsArr.push({
-                        type: `image/${data?.tbl_property_images[x].url.split('.').pop()}`,
-                        base64: base64data.split(';base64,').pop(),
-                    });
+                    .then(base64data => {
+                        imgsArr.push({
+                            type: `image/${data?.tbl_property_images[x].url.split('.').pop()}`,
+                            base64: base64data.split(';base64,').pop(),
+                        });
 
-                    if (imgsArr.length === data?.tbl_property_images.length) {
-                        setImages(imgsArr);
-                    }
-                });
+                        if (imgsArr.length === data?.tbl_property_images.length) {
+                            setImages(imgsArr);
+                        }
+                    });
 
             }
 
             const docsArr = [];
             for (let x = 0; x < data?.tbl_property_documents.length; x++) {
                 convertImageToBase64(`${baseUrl}/documents/properties/${data?.tbl_property_documents[x].url}`)
-                .then(base64data => {
-                    docsArr.push({
-                        fileName: data?.tbl_property_documents[x].url,
-                        type: `image/${data?.tbl_property_documents[x].url.split('.').pop()}`,
-                        base64: base64data.split(';base64,').pop(),
+                    .then(base64data => {
+                        docsArr.push({
+                            fileName: data?.tbl_property_documents[x].url,
+                            type: `image/${data?.tbl_property_documents[x].url.split('.').pop()}`,
+                            base64: base64data.split(';base64,').pop(),
+                        });
+
+                        if (docsArr.length === data?.tbl_property_documents.length) {
+                            setDocuments(docsArr);
+                        }
                     });
 
-                    if (docsArr.length === data?.tbl_property_documents.length) {
-                        setDocuments(docsArr);
-                    }
-                });
-
             }
-        } catch(err) {
+        } catch (err) {
             await errHandler(err, () => loadProperty());
         }
     };
 
-    const loadData = async () => {
-        try {
-            const token = await AsyncStorage.getItem('token');
-            const res = await api.get('/user/states&cities', {headers: {Authorization: `Bearer ${token}`}});
-            setCities(res.data.data[0]);
-            setStates(res.data.data[1]);
+    useEffect(() => {
+        const states = [];
+        const searchCity = [];
+        const result = Object.keys(allCity).map((key) => {
+            searchCity.push({
+                serachState: key,
+                allCity: allCity[key]
+            })
+            states.push({
+                label: key,
+                value: key,
+            });
+        });
+        setStates(states);
+        SetSearchCity(searchCity);
+    }, [allCity])
 
-            if (propertyTypes.length === 0) {loadPropertyTypes();}
-        } catch(err) {
-            await errHandler(err, () => loadData());
-        }
+    const loadData = async () => {
+        // try {
+        //     const token = await AsyncStorage.getItem('token');
+        //     const res = await api.get('/user/states&cities', {headers: {Authorization: `Bearer ${token}`}});
+        //     setCities(res.data.data[0]);
+        //     setStates(res.data.data[1]);
+
+        //     if (propertyTypes.length === 0) {
+        //     }
+        // loadPropertyTypes();
+        // } catch(err) {
+        //     await errHandler(err, () => 
+            // loadData()
+    // );
+        // }
     };
 
     const loadPropertyTypes = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
-            const res = await api.get('/user/properties/types', {headers: {Authorization: `Bearer ${token}`}});
+            const res = await api.get('/user/properties/types', { headers: { Authorization: `Bearer ${token}` } });
             const arr = [];
             for (let x = 0; x < res.data.data.length; x++) {
                 arr.push({
@@ -177,7 +200,7 @@ const EditProperty = ({ navigation, route }) => {
                 });
             }
             setPropertyTypes(arr);
-        } catch(err) {
+        } catch (err) {
             await errHandler(err, () => loadPropertyTypes());
         }
     };
@@ -350,7 +373,7 @@ const EditProperty = ({ navigation, route }) => {
                     property_description: property?.property_description,
                     property_type: propertyType,
                     id: route?.params?.id,
-                }, {headers: {Authorization: `Bearer ${token}`}});
+                }, { headers: { Authorization: `Bearer ${token}` } });
 
                 if (route.name === 'EditProperty') {
                     Dialog.show({
@@ -363,7 +386,7 @@ const EditProperty = ({ navigation, route }) => {
                         onHide: () => navigation.replace('UploadedProperties'),
                     });
                 }
-            } catch(err) {
+            } catch (err) {
                 await errHandler(err);
             }
             setLoading(false);
@@ -382,40 +405,66 @@ const EditProperty = ({ navigation, route }) => {
                 <Backbtn position="static" onPress={() => navigation.goBack()} />
             </View>
             <Br space={0.05} />
-            <H5 theme="light" style={{fontFamily: 'Poppins-Medium', textAlign: 'center'}}>Edit Property</H5>
-            <Pera theme="transparent" style={{textAlign: 'center', width: width * 0.85, alignSelf: 'center'}}>We have sent you an email containing 6 digits verification code. Please enter the code to verify your identity</Pera>
+            <H5 theme="light" style={{ fontFamily: 'Poppins-Medium', textAlign: 'center' }}>Edit Property</H5>
+            <Pera theme="transparent" style={{ textAlign: 'center', width: width * 0.85, alignSelf: 'center' }}>We have sent you an email containing 6 digits verification code. Please enter the code to verify your identity</Pera>
             <Br space={0.02} />
             <Input
                 defaultValue={property?.title}
                 value={property?.title}
                 labelText="Property Title"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
-                onChange={(value) => setProperty({...property, title: value})}
+                onChange={(value) => setProperty({ ...property, title: value })}
             />
             <Dropdown
-                data={cities}
-                selectedValue={property.city}
-                onValueChange={(value) => setProperty({ ...property, city: value })}
-                style={{ width: width * 0.86, alignSelf: 'center' }}
-                defaultStyle={undefined}
-                label={undefined}
-                icon={undefined}
+               data={states}
+               selectedValue={property.state}
+               onValueChange={(value) => {
+                   setProperty({ ...property, state: value })
+                   const selectedCities = searchCity.filter(function (creature) {
+                       return creature.serachState == value;
+                   });
+                   let filterCities = []
+                   selectedCities[0]?.allCity?.map((item) => {
+                       filterCities.push({
+                           label: item,
+                           value: item
+                       })
+                       setCities(filterCities)
+                   })
+               }}
+               style={{ width: width * 0.86, alignSelf: 'center' }}
+               defaultStyle={undefined}
+               label={undefined}
+               icon={undefined}
             />
-            <Dropdown
-                data={states}
-                selectedValue={property.state}
-                onValueChange={(value) => setProperty({ ...property, state: value })}
-                style={{ width: width * 0.86, alignSelf: 'center' }}
-                defaultStyle={undefined}
-                label={undefined}
-                icon={undefined}
-            />
+            {cities.length != 0 ?
+                <Dropdown
+                    data={cities}
+                    selectedValue={property.city}
+                    onValueChange={(value) => { setProperty({ ...property, city: value }) }}
+                    style={{ width: width * 0.86, alignSelf: 'center' }}
+                    defaultStyle={undefined}
+                    label={undefined}
+                    icon={undefined}
+                />
+                :
+                <Dropdown
+                    data={states}
+                    selectedValue={property.state}
+                    onValueChange={(value) => setProperty({ ...property, state: value })}
+                    style={{ width: width * 0.86, alignSelf: 'center' }}
+                    defaultStyle={undefined}
+                    label={undefined}
+                    icon={undefined}
+                />
+            }
+
             <Input
                 defaultValue={property?.address}
                 value={property?.address}
                 labelText="Address"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
-                onChange={(value) => setProperty({...property, address: value})}
+                onChange={(value) => setProperty({ ...property, address: value })}
             />
             <Dropdown
                 data={propertyTypes}
@@ -432,7 +481,7 @@ const EditProperty = ({ navigation, route }) => {
                 value={property?.property_size}
                 labelText="Property Area"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
-                onChange={(value) => setProperty({...property, property_size: value})}
+                onChange={(value) => setProperty({ ...property, property_size: value })}
             />
             <Input
                 defaultValue={property?.property_value}
@@ -440,7 +489,7 @@ const EditProperty = ({ navigation, route }) => {
                 value={property?.property_value}
                 labelText="Property Price"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
-                onChange={(value) => setProperty({...property, property_value: value})}
+                onChange={(value) => setProperty({ ...property, property_value: value })}
             />
             <Input
                 defaultValue={property?.agent_percentage.toString()}
@@ -449,7 +498,7 @@ const EditProperty = ({ navigation, route }) => {
                 value={property?.agent_percentage}
                 labelText="Agent Percentage (%)"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
-                onChange={(value) => setProperty({...property, agent_percentage: value})}
+                onChange={(value) => setProperty({ ...property, agent_percentage: value })}
             />
             <Input
                 defaultValue={property?.agent_amount.toString()}
@@ -458,29 +507,29 @@ const EditProperty = ({ navigation, route }) => {
                 value={property?.agent_amount}
                 labelText="Agent Amount"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
-                onChange={(value) => setProperty({...property, agent_amount: value})}
+                onChange={(value) => setProperty({ ...property, agent_amount: value })}
             />
             <Br space={0.03} />
-            <Pera theme="transparent" style={{width: width * 0.85, alignSelf: 'center'}}>Upload Property Images</Pera>
+            <Pera theme="transparent" style={{ width: width * 0.85, alignSelf: 'center' }}>Upload Property Images</Pera>
             <Br space={0.02} />
-            <View style={{flexDirection: 'row', flexWrap: 'wrap', columnGap: 15, width: width * 0.85, alignSelf: 'center'}}>
-                <Pressable onPress={uploadImage} style={{flexGrow: 1, marginBottom: height * 0.025}}>
-                    <Image source={images[0] ? {uri: images[0].base64.includes(';base64,') ? images[0].base64 : `data:${images[0].type};base64,${images[0].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 15, width: width * 0.85, alignSelf: 'center' }}>
+                <Pressable onPress={uploadImage} style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
+                    <Image source={images[0] ? { uri: images[0].base64.includes(';base64,') ? images[0].base64 : `data:${images[0].type};base64,${images[0].base64}` } : require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
                 </Pressable>
-                <Pressable onPress={uploadImage} style={{flexGrow: 1, marginBottom: height * 0.025}}>
-                    <Image source={images[1] ? {uri: images[1].base64.includes(';base64,') ? images[1].base64 : `data:${images[1].type};base64,${images[1].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
+                <Pressable onPress={uploadImage} style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
+                    <Image source={images[1] ? { uri: images[1].base64.includes(';base64,') ? images[1].base64 : `data:${images[1].type};base64,${images[1].base64}` } : require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
                 </Pressable>
-                <Pressable onPress={uploadImage} style={{flexGrow: 1, marginBottom: height * 0.025}}>
-                    <Image source={images[2] ? {uri: images[2].base64.includes(';base64,') ? images[2].base64 : `data:${images[2].type};base64,${images[2].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
+                <Pressable onPress={uploadImage} style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
+                    <Image source={images[2] ? { uri: images[2].base64.includes(';base64,') ? images[2].base64 : `data:${images[2].type};base64,${images[2].base64}` } : require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
                 </Pressable>
-                <Pressable onPress={uploadImage} style={{flexGrow: 1, marginBottom: height * 0.025}}>
-                    <Image source={images[3] ? {uri: images[3].base64.includes(';base64,') ? images[3].base64 : `data:${images[3].type};base64,${images[3].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
+                <Pressable onPress={uploadImage} style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
+                    <Image source={images[3] ? { uri: images[3].base64.includes(';base64,') ? images[3].base64 : `data:${images[3].type};base64,${images[3].base64}` } : require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
                 </Pressable>
-                <Pressable onPress={uploadImage} style={{flexGrow: 1, marginBottom: height * 0.025}}>
-                    <Image source={images[4] ? {uri: images[4].base64.includes(';base64,') ? images[4].base64 : `data:${images[4].type};base64,${images[4].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
+                <Pressable onPress={uploadImage} style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
+                    <Image source={images[4] ? { uri: images[4].base64.includes(';base64,') ? images[4].base64 : `data:${images[4].type};base64,${images[4].base64}` } : require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
                 </Pressable>
-                <Pressable onPress={uploadImage} style={{flexGrow: 1, marginBottom: height * 0.025}}>
-                    <Image source={images[5] ? {uri: images[5].base64.includes(';base64,') ? images[5].base64 : `data:${images[5].type};base64,${images[5].base64}`} : require('../assets/images/upload_image.png')} style={{width: width * 0.25, height: width * 0.25, borderRadius: 20}} resizeMode="stretch" />
+                <Pressable onPress={uploadImage} style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
+                    <Image source={images[5] ? { uri: images[5].base64.includes(';base64,') ? images[5].base64 : `data:${images[5].type};base64,${images[5].base64}` } : require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
                 </Pressable>
             </View>
             <Br space={0.03} />
@@ -490,7 +539,7 @@ const EditProperty = ({ navigation, route }) => {
                 value={property?.no_of_bedrooms}
                 labelText="Number of Bedrooms"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
-                onChange={(value) => setProperty({...property, no_of_bedrooms: value})}
+                onChange={(value) => setProperty({ ...property, no_of_bedrooms: value })}
             />
             <Input
                 defaultValue={property?.no_of_bathrooms}
@@ -498,7 +547,7 @@ const EditProperty = ({ navigation, route }) => {
                 value={property?.no_of_bathrooms}
                 labelText="Number of Bathrooms"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
-                onChange={(value) => setProperty({...property, no_of_bathrooms: value})}
+                onChange={(value) => setProperty({ ...property, no_of_bathrooms: value })}
             />
             <Input
                 value={tag}
@@ -507,7 +556,7 @@ const EditProperty = ({ navigation, route }) => {
                 onChange={(value) => setTag(value)}
                 onBlur={addTag}
             />
-            <View style={{width: width * 0.85, alignSelf: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 10}}>
+            <View style={{ width: width * 0.85, alignSelf: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
                 {
                     tags.map((label, index) => {
                         return (
@@ -519,7 +568,7 @@ const EditProperty = ({ navigation, route }) => {
                 }
             </View>
             <Br space={0.03} />
-            <View style={{width: width * 0.85, alignSelf: 'center'}}>
+            <View style={{ width: width * 0.85, alignSelf: 'center' }}>
                 <Small theme="transparent" style={{ paddingLeft: width * 0.02 }}>About the Property</Small>
                 <Br space={0.01} />
                 <View style={{
@@ -528,11 +577,11 @@ const EditProperty = ({ navigation, route }) => {
                     backgroundColor: Color('btnOutline'),
                     borderRadius: 20,
                 }}>
-                    <TextInput multiline value={property.property_description} onChangeText={(value) => setProperty({...property, property_description: value})} placeholder="Enter information" numberOfLines={height < 650 ? 8 : 10} style={{ textAlignVertical: 'top', color: Color('darkTheme') }} placeholderTextColor={Color('gray')} />
+                    <TextInput multiline value={property.property_description} onChangeText={(value) => setProperty({ ...property, property_description: value })} placeholder="Enter information" numberOfLines={height < 650 ? 8 : 10} style={{ textAlignVertical: 'top', color: Color('darkTheme') }} placeholderTextColor={Color('gray')} />
                 </View>
             </View>
             <Br space={0.03} />
-            <Button onPress={uploadDocuments} style={{width: width * 0.85, alignSelf: 'center'}}>Upload Documents</Button>
+            <Button onPress={uploadDocuments} style={{ width: width * 0.85, alignSelf: 'center' }}>Upload Documents</Button>
             {
                 documents.length > 0 && (
                     <>
@@ -546,7 +595,7 @@ const EditProperty = ({ navigation, route }) => {
                 documents.map((val, index) => {
                     return (
                         <View key={index} style={{ width: width * 0.85, alignSelf: 'center' }}>
-                            <View style={{flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center'}}>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
                                 <Pera numberOfLines={1} style={{ marginTop: height * 0.002, width: width * 0.7 }}>{val.fileName}</Pera>
                                 <Pressable onPress={() => removeDoc(index)}>
                                     <CloseCircle
@@ -561,7 +610,7 @@ const EditProperty = ({ navigation, route }) => {
                 })
             }
             <Br space={0.05} />
-            <ButtonOutline loading={loading} style={{width: width * 0.85, alignSelf: 'center'}} onPress={onUpdateProperty}>Update Property</ButtonOutline>
+            <ButtonOutline loading={loading} style={{ width: width * 0.85, alignSelf: 'center' }} onPress={onUpdateProperty}>Update Property</ButtonOutline>
             <Br space={0.05} />
         </Background>
     );
