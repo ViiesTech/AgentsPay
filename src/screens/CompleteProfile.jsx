@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { Alert, Dimensions, Image, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -14,6 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {launchImageLibrary} from 'react-native-image-picker';
 import { noImage } from '../utils/defaultValues';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
+import { ShowAlert } from '../utils/Alert';
 
 const { width, height } = Dimensions.get('window');
 const CompleteProfile = ({ navigation, route }) => {
@@ -30,22 +31,22 @@ const CompleteProfile = ({ navigation, route }) => {
 
     const isValid = () => {
         if (validator.isEmpty(profile?.gender) || (profile?.gender !== 'male' && profile?.gender !== 'female')) {
-            Alert.alert('Gender is required!', 'Please enter your gender.');
+            ShowAlert('Gender is required!', 'Please enter your gender.');
             return false;
         }
 
         if (validator.isEmpty(profile?.location)) {
-            Alert.alert('Location is required!', 'Please enter your location.');
+            ShowAlert('Location is required!', 'Please enter your location.');
             return false;
         }
 
         if (validator.isEmpty(profile?.license_number)) {
-            Alert.alert('License number is required!', 'Please enter your license number.');
+            ShowAlert('License number is required!', 'Please enter your license number.');
             return false;
         }
 
         if (validator.isEmpty(profile?.broker_name)) {
-            Alert.alert('Broker name is required!', 'Please enter your broker name.');
+            ShowAlert('Broker name is required!', 'Please enter your broker name.');
             return false;
         }
 

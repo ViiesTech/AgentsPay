@@ -2,12 +2,12 @@ import axios from 'axios';
 import { Alert } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import RNRestart from 'react-native-restart';
+import { ShowAlert } from './utils/Alert';
 
 // export const baseUrl = 'http://192.168.1.21:8080';
 export const baseUrl = 'https://agentspay.predemo.site';
 export const api = axios.create({
     baseURL: baseUrl,
-    // timeout: 100,
 });
 
 export const errHandler = async (err, callBack) => {
@@ -20,7 +20,7 @@ export const errHandler = async (err, callBack) => {
         // 406 NOT ACCEPTABLE
         // 502 BAD GATEWAY
         // 401 UNAUTHORIZED
-        Alert.alert(
+        ShowAlert(
             err.response.data?.title,
             err.response.data?.message
         );

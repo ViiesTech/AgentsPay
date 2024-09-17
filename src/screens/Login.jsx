@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Alert, Dimensions, Image, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -14,15 +14,17 @@ import { api, errHandler } from '../API';
 import DeviceInfo from 'react-native-device-info';
 import { connectFirebase } from '../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ShowAlert } from '../utils/Alert';
 
 const { width, height } = Dimensions.get('window');
 const Login = ({ navigation, route }) => {
     const validator = require('validator');
 
+    const [isLoggedChecked, setIsLoggedChecked] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [FCM, setFCM] = useState();
+    const [FCM, setFCM] = useState('No FCM Loaded!!');
     const [Device, setDevice] = useState();
-    const [ user, setUser ] = useState({
+    const [user, setUser] = useState({
         email: '',
         password: '',
     });
@@ -31,10 +33,29 @@ const Login = ({ navigation, route }) => {
         if (route?.params?.email.length > 0) {setUser({...user, email: route?.params?.email.toLowerCase()});}
     }, [route?.params?.email]);
     useEffect(() => {
-        getDeviceInfo();
-        getFCM();
+        if (isLoggedChecked) {getDeviceInfo();}
+    }, [isLoggedChecked]);
+    useEffect(() => {
+        if (Device) {
+            getFCM();
+        }
+    }, [Device]);
+
+    useEffect(() => {
+        checkIsUserAlreadyLogged();
     }, []);
 
+    async function checkIsUserAlreadyLogged() {
+        const token = await AsyncStorage.getItem('token');
+        const fcm = await AsyncStorage.getItem('fcm');
+        const device = await AsyncStorage.getItem('device');
+        if (token && fcm && device) {
+            Toast.show('Login Successfull!', Toast.SHORT);
+            navigation.replace('Home');
+        }else {
+            setIsLoggedChecked(true);
+        }
+    }
     async function getFCM() {
         await connectFirebase(setFCM);
     }
@@ -68,21 +89,21 @@ const Login = ({ navigation, route }) => {
 
     const isValid = () => {
         if (validator.isEmpty(user?.email)) {
-            Alert.alert('Email is required!', 'Please enter your email.');
+            ShowAlert('Email is required!', 'Please enter your email.');
             return false;
         }
         if (!validator.isEmail(user?.email)) {
-            Alert.alert('Email is not valid!', 'Please enter your valid email address.');
+            ShowAlert('Email is not valid!', 'Please enter your valid email address.');
             return false;
         }
 
         if (validator.isEmpty(user?.password)) {
-            Alert.alert('Password is required!', 'Please enter your password.');
+            ShowAlert('Password is required!', 'Please enter your password.');
             return false;
         }
 
         if (!FCM) {
-            Alert.alert('FCM Not Found!', 'Please close and reopen the app!');
+            ShowAlert('FCM Not Found!', 'Please close and reopen the app!');
             return false;
         }
 
@@ -101,10 +122,9 @@ const Login = ({ navigation, route }) => {
                     fcm: FCM,
                 });
 
-                await AsyncStorage.setItem(
-                    'token',
-                    res.data?.data?.token
-                );
+                await AsyncStorage.setItem('token', res.data?.data?.token);
+                await AsyncStorage.setItem('fcm', FCM);
+                await AsyncStorage.setItem('device', JSON.stringify(Device));
 
                 Toast.show(res.data?.title, Toast.SHORT);
                 if (res.data?.data?.is_profile_completed) {

@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { Alert, Dimensions, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import Background from '../utils/Background';
 import Backbtn from '../components/Backbtn';
 import Notificationbtn from '../components/Notificationbtn';
@@ -12,6 +12,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import { encryption, getCardType, getServiceType } from '../utils/defaultValues';
+import { ShowAlert } from '../utils/Alert';
 
 const { width, height } = Dimensions.get('window');
 const AddCard = ({ navigation, route }) => {
@@ -43,26 +44,26 @@ const AddCard = ({ navigation, route }) => {
 
     const isValid = () => {
         if (validator.isEmpty(card?.card_number)) {
-            Alert.alert('Card Number is Required!', 'Please enter your card number.');
+            ShowAlert('Card Number is Required!', 'Please enter your card number.');
             return false;
         }
 
         if (validator.isEmpty(card?.owner)) {
-            Alert.alert('Name is Required!', 'Please enter your name on card.');
+            ShowAlert('Name is Required!', 'Please enter your name on card.');
             return false;
         }
         if (card?.owner?.length < 3) {
-            Alert.alert('Name is not valid!', 'Name can only contains letters, minimum 3 letters are required.');
+            ShowAlert('Name is not valid!', 'Name can only contains letters, minimum 3 letters are required.');
             return false;
         }
 
         if (validator.isEmpty(card?.expiry)) {
-            Alert.alert('Card Expiry is Required!', 'Please enter your card expiry date.');
+            ShowAlert('Card Expiry is Required!', 'Please enter your card expiry date.');
             return false;
         }
 
         if (validator.isEmpty(card?.cvv)) {
-            Alert.alert('Card CVV is Required!', 'Please enter your card cvv.');
+            ShowAlert('Card CVV is Required!', 'Please enter your card cvv.');
             return false;
         }
 

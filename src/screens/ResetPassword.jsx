@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { Alert, Dimensions, Image, View } from 'react-native';
+import { Dimensions, Image, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
 import Br from '../components/Br';
@@ -9,6 +9,7 @@ import Hr from '../components/Hr';
 import Input from '../components/Input';
 import { api, errHandler } from '../API';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
+import { ShowAlert } from '../utils/Alert';
 
 const { width, height } = Dimensions.get('window');
 const ResetPassword = ({ navigation, route }) => {
@@ -22,20 +23,20 @@ const ResetPassword = ({ navigation, route }) => {
 
     const isValid = () => {
         if (validator.isEmpty(user?.password)) {
-            Alert.alert('Password is required!', 'Please enter your password.');
+            ShowAlert('Password is required!', 'Please enter your password.');
             return false;
         }
         if (!validator.isStrongPassword(user?.password)) {
-            Alert.alert('Password is weak!', 'Please enter a strong password that contains letters, numbers and a special character.');
+            ShowAlert('Password is weak!', 'Please enter a strong password that contains letters, numbers and a special character.');
             return false;
         }
 
         if (validator.isEmpty(user?.confirm_password)) {
-            Alert.alert('Confirm Password is required!', 'Please re-enter your password.');
+            ShowAlert('Confirm Password is required!', 'Please re-enter your password.');
             return false;
         }
         if (!validator.equals(user?.confirm_password, user?.password)) {
-            Alert.alert('Password not matched!', 'Please re-check the confirm password.');
+            ShowAlert('Password not matched!', 'Please re-check the confirm password.');
             return false;
         }
 

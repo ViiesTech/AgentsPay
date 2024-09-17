@@ -10,10 +10,11 @@ import { useNavigation } from './NavigationContext';
 import { useIsFocused, useRoute } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideDrawer, showDrawer } from '../redux/Reducers/drawerSlice';
+import { ShowAlert } from './Alert';
 
 const { width, height } = Dimensions.get('screen');
 
-const Background = ({ home, children, noBackground, data, noScroll, detectScrollEnd, onScrollEnd, noAuth, flex,contenStyle }) => {
+const Background = ({ bgColor, home, children, noBackground, data, noScroll, detectScrollEnd, onScrollEnd, noAuth, flex,contenStyle }) => {
     const isFocused = useIsFocused();
     const route = useRoute();
     const navigation = useNavigation();
@@ -25,11 +26,27 @@ const Background = ({ home, children, noBackground, data, noScroll, detectScroll
             const routes = navigation.navigationRef.current.getState().routes;
             const name = routes[routes.length - 2].name;
             const backToSidebar = route?.params?.backToSidebar;
-            navigation.navigate(name);
-            if (backToSidebar) {
-                dispatch(showDrawer());
+            if (name === 'Splash') {
+                ShowAlert(
+                    'Do You Want To Logout?',
+                    'Logging out will clear your current session and require you to log in again to access your account. Are you sure?',
+                    'Confirm',
+                    () => {
+                        navigation.navigate(name);
+                    },
+                );
             }else {
-                dispatch(hideDrawer());
+                if (route.name === name) {
+                    const previousName = routes[routes.length - 3] ? routes[routes.length - 3].name : 'Home';
+                    navigation.navigate(previousName);
+                }else {
+                    navigation.navigate(name);
+                }
+                if (backToSidebar) {
+                    dispatch(showDrawer());
+                }else {
+                    dispatch(hideDrawer());
+                }
             }
             return true;
         };
@@ -78,7 +95,7 @@ const Background = ({ home, children, noBackground, data, noScroll, detectScroll
                         return <Sidebar user={data} isOpen={isOpen} />;
                     }, [home, isOpen])
                 }
-                <SafeAreaView style={styles.safeAreaView}>
+                <SafeAreaView style={[styles.safeAreaView, { backgroundColor: bgColor || Color('navigationBackground') }]}>
                     {!noBackground && <Image source={require('../assets/images/background.png')} style={styles.backgroundImage} />}
                     <View style={[styles.content,contenStyle]}>
                         <KeyboardView>
@@ -133,7 +150,6 @@ export default Background;
 const styles = StyleSheet.create({
     safeAreaView: {
         flex: 1,
-        backgroundColor: Color('navigationBackground'),
         paddingTop: Platform.OS === 'android' ? 25 : 0,
     },
     backgroundImage: {

@@ -59,24 +59,26 @@ const Subscriptions = ({ navigation }) => {
                     <SubscriptionCard data={subscriptions[0]} onPress={() => navigation.navigate('SubscriptionPayment', {package: subscriptions[0]})} style={{ width: width * 0.85, alignSelf: 'center' }} />
                 </View>
                 :
-                <Swiper
-                    centerContent
-                    showsButtons={false}
-                    style={{ height: height * 0.7 }}
-                    activeDotColor={Color('btnBackground')}
-                    showsPagination
-                    loop
-                >
-                    {
-                        subscriptions.map((val, index) => {
-                            return (
-                                <View key={index}>
-                                    <SubscriptionCard data={val} onPress={() => navigation.navigate('SubscriptionPayment', {package: val})} style={{ width: width * 0.85, alignSelf: 'center' }} />
-                                </View>
-                            );
-                        })
-                    }
-                </Swiper>
+                <View style={{zIndex: 1}}>
+                    <Swiper
+                        centerContent
+                        showsButtons={false}
+                        style={{ height: height * 0.7 }}
+                        activeDotColor={Color('btnBackground')}
+                        showsPagination
+                        loop
+                    >
+                        {
+                            subscriptions.map((val, index) => {
+                                return (
+                                    <View key={index} style={{ height: height * 0.7 }}>
+                                        <SubscriptionCard data={val} onPress={() => navigation.navigate('SubscriptionPayment', {package: val})} style={{ width: width * 0.85, alignSelf: 'center' }} />
+                                    </View>
+                                );
+                            })
+                        }
+                    </Swiper>
+                </View>
             }
         </Background>
     );

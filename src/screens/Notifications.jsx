@@ -45,7 +45,7 @@ const Notifications = ({ navigation }) => {
         const hours = duration.hours();
         const minutes = duration.minutes();
 
-        const dt = minutes <= 60 ? `${minutes}m` : hours <= 24 ? `${hours}h` : days <= 30 ? `${days}d` : `${months}m`;
+        const dt = months > 0 ? `${months}m` : days > 0 ? `${days}d` : hours > 0 ? `${hours}h` : minutes > 0 ? `${minutes}m` : 'Just Now';
 
         return (
             <React.Fragment key={id}>
@@ -55,9 +55,15 @@ const Notifications = ({ navigation }) => {
                         {data?.body}
                     </Pera>
                     <Br space={0.01} />
-                    <Small>
-                        {dt.toString().split('-').pop()} ago
-                    </Small>
+                    {
+                        dt === 'Just Now'
+                        ?
+                        <Small>{dt}</Small>
+                        :
+                        <Small>
+                            {dt.toString().split('-').pop()} ago
+                        </Small>
+                    }
                 </View>
                 <Br space={0.02} />
             </React.Fragment>

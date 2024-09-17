@@ -202,6 +202,9 @@ const Sidebar = ({ user, isOpen }) => {
                     />
                     <Br space={0.03} />
                     <TouchableOpacity onPress={async () => {
+                        await AsyncStorage.removeItem('token');
+                        await AsyncStorage.removeItem('fcm');
+                        await AsyncStorage.removeItem('device');
                         await AsyncStorage.removeItem('user');
                         dispatch(hideDrawer());
                         navigation.navigate('Logout');

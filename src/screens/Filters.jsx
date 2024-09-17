@@ -1,7 +1,8 @@
+/* eslint-disable radix */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Pressable, TextInput, View } from 'react-native';
+import { Dimensions, Pressable, View } from 'react-native';
 import Background from '../utils/Background';
 import { H6, Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -9,38 +10,62 @@ import Br from '../components/Br';
 import Backbtn from '../components/Backbtn';
 import { Refresh2 } from 'iconsax-react-native';
 import { Button } from '../components/Button';
-import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import Loading from './Loading';
 import Dropdown from '../components/Dropdown';
 import Toast from 'react-native-simple-toast';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 const { width, height } = Dimensions.get('window');
 const Filters = ({ navigation }) => {
-    const isFocused = useIsFocused();
-    const [ filterOptions, setFilterOptions ] = useState();
-    const [ amenity, setAmenity ] = useState('');
-    const [ propertyType, setPropertyType ] = useState('');
-    const [ state, setState ] = useState('');
-    const [ city, setCity ] = useState('');
-    const [ min, setMin ] = useState(0);
-    const [ max, setMax ] = useState(0);
-    const [ beds, setBeds ] = useState(1);
-    const [ baths, setBaths ] = useState(1);
-    const [ areaMin, setAreaMin ] = useState(0);
-    const [ areaMax, setAreaMax ] = useState(0);
+    const [filterOptions, setFilterOptions] = useState();
+    const [amenity, setAmenity] = useState('');
+    const [propertyType, setPropertyType] = useState('');
+    const [state, setState] = useState('');
+    const [city, setCity] = useState('');
+    const [min, setMin] = useState(0);
+    const [max, setMax] = useState(0);
+    const [beds, setBeds] = useState(1);
+    const [baths, setBaths] = useState(1);
+    const [areaMin, setAreaMin] = useState(0);
+    const [areaMax, setAreaMax] = useState(0);
+
+    const [twoWayValue, setTwoWayValue] = useState([0, 0]);
+    const [twoWayValueArea, setTwoWayValueArea] = useState([0, 0]);
+
+    const [maxValue, setMaxValue] = useState(0);
+    const [maxValueArea, setMaxValueArea] = useState(0);
 
     useEffect(() => {
-        if (isFocused) {loadData();}
-    }, [isFocused]);
+        if (!filterOptions) {
+            loadData();
+        }
+    }, [filterOptions]);
+
+    useEffect(() => {
+        setMin(twoWayValue[0]);
+        setMax(twoWayValue[1]);
+    }, [twoWayValue]);
+
+    useEffect(() => {
+        setAreaMin(twoWayValueArea[0]);
+        setAreaMax(twoWayValueArea[1]);
+    }, [twoWayValueArea]);
 
     const loadData = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
-            const res = await api.get('/user/properties/filter/data', {headers: {Authorization: `Bearer ${token}`}});
+            const res = await api.get('/user/properties/filter/data', { headers: { Authorization: `Bearer ${token}` } });
+            const maxAmount = parseFloat(res.data?.data[4]) > 0 ? parseFloat(res.data?.data[4]) : 1;
+            const maxAreaValue = parseFloat(res.data?.data[5]) > 0 ? parseFloat(res.data?.data[5]) : 1;
+
             setFilterOptions(res.data?.data);
-        } catch(err) {
+            setTwoWayValue([0, maxAmount]);
+            setTwoWayValueArea([0, maxAreaValue]);
+            setMaxValue(parseInt(maxAmount));
+            setMaxValueArea(parseInt(maxAreaValue));
+        } catch (err) {
             await errHandler(err, () => loadData());
         }
     };
@@ -56,7 +81,13 @@ const Filters = ({ navigation }) => {
         setBaths(1);
         setAreaMin(0);
         setAreaMax(0);
+        setTwoWayValue([0, maxValue]);
+        setTwoWayValueArea([0, maxValueArea]);
         Toast.show('Filters has been reset', Toast.SHORT);
+    };
+
+    const handleTwoWaySliderChange = value => {
+        setTwoWayValue(value);
     };
 
     if (!filterOptions) {
@@ -76,18 +107,18 @@ const Filters = ({ navigation }) => {
     const uniqueAmentitiesList = [...new Set(amentitiesList)];
 
     return (
-        <Background noBackground>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <Background bgColor={Color('textColor')} noBackground>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Backbtn style={{ flex: 1 }} dark position="static" onPress={() => navigation.goBack()} />
                 <H6 style={{ flex: 4, textAlign: 'center', fontFamily: 'Inter_28pt-Regular' }} theme="dark">Filter</H6>
                 <Pressable onPress={resetFilters}>
-                    <Pera style={{flex: 1, textAlign: 'center', fontFamily: 'Inter_28pt-Regular', paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30, backgroundColor: Color('darkTheme')}}>Clear</Pera>
+                    <Pera style={{ flex: 1, textAlign: 'center', fontFamily: 'Inter_28pt-Regular', paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30, backgroundColor: Color('darkTheme') }}>Clear</Pera>
                 </Pressable>
             </View>
             <Br space={0.03} />
             <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Property Type</H6>
             <Br space={0.02} />
-            <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 15}}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 15 }}>
                 <Pressable onPress={() => setPropertyType('')} style={{ borderWidth: 1, backgroundColor: propertyType === '' ? Color('btnBackground') : null, borderColor: propertyType === '' ? Color('btnBackground') : Color('gray'), paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30 }}>
                     <Small style={{ fontFamily: 'Inter_28pt-Regular' }} theme={propertyType === '' ? null : 'dark'}>Any</Small>
                 </Pressable>
@@ -132,23 +163,37 @@ const Filters = ({ navigation }) => {
 
             <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Price Range</H6>
             <Br space={0.02} />
-            <View style={{flexDirection: 'row', gap: 10, justifyContent: 'space-between'}}>
-                <View style={{alignItems: 'center'}}>
-                    <TextInput value={min} onChangeText={(value) => setMin(parseFloat(value))} keyboardType="numeric" placeholder="$300" placeholderTextColor={Color('gray')} style={{borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05}} />
-                    <Br space={0.01} />
-                    <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Min</H6>
-                </View>
-                <View style={{alignItems: 'center'}}>
-                    <TextInput value={max} onChangeText={(value) => setMax(parseFloat(value))} keyboardType="numeric" placeholder="$300" placeholderTextColor={Color('gray')} style={{borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05}} />
-                    <Br space={0.01} />
-                    <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Max</H6>
-                </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
+                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{min}</H6>
+                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{max}</H6>
+            </View>
+            {
+                maxValue > 0 && (
+                    <MultiSlider
+                        values={twoWayValue}
+                        onValuesChange={handleTwoWaySliderChange}
+                        sliderLength={width * 0.85}
+                        containerStyle={{ alignSelf: 'center' }}
+                        min={0}
+                        max={maxValue}
+                        step={1}
+                        allowOverlap={false}
+                        snapped={true}
+                        markerStyle={{ backgroundColor: Color('propertyPrice') }}
+                        selectedStyle={{ backgroundColor: Color('propertyPrice') }}
+                        unselectedStyle={{ backgroundColor: Color('gray') }}
+                    />
+                )
+            }
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
+                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Min</H6>
+                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Max</H6>
             </View>
             <Br space={0.05} />
 
             <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Bedroom</Pera>
             <Br space={0.02} />
-            <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 15}}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 15 }}>
                 <Pressable onPress={() => setBeds(1)} style={{ borderWidth: 1, borderColor: beds === 1 ? Color('btnBackground') : Color('gray'), backgroundColor: beds === 1 ? Color('btnBackground') : null, paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 10 }}>
                     <Small style={{ fontFamily: 'Inter_28pt-Regular' }} theme={beds === 1 ? null : 'dark'}>1</Small>
                 </Pressable>
@@ -172,7 +217,7 @@ const Filters = ({ navigation }) => {
 
             <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Bathroom</Pera>
             <Br space={0.02} />
-            <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 15}}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 15 }}>
                 <Pressable onPress={() => setBaths(1)} style={{ borderWidth: 1, borderColor: baths === 1 ? Color('btnBackground') : Color('gray'), backgroundColor: baths === 1 ? Color('btnBackground') : null, paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 10 }}>
                     <Small style={{ fontFamily: 'Inter_28pt-Regular' }} theme={baths === 1 ? null : 'dark'}>1</Small>
                 </Pressable>
@@ -196,22 +241,36 @@ const Filters = ({ navigation }) => {
 
             <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Area Range (Sqft)</H6>
             <Br space={0.02} />
-            <View style={{flexDirection: 'row', gap: 10, justifyContent: 'space-between'}}>
-                <View style={{alignItems: 'center'}}>
-                    <TextInput value={areaMin} onChangeText={(value) => setAreaMin(parseFloat(value))} placeholderTextColor={Color('gray')} keyboardType="numeric" placeholder="$300" style={{borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05}} />
-                    <Br space={0.01} />
-                    <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Min</H6>
-                </View>
-                <View style={{alignItems: 'center'}}>
-                    <TextInput value={areaMax} onChangeText={(value) => setAreaMax(parseFloat(value))} placeholderTextColor={Color('gray')} keyboardType="numeric" placeholder="$300" style={{borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05}} />
-                    <Br space={0.01} />
-                    <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Max</H6>
-                </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
+                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{areaMin}</H6>
+                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{areaMax}</H6>
+            </View>
+            {
+                maxValueArea > 0 && (
+                    <MultiSlider
+                        values={twoWayValueArea}
+                        onValuesChange={(value) => setTwoWayValueArea(value)}
+                        sliderLength={width * 0.85}
+                        containerStyle={{ alignSelf: 'center' }}
+                        min={0}
+                        max={maxValueArea}
+                        step={1}
+                        allowOverlap={false}
+                        snapped={true}
+                        markerStyle={{ backgroundColor: Color('propertyPrice') }}
+                        selectedStyle={{ backgroundColor: Color('propertyPrice') }}
+                        unselectedStyle={{ backgroundColor: Color('gray') }}
+                    />
+                )
+            }
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
+                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Min</H6>
+                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Max</H6>
             </View>
             <Br space={0.05} />
             <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Amenities</H6>
             <Br space={0.02} />
-            <View style={{flexDirection: 'row', flexWrap: 'wrap', gap: 15}}>
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 15 }}>
                 {
                     uniqueAmentitiesList.map((val, index) => {
                         const isActive = amenity.includes(val.toLowerCase());
@@ -224,15 +283,15 @@ const Filters = ({ navigation }) => {
                 }
             </View>
             <Br space={0.05} />
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Pressable onPress={resetFilters} style={{flexDirection: 'row', alignItems: 'center', gap: 10}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Pressable onPress={resetFilters} style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Refresh2
                         size="25"
                         color={Color('btnBackground')}
                     />
                     <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Reset all</Pera>
                 </Pressable>
-                <Button style={{backgroundColor: Color('darkTheme')}} onPress={() => navigation.navigate('ListedProperties', {propertyType: propertyType, state: state, city: city, min: min, max: max, beds: beds, baths: baths, areaMin: areaMin, areaMax: areaMax})}>
+                <Button style={{ backgroundColor: Color('darkTheme') }} onPress={() => navigation.navigate('ListedProperties', { propertyType: propertyType, state: state, city: city, min: min, max: max, beds: beds, baths: baths, areaMin: areaMin, areaMax: areaMax })}>
                     Search Properties
                 </Button>
             </View>

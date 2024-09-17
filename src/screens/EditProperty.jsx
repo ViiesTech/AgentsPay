@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Alert, Dimensions, Image, Pressable, TextInput, View } from 'react-native';
+import { Dimensions, Image, Pressable, TextInput, View } from 'react-native';
 import Background from '../utils/Background';
 import Backbtn from '../components/Backbtn';
 import { H5, Pera, Small } from '../utils/Text';
@@ -20,6 +20,7 @@ import { allCity } from '../utils/defaultValues';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 import Loading from './Loading';
+import { ShowAlert } from '../utils/Alert';
 
 const { width, height } = Dimensions.get('window');
 const EditProperty = ({ navigation, route }) => {
@@ -248,72 +249,72 @@ const EditProperty = ({ navigation, route }) => {
 
     const isValid = () => {
         if (validator.isEmpty(property?.title)) {
-            Alert.alert('Title is required!', 'Please enter title.');
+            ShowAlert('Title is required!', 'Please enter title.');
             return false;
         }
 
         if (validator.isEmpty(property?.city) || property?.city === 'Select City') {
-            Alert.alert('City is required!', 'Please select city.');
+            ShowAlert('City is required!', 'Please select city.');
             return false;
         }
 
         if (validator.isEmpty(property?.state) || property?.state === 'Select State') {
-            Alert.alert('State is required!', 'Please select state.');
+            ShowAlert('State is required!', 'Please select state.');
             return false;
         }
 
         if (validator.isEmpty(property?.address)) {
-            Alert.alert('Address is required!', 'Please enter address.');
+            ShowAlert('Address is required!', 'Please enter address.');
             return false;
         }
 
         if (property?.property_size < 1) {
-            Alert.alert('Property Size/Area is required!', 'Please enter property size/area.');
+            ShowAlert('Property Size/Area is required!', 'Please enter property size/area.');
             return false;
         }
 
         if (property?.property_value < 1) {
-            Alert.alert('Property Value is required!', 'Please enter property value.');
+            ShowAlert('Property Value is required!', 'Please enter property value.');
             return false;
         }
 
         if (property?.agent_percentage < 1 && property?.agent_amount < 1) {
-            Alert.alert('Agent Percentage or Amount is required!', 'Please enter agent percentage or amount.');
+            ShowAlert('Agent Percentage or Amount is required!', 'Please enter agent percentage or amount.');
             return false;
         }
 
         if (property?.no_of_bedrooms < 1) {
-            Alert.alert('Number of Bedrooms is required!', 'Please enter number of bedrooms.');
+            ShowAlert('Number of Bedrooms is required!', 'Please enter number of bedrooms.');
             return false;
         }
 
         if (property?.no_of_bathrooms < 1) {
-            Alert.alert('Number of Bathrooms is required!', 'Please enter number of bathrooms.');
+            ShowAlert('Number of Bathrooms is required!', 'Please enter number of bathrooms.');
             return false;
         }
 
         if (validator.isEmpty(property?.property_description)) {
-            Alert.alert('Property Description is required!', 'Please enter description.');
+            ShowAlert('Property Description is required!', 'Please enter description.');
             return false;
         }
 
         if (validator.isEmpty(property?.property_type) || property?.property_type === 'Property Type') {
-            Alert.alert('Property Type is required!', 'Please enter property type.');
+            ShowAlert('Property Type is required!', 'Please enter property type.');
             return false;
         }
 
         if (images.length === 0) {
-            Alert.alert('Property Images are required!', 'Please upload atleast one image.');
+            ShowAlert('Property Images are required!', 'Please upload atleast one image.');
             return false;
         }
 
         if (documents.length === 0) {
-            Alert.alert('Property Documents are required!', 'Please upload atleast one document.');
+            ShowAlert('Property Documents are required!', 'Please upload atleast one document.');
             return false;
         }
 
         if (tags.length === 0) {
-            Alert.alert('Amenities are required!', 'Please enter atleast one.');
+            ShowAlert('Amenities are required!', 'Please enter atleast one.');
             return false;
         }
 

@@ -125,10 +125,10 @@ const PropertyDetails = ({ navigation, route }) => {
                             paddingVertical: height * 0.005,
                             bottom: 0, backgroundColor:
                                 Color('btnBackground'),
-                            alignItems: 'center'
+                            alignItems: 'center',
                         }}
                     >
-                        <Pera numberOfLines={1}>Agent Commission {details?.agent_percentage > 0 && `${details?.agent_percentage}%`} {details?.agent_amount > 0 && `(${details?.agent_amount.toLocaleString('en')}/-)`}</Pera>
+                        <H6 numberOfLines={1}>Agent Commission {details?.agent_percentage > 0 && `${details?.agent_percentage}%`} {details?.agent_amount > 0 && `(${details?.agent_amount.toLocaleString('en')}/-)`}</H6>
                     </View>
                 </View>
                 <View style={{ width: width * 0.85, alignSelf: 'center' }}>
@@ -147,12 +147,12 @@ const PropertyDetails = ({ navigation, route }) => {
                         {
                             details?.tags.split(', ').map((tag, index) => {
                                 return (
-                                  
+
                                         <React.Fragment key={index}>
                                             <Pera style={{ textTransform: 'capitalize' }}>{tag}</Pera>
                                             {(index + 1) < details?.tags.split(', ')?.length && <Pera theme="light">|</Pera>}
                                         </React.Fragment>
-                                  
+
                                 );
                             })
                         }

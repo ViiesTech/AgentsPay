@@ -1,6 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
-import React, { useState } from 'react';
-import { Alert, Dimensions, TextInput, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Dimensions, TextInput, View } from 'react-native';
 import Background from '../utils/Background';
 import Backbtn from '../components/Backbtn';
 import Notificationbtn from '../components/Notificationbtn';
@@ -12,13 +13,11 @@ import { ButtonOutline } from '../components/Button';
 import { api, errHandler } from '../API';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch } from 'react-redux';
-import { showDrawer } from '../redux/Reducers/drawerSlice';
+import { ShowAlert } from '../utils/Alert';
 
 const { width, height } = Dimensions.get('window');
 const ContactAdmin = ({ navigation, route }) => {
     const validator = require('validator');
-    const dispatch = useDispatch()
 
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState({
@@ -27,27 +26,40 @@ const ContactAdmin = ({ navigation, route }) => {
         message: '',
     });
 
+
+    useEffect(() => {
+        setData();
+    }, []);
+
+    const setData =  async () => {
+        const userData = await AsyncStorage.getItem('user');
+        setUser({
+            ...user,
+            full_name: JSON.parse(userData)?.full_name,
+        });
+    };
+
     const isValid = () => {
         if (validator.isEmpty(user?.full_name)) {
-            Alert.alert('Name is required!', 'Please enter your name.');
+            ShowAlert('Name is required!', 'Please enter your name.');
             return false;
         }
         if (!validator.isAlpha(user?.full_name.replace(' ', '')) || user?.full_name?.length < 3) {
-            Alert.alert('Name is not valid!', 'Name can only contains letters, minimum 3 letters are required.');
+            ShowAlert('Name is not valid!', 'Name can only contains letters, minimum 3 letters are required.');
             return false;
         }
 
         if (validator.isEmpty(user?.email)) {
-            Alert.alert('Email is required!', 'Please enter your email.');
+            ShowAlert('Email is required!', 'Please enter your email.');
             return false;
         }
         if (!validator.isEmail(user?.email)) {
-            Alert.alert('Email is not valid!', 'Please enter your valid email address.');
+            ShowAlert('Email is not valid!', 'Please enter your valid email address.');
             return false;
         }
 
         if (validator.isEmpty(user?.message)) {
-            Alert.alert('Message is required!', 'Please enter your message.');
+            ShowAlert('Message is required!', 'Please enter your message.');
             return false;
         }
 
@@ -95,7 +107,7 @@ const ContactAdmin = ({ navigation, route }) => {
                 alignSelf: 'center',
             }}>
                 <Backbtn position="static" onPress={() => {
-                    navigation.goBack()
+                    navigation.goBack();
                 }} />
                 <Notificationbtn unSeen position="static" onPress={() => navigation.goBack()} />
             </View>
@@ -109,6 +121,8 @@ const ContactAdmin = ({ navigation, route }) => {
                     labelText="Name"
                     style={{ marginBottom: height * 0.015 }}
                     onChange={(value) => setUser({ ...user, full_name: value })}
+                    isDefaultFocused
+                    readOnly
                 />
                 <Input
                     value={user?.email}
