@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo } from 'react';
-import { BackHandler, Dimensions, FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { Alert, BackHandler, Dimensions, FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import KeyboardView from './KeyboardView';
 import Sidebar from '../components/Sidebar';
-import { ALERT_TYPE, AlertNotificationRoot, Dialog } from 'react-native-alert-notification';
+import { AlertNotificationRoot } from 'react-native-alert-notification';
 import { Color } from './Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from './NavigationContext';
@@ -26,18 +26,19 @@ const Background = ({ bgColor, home, children, noBackground, data, noScroll, det
             const name = routes[routes.length - 2].name;
             const backToSidebar = route?.params?.backToSidebar;
             if (name === 'Splash') {
-                Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    gravity: 'center',
-                    title: 'Do You Want To Logout?',
-                    textBody: 'Logging out will clear your current session and require you to log in again to access your account. Are you sure?',
-                    button: 'Okay',
-                    onPressButton: () => {
-                        navigation.navigate(name);
-                    },
-                });
+                if (noAuth) {
+                    navigation.navigate(name);
+                }else {
+                    Alert.alert(
+                        'Do you want to logout?',
+                        'Logging out will clear your current session and require you to log in again to access your account. Are you sure?',
+                        [
+                            {text: 'No'},
+                            {text: 'Yes', onPress: () => navigation.navigate(name)},
+                        ]
+                    );
+                }
             }else {
-                console.log('123123123');
                 if (route.name === name) {
                     const previousName = routes[routes.length - 3] ? routes[routes.length - 3].name : 'Home';
                     navigation.navigate(previousName);
@@ -59,15 +60,17 @@ const Background = ({ bgColor, home, children, noBackground, data, noScroll, det
         );
 
         return () => backHandler.remove();
-    }, []);
+    }, [noAuth]);
 
     useEffect(() => {
-        if (!noAuth) {hasToken();}
-    }, [isFocused]);
+        if (!noAuth) {
+            hasToken();
+        }
+    }, [isFocused, noAuth]);
 
     const hasToken = async () => {
         const token = await AsyncStorage.getItem('token');
-        if (!token) {
+        if (!token && !noAuth) {
             navigation.navigate('Splash');
         }
     };

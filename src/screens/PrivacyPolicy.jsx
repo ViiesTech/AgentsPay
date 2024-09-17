@@ -32,7 +32,7 @@ const PrivacyPolicy = ({ navigation, route }) => {
     };
 
     if (content.length === 0) {
-        return <Loading />;
+        return <Loading noAuth />;
     }
 
     return (
