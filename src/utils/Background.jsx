@@ -3,14 +3,13 @@ import React, { useEffect, useMemo } from 'react';
 import { BackHandler, Dimensions, FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import KeyboardView from './KeyboardView';
 import Sidebar from '../components/Sidebar';
-import { AlertNotificationRoot } from 'react-native-alert-notification';
+import { ALERT_TYPE, AlertNotificationRoot, Dialog } from 'react-native-alert-notification';
 import { Color } from './Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from './NavigationContext';
 import { useIsFocused, useRoute } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import { hideDrawer, showDrawer } from '../redux/Reducers/drawerSlice';
-import { ShowAlert } from './Alert';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -27,15 +26,18 @@ const Background = ({ bgColor, home, children, noBackground, data, noScroll, det
             const name = routes[routes.length - 2].name;
             const backToSidebar = route?.params?.backToSidebar;
             if (name === 'Splash') {
-                ShowAlert(
-                    'Do You Want To Logout?',
-                    'Logging out will clear your current session and require you to log in again to access your account. Are you sure?',
-                    'Confirm',
-                    () => {
+                Dialog.show({
+                    type: ALERT_TYPE.SUCCESS,
+                    gravity: 'center',
+                    title: 'Do You Want To Logout?',
+                    textBody: 'Logging out will clear your current session and require you to log in again to access your account. Are you sure?',
+                    button: 'Okay',
+                    onPressButton: () => {
                         navigation.navigate(name);
                     },
-                );
+                });
             }else {
+                console.log('123123123');
                 if (route.name === name) {
                     const previousName = routes[routes.length - 3] ? routes[routes.length - 3].name : 'Home';
                     navigation.navigate(previousName);

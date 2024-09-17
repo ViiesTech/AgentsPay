@@ -63,15 +63,18 @@ const Subscriptions = ({ navigation }) => {
                     <Swiper
                         centerContent
                         showsButtons={false}
-                        style={{ height: height * 0.7 }}
+                        style={{ height: height * 0.7, zIndex: 1, overflow: 'visible' }}
                         activeDotColor={Color('btnBackground')}
                         showsPagination
+                        paginationEnabled={true}
+                        disabled={false}
+                        scrollEnabled={true}
                         loop
                     >
                         {
                             subscriptions.map((val, index) => {
                                 return (
-                                    <View key={index} style={{ height: height * 0.7 }}>
+                                    <View key={index} style={{ height: height * 0.7, zIndex: 10 }}>
                                         <SubscriptionCard data={val} onPress={() => navigation.navigate('SubscriptionPayment', {package: val})} style={{ width: width * 0.85, alignSelf: 'center' }} />
                                     </View>
                                 );
