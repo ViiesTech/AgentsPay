@@ -16,6 +16,7 @@ import { api, baseUrl, errHandler } from '../API';
 import Loading from './Loading';
 import Toast from 'react-native-simple-toast';
 import Hr from '../components/Hr';
+import Backbtn from '../components/Backbtn';
 
 const { width, height } = Dimensions.get('window');
 const PropertyDetails = ({ navigation, route }) => {
@@ -105,16 +106,22 @@ const PropertyDetails = ({ navigation, route }) => {
     return (
         <>
             <Background
+                flex
                 contenStyle={{
                     paddingHorizontal: 0,
-                }}
-                flex>
+                }}>
+                <Backbtn
+                    style={{ marginLeft: width * 0.03 }}
+                    position="static"
+                    onPress={() => {
+                        navigation.goBack();
+                    }} />
                 <View
                     style={{ position: 'relative' }}
                 >
                     <Br space={0.03} />
                     <View>
-                    <PropertyInfo data={route?.params?.data} isSwiper />
+                        <PropertyInfo data={route?.params?.data} isSwiper />
                     </View>
                     <Br space={0.07} />
                     <View
@@ -143,15 +150,15 @@ const PropertyDetails = ({ navigation, route }) => {
                         Amenities
                     </H6>
                     <Br space={0.01} />
-                    <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-around',flexWrap:'wrap' }}>
+                    <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-around', flexWrap: 'wrap' }}>
                         {
                             details?.tags.split(', ').map((tag, index) => {
                                 return (
 
-                                        <React.Fragment key={index}>
-                                            <Pera style={{ textTransform: 'capitalize' }}>{tag}</Pera>
-                                            {(index + 1) < details?.tags.split(', ')?.length && <Pera theme="light">|</Pera>}
-                                        </React.Fragment>
+                                    <React.Fragment key={index}>
+                                        <Pera style={{ textTransform: 'capitalize' }}>{tag}</Pera>
+                                        {(index + 1) < details?.tags.split(', ')?.length && <Pera theme="light">|</Pera>}
+                                    </React.Fragment>
 
                                 );
                             })

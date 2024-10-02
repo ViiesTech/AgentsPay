@@ -11,6 +11,7 @@ import CheckBox from '@react-native-community/checkbox';
 import { api, errHandler } from '../API';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import { ShowAlert } from '../utils/Alert';
+import Backbtn from '../components/Backbtn';
 
 const { width, height } = Dimensions.get('window');
 const Signup = ({ navigation, route }) => {
@@ -111,6 +112,7 @@ const Signup = ({ navigation, route }) => {
     };
     return (
         <Background noAuth>
+             <Backbtn onPress={() => navigation.goBack()} />
             <Image source={require('../assets/images/icon.png')} style={{ alignSelf: 'center', width: width * 0.4, height: width * 0.4, resizeMode: 'contain', marginTop: height * 0.05 }} />
             <Br space={0.03} />
             <View style={{width: width * 0.85, alignSelf: 'center'}}>

@@ -39,8 +39,8 @@ const UploadProperty = ({ navigation, route }) => {
     const [propertyTypes, setPropertyTypes] = useState([]);
     const [property, setProperty] = useState({
         title: '',
-        city: 'Select City',
-        state: 'Select State',
+        city: '',
+        state: '',
         address: '',
         property_size: 0,
         property_value: 0,
@@ -49,7 +49,8 @@ const UploadProperty = ({ navigation, route }) => {
         no_of_bedrooms: 0,
         no_of_bathrooms: 0,
         property_description: '',
-        property_type: 'Property Type',
+        property_type: '',
+        agent_remarks: ''
     });
 
     useEffect(() => {
@@ -145,7 +146,7 @@ const UploadProperty = ({ navigation, route }) => {
                 docs.push(result[x]);
             }
 
-            if (docs.length > 6) {
+            if (docs.length > 2) {
                 docs.splice(0, docs.length - 6);
             }
             setDocuments(docs);
@@ -174,33 +175,9 @@ const UploadProperty = ({ navigation, route }) => {
     };
 
     const isValid = () => {
-        if (validator.isEmpty(property?.title)) {
-            ShowAlert('Title is required!', 'Please enter title.');
-            return false;
-        }
-
-        if (validator.isEmpty(property?.city) || property?.city === 'Select City') {
-            ShowAlert('City is required!', 'Please select city.');
-            return false;
-        }
-
-        if (validator.isEmpty(property?.state) || property?.state === 'Select State') {
-            ShowAlert('State is required!', 'Please select state.');
-            return false;
-        }
 
         if (validator.isEmpty(property?.address)) {
             ShowAlert('Address is required!', 'Please enter address.');
-            return false;
-        }
-
-        if (parseFloat(property?.property_size) < 1) {
-            ShowAlert('Property Size/Area is required!', 'Please enter property size/area.');
-            return false;
-        }
-
-        if (parseFloat(property?.property_value) < 1) {
-            ShowAlert('Property Value is required!', 'Please enter property value.');
             return false;
         }
 
@@ -208,42 +185,6 @@ const UploadProperty = ({ navigation, route }) => {
             ShowAlert('Agent Percentage or Amount is required!', 'Please enter agent percentage or amount.');
             return false;
         }
-
-        if (parseInt(property?.no_of_bedrooms) < 1) {
-            ShowAlert('Number of Bedrooms is required!', 'Please enter number of bedrooms.');
-            return false;
-        }
-
-        if (parseInt(property?.no_of_bathrooms) < 1) {
-            ShowAlert('Number of Bathrooms is required!', 'Please enter number of bathrooms.');
-            return false;
-        }
-
-        if (validator.isEmpty(property?.property_description)) {
-            ShowAlert('Property Description is required!', 'Please enter description.');
-            return false;
-        }
-
-        if (validator.isEmpty(property?.property_type) || property?.property_type === 'Property Type') {
-            ShowAlert('Property Type is required!', 'Please enter property type.');
-            return false;
-        }
-
-        if (images.length === 0) {
-            ShowAlert('Property Images are required!', 'Please upload atleast one image.');
-            return false;
-        }
-
-        if (documents.length === 0) {
-            ShowAlert('Property Documents are required!', 'Please upload atleast one document.');
-            return false;
-        }
-
-        if (tags.length === 0) {
-            ShowAlert('Amenities are required!', 'Please enter atleast one.');
-            return false;
-        }
-
         return true;
     };
 
@@ -272,6 +213,7 @@ const UploadProperty = ({ navigation, route }) => {
                     no_of_bathrooms: property?.no_of_bathrooms,
                     property_description: property?.property_description.toString(),
                     property_type: propertyType,
+                    agent_remarks: property?.agent_remarks?.toString()
                 }, { headers: { Authorization: `Bearer ${token}` } });
 
                 if (route.name === 'UploadProperty') {
@@ -309,7 +251,7 @@ const UploadProperty = ({ navigation, route }) => {
             <Br space={0.02} />
             <Input
                 value={property?.title}
-                labelText="Property Title"
+                labelText="Property"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
                 onChange={(value) => setProperty({ ...property, title: value })}
             />
@@ -459,34 +401,50 @@ const UploadProperty = ({ navigation, route }) => {
                     <TextInput multiline value={property.property_description} onChangeText={(value) => setProperty({ ...property, property_description: value })} placeholder="Enter information" numberOfLines={height < 650 ? 8 : 10} style={{ textAlignVertical: 'top', color: Color('darkTheme') }} placeholderTextColor={Color('gray')} />
                 </View>
             </View>
+            <View style={{ width: width * 0.85, alignSelf: 'center' }}>
+                <Small theme="transparent" style={{ paddingLeft: width * 0.02, paddingTop: width * 0.05 }}>Agents Remarks</Small>
+                <Br space={0.01} />
+                <View style={{
+                    padding: width * 0.05,
+                    paddingTop: height * 0.01,
+                    backgroundColor: Color('btnOutline'),
+                    borderRadius: 20,
+                }}>
+                    <TextInput multiline value={property.property_description} onChangeText={(value) => setProperty({ ...property, agent_remarks: value })} placeholder="Enter information" numberOfLines={height < 650 ? 8 : 10} style={{ textAlignVertical: 'top', color: Color('darkTheme') }} placeholderTextColor={Color('gray')} />
+                </View>
+            </View>
             <Br space={0.03} />
-            <Button onPress={uploadDocuments} style={{ width: width * 0.85, alignSelf: 'center' }}>Upload Documents</Button>
-            {
-                documents.length > 0 && (
-                    <>
-                        <Br space={0.03} />
-                        <Pera theme="transparent" style={{ marginTop: height * 0.002, width: width * 0.85, alignSelf: 'center' }}>Uploaded Document</Pera>
-                        <Br space={0.01} />
-                    </>
-                )
+            <Button onPress={() => {
+                if (documents?.length === 2) {
+                    ShowAlert('Only 2 document is allowed!',);
+                } else {
+                    uploadDocuments()
+                }
+            }} style={{ width: width * 0.85, alignSelf: 'center' }}>Upload Documents</Button>
+            {documents.length > 0 && (
+                <>
+                    <Br space={0.03} />
+                    <Pera theme="transparent" style={{ marginTop: height * 0.002, width: width * 0.85, alignSelf: 'center' }}>Uploaded Document</Pera>
+                    <Br space={0.01} />
+                </>
+            )
             }
-            {
-                documents.map((val, index) => {
-                    return (
-                        <View key={index} style={{ width: width * 0.85, alignSelf: 'center' }}>
-                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
-                                <Pera numberOfLines={1} style={{ marginTop: height * 0.002, width: width * 0.7 }}>{val.fileName}</Pera>
-                                <Pressable onPress={() => removeDoc(index)}>
-                                    <CloseCircle
-                                        size="25"
-                                        color={Color('btnBackground')}
-                                    />
-                                </Pressable>
-                            </View>
-                            <Br space={0.02} />
+            {documents.map((val, index) => {
+                return (
+                    <View key={index} style={{ width: width * 0.85, alignSelf: 'center' }}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
+                            <Pera numberOfLines={1} style={{ marginTop: height * 0.002, width: width * 0.7 }}>{val.fileName}</Pera>
+                            <Pressable onPress={() => removeDoc(index)}>
+                                <CloseCircle
+                                    size="25"
+                                    color={Color('btnBackground')}
+                                />
+                            </Pressable>
                         </View>
-                    );
-                })
+                        <Br space={0.02} />
+                    </View>
+                );
+            })
             }
             <Br space={0.05} />
             <ButtonOutline loading={loading} style={{ width: width * 0.85, alignSelf: 'center' }} onPress={onAddProperty}>Submit</ButtonOutline>

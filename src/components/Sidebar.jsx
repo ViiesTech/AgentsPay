@@ -3,16 +3,17 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { Animated, Dimensions, Image, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { hideDrawer } from '../redux/Reducers/drawerSlice';
 import { Color } from '../utils/Colors';
-import { Call, Card, Cards, Edit2, Home, MessageNotif, Notepad, Personalcard, Profile, Profile2User, ProfileTick, Reserve, SmsNotification } from 'iconsax-react-native';
+import { Call, Card, Cards, Edit2, Hashtag, Home, MessageNotif, Notepad, Personalcard, Profile, Profile2User, ProfileTick, Reserve, SmsNotification, User } from 'iconsax-react-native';
 import { H6, Pera, Small } from '../utils/Text';
 import Br from './Br';
 import Backbtn from './Backbtn';
 import Hr from './Hr';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { api } from '../API';
 const { width, height } = Dimensions.get('screen');
 
 const Sidebar = ({ user, isOpen }) => {
@@ -20,7 +21,8 @@ const Sidebar = ({ user, isOpen }) => {
     const slideAnim = new Animated.Value(-width);
     const dispatch = useDispatch();
     const navigation = useNavigation();
-    const [ userData, setUserData ] = useState();
+    const [userData, setUserData] = useState();
+    const [genderPronouns, setGenderPronouns] = useState('')
 
     useEffect(() => {
         Animated.timing(slideAnim, {
@@ -31,14 +33,17 @@ const Sidebar = ({ user, isOpen }) => {
     }, [slideAnim, isOpen]);
 
     useEffect(() => {
-        if (!userData) {saveUserData();}
+        if (!userData) { saveUserData(); }
     }, []);
 
     const saveUserData = async () => {
         if (user) {
+            const token = await AsyncStorage.getItem('token');
+            const res = await api.get('/user/profile/data', { headers: { Authorization: `Bearer ${token}` } });
+            setGenderPronouns(res.data?.data?.gender)
             await AsyncStorage.setItem('user', JSON.stringify(user));
             setUserData(user);
-        }else {
+        } else {
             const savedData = await AsyncStorage.getItem('user');
             setUserData(JSON.parse(savedData));
         }
@@ -156,6 +161,14 @@ const Sidebar = ({ user, isOpen }) => {
                                     variant="Outline"
                                 />
                                 <Small style={{ width: width * 0.35 }} numberOfLines={1}>{userData?.broker_name}</Small>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                                <Hashtag
+                                    size="22"
+                                    color={Color('btnBackground')}
+                                    variant="Outline"
+                                />
+                                <Small style={{ width: width * 0.45 }} numberOfLines={1}>{genderPronouns === "male" ? "He" : genderPronouns === "female" ? "She" : 'Other'}</Small>
                             </View>
                         </View>
                     </View>
