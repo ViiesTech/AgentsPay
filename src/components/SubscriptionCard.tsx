@@ -13,7 +13,7 @@ const SubscriptionCard = ({ data, style, onPress }: { data?: any, style?: any, o
         if (onPress) {onPress();}
     };
     return (
-        <Pressable onPress={onClicked} style={[{ padding: width * 0.05, backgroundColor: Color('textColor'), borderRadius: 10 }, style]}>
+        <Pressable onPress={onClicked} style={[{ padding: width * 0.05, backgroundColor: Color('textColor'), borderRadius: 10, zIndex: 1 }, style]}>
             <View style={{
                 flexDirection: 'row',
                 alignItems: 'center',

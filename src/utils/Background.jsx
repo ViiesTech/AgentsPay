@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react';
-import { BackHandler, Dimensions, FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import React, { useEffect, useMemo } from 'react';
+import { Alert, BackHandler, Dimensions, FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import KeyboardView from './KeyboardView';
 import Sidebar from '../components/Sidebar';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
@@ -8,27 +8,48 @@ import { Color } from './Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from './NavigationContext';
 import { useIsFocused, useRoute } from '@react-navigation/native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { hideDrawer, showDrawer } from '../redux/Reducers/drawerSlice';
 
 const { width, height } = Dimensions.get('screen');
 
-const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, onScrollEnd, noAuth, flex,contenStyle }) => {
+const Background = ({ bgColor, home, children, noBackground, data, noScroll, detectScrollEnd, onScrollEnd, noAuth, flex,contenStyle }) => {
     const isFocused = useIsFocused();
     const route = useRoute();
     const navigation = useNavigation();
     const dispatch = useDispatch();
+    const isOpen = useSelector(({ drawer }) => drawer?.drawer);
 
     useEffect(() => {
         const backAction = () => {
             const routes = navigation.navigationRef.current.getState().routes;
             const name = routes[routes.length - 2].name;
             const backToSidebar = route?.params?.backToSidebar;
-            navigation.navigate(name);
-            if (backToSidebar) {
-                dispatch(showDrawer());
+            if (name === 'Splash') {
+                if (noAuth) {
+                    navigation.navigate(name);
+                }else {
+                    Alert.alert(
+                        'Do you want to logout?',
+                        'Logging out will clear your current session and require you to log in again to access your account. Are you sure?',
+                        [
+                            {text: 'No'},
+                            {text: 'Yes', onPress: () => navigation.navigate(name)},
+                        ]
+                    );
+                }
             }else {
-                dispatch(hideDrawer());
+                if (route.name === name) {
+                    const previousName = routes[routes.length - 3] ? routes[routes.length - 3].name : 'Home';
+                    navigation.navigate(previousName);
+                }else {
+                    navigation.navigate(name);
+                }
+                if (backToSidebar) {
+                    dispatch(showDrawer());
+                }else {
+                    dispatch(hideDrawer());
+                }
             }
             return true;
         };
@@ -39,15 +60,17 @@ const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, o
         );
 
         return () => backHandler.remove();
-    }, []);
+    }, [noAuth]);
 
     useEffect(() => {
-        if (!noAuth) {hasToken();}
-    }, [isFocused]);
+        if (!noAuth) {
+            hasToken();
+        }
+    }, [isFocused, noAuth]);
 
     const hasToken = async () => {
         const token = await AsyncStorage.getItem('token');
-        if (!token) {
+        if (!token && !noAuth) {
             navigation.navigate('Splash');
         }
     };
@@ -72,8 +95,12 @@ const Background = ({ children, noBackground, data, noScroll, detectScrollEnd, o
             ]}
             toastConfig={{ titleStyle: { textAlign: 'center' }, textBodyStyle: { textAlign: 'center' } }}
             >
-                <Sidebar user={data} />
-                <SafeAreaView style={styles.safeAreaView}>
+                {
+                    useMemo(() => {
+                        return <Sidebar user={data} isOpen={isOpen} />;
+                    }, [home, isOpen])
+                }
+                <SafeAreaView style={[styles.safeAreaView, { backgroundColor: bgColor || Color('navigationBackground') }]}>
                     {!noBackground && <Image source={require('../assets/images/background.png')} style={styles.backgroundImage} />}
                     <View style={[styles.content,contenStyle]}>
                         <KeyboardView>
@@ -128,7 +155,6 @@ export default Background;
 const styles = StyleSheet.create({
     safeAreaView: {
         flex: 1,
-        backgroundColor: Color('navigationBackground'),
         paddingTop: Platform.OS === 'android' ? 25 : 0,
     },
     backgroundImage: {

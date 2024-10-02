@@ -55,7 +55,7 @@ const Home = ({ navigation }) => {
 
     return (
         <>
-            <Background data={user}>
+            <Background data={user} home>
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',

@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { Alert, Dimensions, Image, View } from 'react-native';
+import { Dimensions, Image, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
 import Br from '../components/Br';
@@ -10,6 +10,7 @@ import OTPInput from '../components/OTPInput';
 import Backbtn from '../components/Backbtn';
 import { api, errHandler } from '../API';
 import Toast from 'react-native-simple-toast';
+import { ShowAlert } from '../utils/Alert';
 
 const { width, height } = Dimensions.get('window');
 const OTPScreen = ({ navigation, route }) => {
@@ -19,11 +20,11 @@ const OTPScreen = ({ navigation, route }) => {
 
     const isValid = () => {
         if (validator.isEmpty(OTP)) {
-            Alert.alert('OTP is required!', 'Please enter the OTP you received.');
+            ShowAlert('OTP is required!', 'Please enter the OTP you received.');
             return false;
         }
         if (OTP.toString().length < 6) {
-            Alert.alert('OTP is not valid!', 'Please enter a valid OTP.');
+            ShowAlert('OTP is not valid!', 'Please enter a valid OTP.');
             return false;
         }
 

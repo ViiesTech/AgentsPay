@@ -5,9 +5,9 @@ import { Color } from '../utils/Colors';
 import Background from '../utils/Background';
 
 const { height } = Dimensions.get('window');
-const Loading = () => {
+const Loading = ({ noAuth }) => {
     return (
-        <Background>
+        <Background noAuth={noAuth}>
             <View style={{height: height * 0.9, alignItems: 'center', justifyContent: 'center'}}>
                 <ActivityIndicator size={Platform.OS === 'ios' ? 'large' : 70} color={Color('btnBackground')} />
             </View>

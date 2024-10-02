@@ -3,7 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { Animated, Dimensions, Image, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { hideDrawer } from '../redux/Reducers/drawerSlice';
 import { Color } from '../utils/Colors';
 import { Call, Card, Cards, Edit2, Home, MessageNotif, Notepad, Personalcard, Profile, Profile2User, ProfileTick, Reserve, SmsNotification } from 'iconsax-react-native';
@@ -11,43 +11,37 @@ import { H6, Pera, Small } from '../utils/Text';
 import Br from './Br';
 import Backbtn from './Backbtn';
 import Hr from './Hr';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const { width, height } = Dimensions.get('screen');
 
-const Sidebar = ({ user }) => {
+const Sidebar = ({ user, isOpen }) => {
     // Create animated value for the horizontal position
     const slideAnim = new Animated.Value(-width);
-    const showDrawer = useSelector(({ drawer }) => drawer?.drawer);
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const [ userData, setUserData ] = useState();
 
     useEffect(() => {
         Animated.timing(slideAnim, {
-            toValue: showDrawer ? 0 : -width,
+            toValue: isOpen ? 0 : -width,
             duration: 500,
             useNativeDriver: true,
         }).start();
-    }, [slideAnim, showDrawer]);
+    }, [slideAnim, isOpen]);
 
     useEffect(() => {
-        if (!showDrawer) {
-            if (user) {
-                saveUserData();
-            }else {
-                loadUserData();
-            }
-        }
-    }, [user, showDrawer]);
+        if (!userData) {saveUserData();}
+    }, []);
 
     const saveUserData = async () => {
-        await AsyncStorage.setItem('user', JSON.stringify(user));
-        setUserData(user);
-    };
-    const loadUserData = async () => {
-        const data = await AsyncStorage.getItem('user');
-        setUserData(JSON.parse(data));
+        if (user) {
+            await AsyncStorage.setItem('user', JSON.stringify(user));
+            setUserData(user);
+        }else {
+            const savedData = await AsyncStorage.getItem('user');
+            setUserData(JSON.parse(savedData));
+        }
     };
     const DrawerItem = ({ label, screen }) => {
         const clicked = () => {
@@ -73,7 +67,7 @@ const Sidebar = ({ user }) => {
         );
     };
 
-    if (!showDrawer || !userData) { return; }
+    if (!isOpen || !userData) { return; }
 
     return (
         <Animated.View
@@ -208,8 +202,11 @@ const Sidebar = ({ user }) => {
                     />
                     <Br space={0.03} />
                     <TouchableOpacity onPress={async () => {
-                        dispatch(hideDrawer());
                         await AsyncStorage.removeItem('token');
+                        await AsyncStorage.removeItem('fcm');
+                        await AsyncStorage.removeItem('device');
+                        await AsyncStorage.removeItem('user');
+                        dispatch(hideDrawer());
                         navigation.navigate('Logout');
                     }}>
                         <View style={{

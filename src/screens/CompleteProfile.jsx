@@ -11,9 +11,10 @@ import { Edit2 } from 'iconsax-react-native';
 import Dropdown from '../components/Dropdown';
 import { api, errHandler } from '../API';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { noImage } from '../utils/defaultValues';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
+import { ShowAlert } from '../utils/Alert';
 
 const { width, height } = Dimensions.get('window');
 const CompleteProfile = ({ navigation, route }) => {
@@ -30,22 +31,22 @@ const CompleteProfile = ({ navigation, route }) => {
 
     const isValid = () => {
         if (validator.isEmpty(profile?.gender) || (profile?.gender !== 'male' && profile?.gender !== 'female')) {
-            Alert.alert('Gender is required!', 'Please enter your gender.');
+            ShowAlert('Gender is required!', 'Please enter your gender.');
             return false;
         }
 
         if (validator.isEmpty(profile?.location)) {
-            Alert.alert('Location is required!', 'Please enter your location.');
+            ShowAlert('Location is required!', 'Please enter your location.');
             return false;
         }
 
         if (validator.isEmpty(profile?.license_number)) {
-            Alert.alert('License number is required!', 'Please enter your license number.');
+            ShowAlert('License number is required!', 'Please enter your license number.');
             return false;
         }
 
         if (validator.isEmpty(profile?.broker_name)) {
-            Alert.alert('Broker name is required!', 'Please enter your broker name.');
+            ShowAlert('Broker name is required!', 'Please enter your broker name.');
             return false;
         }
 
@@ -102,6 +103,23 @@ const CompleteProfile = ({ navigation, route }) => {
         }
     };
 
+    const clickProfileImage = async () => {
+        const result = await launchCamera({
+            cameraType: 'back',
+            mediaType: 'photo',
+            maxWidth: 300,
+            maxHeight: 300,
+            includeBase64: true,
+        });
+
+        if (result?.assets) {
+            setProfile({...profile, profile_image: {
+                uri: result.assets[0].base64,
+                prefix: `data:${result.assets[0].type};base64,`,
+            }});
+        }
+    };
+
     return (
         <Background>
             <View style={{width: width * 0.85, alignSelf: 'center'}}>
@@ -115,7 +133,17 @@ const CompleteProfile = ({ navigation, route }) => {
                     width: width * 0.25,
                     alignSelf: 'center',
                 }}
-                onPress={uploadProfileImage}
+                onPress={() => {
+                    Alert.alert(
+                        'Select an Option',
+                        'Do you want to upload an image or click one from the camera?',
+                        [
+                            {text: 'Cancel'},
+                            {text: 'Camera', onPress: () => clickProfileImage()},
+                            {text: 'Upload', onPress: () => uploadProfileImage()},
+                        ]
+                    );
+                }}
                 >
                     <Image source={{ uri: `${profile.profile_image?.prefix}${profile.profile_image?.uri}` }} resizeMode="cover" style={{
                         width: width * 0.25,

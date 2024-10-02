@@ -1,7 +1,8 @@
+/* eslint-disable radix */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, TouchableOpacity, View } from 'react-native';
+import { Dimensions, View } from 'react-native';
 import Background from '../utils/Background';
 import Notificationbtn from '../components/Notificationbtn';
 import Br from '../components/Br';
@@ -9,46 +10,59 @@ import Search from '../components/Search';
 import NavigationBar from '../components/NavigationBar';
 import Backbtn from '../components/Backbtn';
 import PropertyListing from '../components/PropertyListing';
-import { useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, errHandler } from '../API';
 import Loading from './Loading';
-import { Pera, XSmall } from '../utils/Text';
+import { Pera } from '../utils/Text';
 
 const { width, height } = Dimensions.get('window');
 const ListedProperties = ({ navigation, route }) => {
     const params = route?.params;
-    const isFocused = useIsFocused();
 
+    const [ maxReached, setMaxReached ] = useState(false);
+    const [ loadingMore, setLoadingMore ] = useState();
     const [ keywords, setKeywords ] = useState('');
     const [ list, setlist ] = useState();
     const [page, setPage] = useState(1);
     const [maxPage, setMaxPage] = useState(1);
 
     useEffect(() => {
-        if (isFocused) {loadProperties();}
-    }, [isFocused]);
+        loadProperties();
+    }, []);
 
     const loadProperties = async () => {
         try {
-            const token = await AsyncStorage.getItem('token');
-            const res = await api.get('/user/properties/listing?page=' + page, {headers: {Authorization: `Bearer ${token}`}});
-            setlist(res.data?.data[0]);
-            setMaxPage(res.data?.data[1]);
-            setPage(page + 1);
+            if (!maxReached) {
+                const token = await AsyncStorage.getItem('token');
+                const res = await api.get('/user/properties/listing?page=' + page, {headers: {Authorization: `Bearer ${token}`}});
+                setlist(res.data?.data[0]);
+                setMaxPage(res.data?.data[1]);
+                if ((page + 1) <= parseInt(res.data?.data[1])) {
+                    setPage(page + 1);
+                }else {
+                    setMaxReached(true);
+                }
+            }
         } catch(err) {
             await errHandler(err, () => loadProperties());
         }
     };
 
     const loadMore = async () => {
-        if (page < maxPage) {
+        if (page <= maxPage && !maxReached) {
             try {
+                setLoadingMore('Loading....');
                 const token = await AsyncStorage.getItem('token');
                 const res = await api.get('/user/properties/listing?page=' + page, {headers: {Authorization: `Bearer ${token}`}});
                 setlist([...list, ...res.data.data[0]]);
-                setPage(page + 1);
+                setLoadingMore();
+                if ((page + 1) <= parseInt(res.data?.data[1])) {
+                    setPage(page + 1);
+                }else {
+                    setMaxReached(true);
+                }
             } catch(err) {
+                setLoadingMore();
                 await errHandler(err, () => loadMore());
             }
         }
@@ -134,11 +148,11 @@ const ListedProperties = ({ navigation, route }) => {
                             }).map((val, index) => {
                                 return (
                                     <View key={index} style={{flexBasis: '50%'}}>
-                                        <PropertyListing 
-                                        route={route} 
-                                        routeShouldBe="ListedProperties" 
+                                        <PropertyListing
+                                        route={route}
+                                        routeShouldBe="ListedProperties"
                                         onPress={() => navigation.navigate('PropertyDetails', { data: val })}
-                                         style={{ marginBottom: height * 0.01 }} 
+                                         style={{ marginBottom: height * 0.01 }}
                                          data={val} />
                                     </View>
                                 );
@@ -146,21 +160,14 @@ const ListedProperties = ({ navigation, route }) => {
                         }
                     </View>
                 }
-                {/* <View style={{flexDirection: 'row', width: width * 0.75, flexWrap: 'wrap', alignSelf: 'center', justifyContent: 'center', gap: 10, marginTop: height * 0.02}}>
-                    {
-                        Array.from({ length: maxPage }, (_, i) => i).map((_, index) => {
-                            return (
-                                <TouchableOpacity onPress={() => setPage(index + 1)}>
-                                    <View style={{ lineHeight: 1, alignItems: 'center' }}>
-                                        <Pera style={{fontWeight: 'bold'}}>{index + 1}</Pera>
-                                        <XSmall>Page</XSmall>
-                                    </View>
-                                </TouchableOpacity>
-                            );
-                        })
-                    }
-                </View> */}
-                <Br space={0.1} />
+                {
+                    loadingMore ? (
+                        <>
+                            <Pera style={{textAlign: 'center'}}>{loadingMore}</Pera>
+                            <Br space={0.1} />
+                        </>
+                    ) : <Br space={0.15} />
+                }
             </Background>
             <NavigationBar />
         </>

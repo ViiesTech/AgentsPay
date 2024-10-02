@@ -11,8 +11,6 @@ import { Color } from '../utils/Colors';
 import { useIsFocused } from '@react-navigation/native';
 import { api, errHandler } from '../API';
 import Loading from './Loading';
-import { useDispatch } from 'react-redux';
-import { showDrawer } from '../redux/Reducers/drawerSlice';
 
 const { width, height } = Dimensions.get('window');
 const UserTerms = ({ navigation }) => {
@@ -39,12 +37,12 @@ const UserTerms = ({ navigation }) => {
     };
 
     if (content.length === 0) {
-        return <Loading />;
+        return <Loading noAuth />;
     }
     return (
         <Background noAuth>
             <Backbtn onPress={() =>{
-             navigation.goBack()  
+             navigation.goBack();
             }} />
             <View style={{width: width * 0.85, alignSelf: 'center'}}>
                 <Image source={require('../assets/images/icon.png')} style={{ alignSelf: 'center', width: width * 0.4, height: width * 0.4, resizeMode: 'contain', marginTop: height * 0.05 }} />
