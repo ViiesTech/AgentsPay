@@ -55,7 +55,7 @@ const EditProfile = ({ navigation, route }) => {
     };
 
     const isValid = () => {
-        if (validator.isEmpty(profile?.gender) || (profile?.gender !== 'male' && profile?.gender !== 'female')) {
+        if (validator.isEmpty(profile?.gender) || (profile?.gender !== 'male' && profile?.gender !== 'female' && profile?.gender !== 'other')) {
             ShowAlert('Gender is required!', 'Please enter your gender.');
             return false;
         }

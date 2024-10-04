@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, View } from 'react-native';
-import { H6, Pera, Small } from '../utils/Text';
+import { Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
 import Br from './Br';
 import { ArchiveAdd, ArrowLeft2, ArrowRight2 } from 'iconsax-react-native';
@@ -87,7 +87,7 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                         </View>}
                 >
                     {
-                        data?.tbl_property_images?.map((val: any, index: any) => {
+                        data?.tbl_property_images && data?.tbl_property_images?.length > 0 ? data?.tbl_property_images?.map((val: any, index: any) => {
                             return (
                                 <View>
                                     <Image style={{
@@ -108,6 +108,23 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                                 </View>
                             );
                         })
+                        :
+                        <View>
+                            <Image style={{
+                                width: width * 0.85,
+                                height: height * 0.3,
+                                borderRadius: 20,
+                                shadowColor: Color('btnText'),
+                                shadowOffset: {
+                                    width: 0,
+                                    height: 7,
+                                },
+                                shadowOpacity: 0.41,
+                                shadowRadius: 9.11,
+
+                            }}
+                                source={{ uri: 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=' }} resizeMode="cover" />
+                        </View>
                     }
                 </Swiper>
                 :
@@ -122,15 +139,14 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                     },
                     shadowOpacity: 0.41,
                     shadowRadius: 9.11,
-                }} source={{ uri: `${baseUrl}/images/properties/${data?.tbl_property_images.filter((val: any) => val.cover_image === 1)[0].url}` }} resizeMode="cover" />
+                }} source={{ uri: `${baseUrl}/images/properties/${data?.tbl_property_images?.filter((val: any) => val.cover_image === 1)[0]?.url}` }} resizeMode="cover" />
             }
             <View style={{ paddingHorizontal: width * 0.03, paddingTop: height * 0.02 }}>
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
+                    justifyContent: 'flex-end',
                 }}>
-                    <H6 numberOfLines={1} style={{ fontFamily: 'Jost-SemiBold', textTransform: 'capitalize' }}>{data?.title}</H6>
                     <Small style={{
                         fontFamily: 'Jost-SemiBold',
                         paddingVertical: height * 0.005,

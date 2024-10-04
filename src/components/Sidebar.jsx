@@ -22,7 +22,7 @@ const Sidebar = ({ user, isOpen }) => {
     const dispatch = useDispatch();
     const navigation = useNavigation();
     const [userData, setUserData] = useState();
-    const [genderPronouns, setGenderPronouns] = useState('')
+    const [genderPronouns, setGenderPronouns] = useState('');
 
     useEffect(() => {
         Animated.timing(slideAnim, {
@@ -40,7 +40,7 @@ const Sidebar = ({ user, isOpen }) => {
         if (user) {
             const token = await AsyncStorage.getItem('token');
             const res = await api.get('/user/profile/data', { headers: { Authorization: `Bearer ${token}` } });
-            setGenderPronouns(res.data?.data?.gender)
+            setGenderPronouns(res.data?.data?.gender);
             await AsyncStorage.setItem('user', JSON.stringify(user));
             setUserData(user);
         } else {
@@ -154,7 +154,7 @@ const Sidebar = ({ user, isOpen }) => {
                                 />
                                 <Small style={{ width: width * 0.35 }} numberOfLines={1}>{userData?.license_number}</Small>
                             </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: height * 0.005 }}>
                                 <Notepad
                                     size="25"
                                     color={Color('btnBackground')}
@@ -168,7 +168,7 @@ const Sidebar = ({ user, isOpen }) => {
                                     color={Color('btnBackground')}
                                     variant="Outline"
                                 />
-                                <Small style={{ width: width * 0.45 }} numberOfLines={1}>{genderPronouns === "male" ? "He" : genderPronouns === "female" ? "She" : 'Other'}</Small>
+                                <Small style={{ width: width * 0.45 }} numberOfLines={1}>{genderPronouns === 'male' ? 'He' : genderPronouns === 'female' ? 'She' : 'Other'}</Small>
                             </View>
                         </View>
                     </View>

@@ -55,14 +55,13 @@ const PropertyCard = ({ data }: { data?: any }) => {
                 },
                 shadowOpacity: 0.41,
                 shadowRadius: 9.11,
-            }} source={{ uri: `${baseUrl}/images/properties/${data?.tbl_property_images[0].url}` }} resizeMode="cover" />
+            }} source={{ uri: data?.tbl_property_images && data?.tbl_property_images?.length > 0 ? `${baseUrl}/images/properties/${data?.tbl_property_images[0]?.url}` : 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=' }} resizeMode="cover" />
             <View style={{ transform: [{ translateY: -(height * 0.05) }], paddingHorizontal: width * 0.03, paddingVertical: height * 0.015, borderRadius: 10, backgroundColor: Color('textColor'), width: width * 0.75, alignSelf: 'center' }}>
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',
                     justifyContent: 'space-between',
                 }}>
-                    <Pera numberOfLines={1} style={{ color: Color('btnText'), fontFamily: 'Poppins-SemiBold' }}>{data?.title}</Pera>
                     <Pera style={{ color: Color('btnText'), fontFamily: 'Poppins-SemiBold' }}>${amountFormat(data?.property_value)}</Pera>
                 </View>
                 <View style={{

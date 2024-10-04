@@ -102,7 +102,7 @@ const ListedProperties = ({ navigation, route }) => {
                     <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
                         {
                             list.filter(val => {
-                                const property_type = val?.tbl_property_type?.label?.toLowerCase();
+                                const property_type = val?.tbl_property_type ? val?.tbl_property_type?.label?.toLowerCase() : '';
                                 const search_property_type = params?.propertyType || '';
 
                                 const state = val?.state?.toLowerCase();

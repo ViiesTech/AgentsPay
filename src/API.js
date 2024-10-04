@@ -3,6 +3,7 @@ import { Alert } from 'react-native';
 import Toast from 'react-native-simple-toast';
 import RNRestart from 'react-native-restart';
 import { ShowAlert } from './utils/Alert';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // export const baseUrl = 'http://192.168.1.21:8080';
 export const baseUrl = 'https://agentspay.predemo.site';
@@ -36,6 +37,10 @@ export const errHandler = async (err, callBack) => {
     if (status === 511) // MALFORMED TOKEN
     {
         Toast.show('Your session has been ended!!', Toast.SHORT);
+        await AsyncStorage.removeItem('token');
+        await AsyncStorage.removeItem('fcm');
+        await AsyncStorage.removeItem('device');
+        await AsyncStorage.removeItem('user');
         RNRestart.restart();
     }else {
         if (callBack) {

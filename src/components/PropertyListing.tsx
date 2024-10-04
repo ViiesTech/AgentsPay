@@ -1,7 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import { Dimensions, Image, Pressable, View } from 'react-native';
-import { Pera, Small } from '../utils/Text';
+import { Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
 import Br from './Br';
 import { amountFormat } from '../utils/defaultValues';
@@ -86,7 +86,7 @@ const PropertyListing = ({ route, routeShouldBe, isBookmarked, own, style, data,
                 <Small style={{ fontFamily: 'Poppins-SemiBold' }}>${amountFormat(data?.property_value)}</Small>
             </View>
             {
-                data?.tbl_property_images?.slice(0,1).map((val: any, index: any) => {
+                data?.tbl_property_images && data?.tbl_property_images?.length > 0 ? data?.tbl_property_images?.slice(0,1).map((val: any, index: any) => {
                     return (
                         <Image style={{
                             width: width * 0.41,
@@ -102,9 +102,21 @@ const PropertyListing = ({ route, routeShouldBe, isBookmarked, own, style, data,
                         }} key={index} source={{ uri: `${baseUrl}/images/properties/${val.url}` }} resizeMode="cover" />
                     );
                 })
+                :
+                <Image style={{
+                    width: width * 0.41,
+                    height: height * 0.13,
+                    borderRadius: 10,
+                    shadowColor: Color('btnText'),
+                    shadowOffset: {
+                        width: 0,
+                        height: 7,
+                    },
+                    shadowOpacity: 0.41,
+                    shadowRadius: 9.11,
+                }} source={{ uri: 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=' }} resizeMode="cover" />
             }
             <View style={{ paddingTop: height * 0.015, paddingBottom: own ? 0 : height * 0.015 }}>
-                <Pera numberOfLines={1} style={{ width: width * 0.4, color: Color('btnText'), fontFamily: 'Poppins-SemiBold', textTransform: 'capitalize'  }}>{data?.title}</Pera>
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',

@@ -196,7 +196,7 @@ const UploadProperty = ({ navigation, route }) => {
 
             try {
                 const token = await AsyncStorage.getItem('token');
-                const propertyType = propertyTypes.filter(val => val.label === property?.property_type)[0].id;
+                const propertyType = propertyTypes.filter(val => val.label === property?.property_type)[0];
                 const res = await api.post('/user/properties/upload', {
                     tags: JSON.stringify(tags),
                     images: JSON.stringify(images),
@@ -212,7 +212,7 @@ const UploadProperty = ({ navigation, route }) => {
                     no_of_bedrooms: property?.no_of_bedrooms,
                     no_of_bathrooms: property?.no_of_bathrooms,
                     property_description: property?.property_description.toString(),
-                    property_type: propertyType,
+                    property_type: propertyType ? propertyType?.id : "",
                     agent_remarks: property?.agent_remarks?.toString()
                 }, { headers: { Authorization: `Bearer ${token}` } });
 

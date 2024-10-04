@@ -206,6 +206,20 @@ const PropertyDetails = ({ navigation, route }) => {
                         />
                         <Pera style={{ textTransform: 'capitalize' }}>{details?.tbl_user?.full_name}</Pera>
                     </View>
+                    {
+                        details?.agent_remarks && details?.agent_remarks?.length && (
+                            <>
+                                <Br space={0.01} />
+                                <H6 style={{ fontFamily: 'Jost-Regular' }}>
+                                    Agent's Remarks
+                                </H6>
+                                <Br space={0.01} />
+                                <Small>
+                                    {details?.agent_remarks}
+                                </Small>
+                            </>
+                        )
+                    }
                     <Br space={0.03} />
                     <Button onPress={() => setShowAgentDetails(true)}>View Contact Details</Button>
                     <Br space={0.15} />
