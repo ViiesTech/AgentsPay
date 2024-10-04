@@ -15,7 +15,7 @@ import Loading from './Loading';
 
 const { width, height } = Dimensions.get('window');
 const Subscriptions = ({ navigation }) => {
-    const [ subscriptions, setSubscriptions ] = useState();
+    const [subscriptions, setSubscriptions] = useState();
     useEffect(() => {
         loadSubscriptions();
     }, []);
@@ -23,10 +23,10 @@ const Subscriptions = ({ navigation }) => {
     const loadSubscriptions = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
-            const res = await api.get('/user/subscriptions/all',{headers: {Authorization: `Bearer ${token}`}});
+            const res = await api.get('/user/subscriptions/all', { headers: { Authorization: `Bearer ${token}` } });
 
             setSubscriptions(res.data?.data);
-        } catch(err) {
+        } catch (err) {
             await errHandler(err, () => loadSubscriptions());
         }
     };
@@ -46,42 +46,31 @@ const Subscriptions = ({ navigation }) => {
                 <Backbtn position="static" onPress={() => navigation.goBack()} />
             </View>
             <Br space={0.05} />
-            <H5 theme="light" style={{fontFamily: 'Poppins-Medium', textAlign: 'center'}}>Subscriptions</H5>
+            <H5 theme="light" style={{ fontFamily: 'Poppins-Medium', textAlign: 'center' }}>Subscriptions</H5>
             <Br space={0.02} />
             {
                 subscriptions.length === 0
-                ?
-                <Pera style={{textAlign: 'center'}}>No Subscription Available</Pera>
-                :
-                subscriptions.length === 1
-                ?
-                <View style={{ height: height < 650 ? (height * 0.4) :  (height * 0.33) }}>
-                    <SubscriptionCard data={subscriptions[0]} onPress={() => navigation.navigate('SubscriptionPayment', {package: subscriptions[0]})} style={{ width: width * 0.85, alignSelf: 'center' }} />
-                </View>
-                :
-                <View style={{zIndex: 1}}>
-                    <Swiper
-                        centerContent
-                        showsButtons={false}
-                        style={{ height: height * 0.7, zIndex: 1, overflow: 'visible' }}
-                        activeDotColor={Color('btnBackground')}
-                        showsPagination
-                        paginationEnabled={true}
-                        disabled={false}
-                        scrollEnabled={true}
-                        loop
-                    >
-                        {
-                            subscriptions.map((val, index) => {
-                                return (
-                                    <View key={index} style={{ height: height * 0.7, zIndex: 10 }}>
-                                        <SubscriptionCard data={val} onPress={() => navigation.navigate('SubscriptionPayment', {package: val})} style={{ width: width * 0.85, alignSelf: 'center' }} />
-                                    </View>
-                                );
-                            })
-                        }
-                    </Swiper>
-                </View>
+                    ?
+                    <Pera style={{ textAlign: 'center' }}>No Subscription Available</Pera>
+                    :
+                    subscriptions.length === 1
+                        ?
+                        <View style={{ height: height < 650 ? (height * 0.4) : (height * 0.33) }}>
+                            <SubscriptionCard data={subscriptions[0]} onPress={() => navigation.navigate('SubscriptionPayment', { package: subscriptions[0] })} style={{ width: width * 0.85, alignSelf: 'center' }} />
+                        </View>
+                        :
+                        <View style={{ zIndex: 1 }}>
+
+                            {
+                                subscriptions.map((val, index) => {
+                                    return (
+                                        <View key={index} style={{ marginBottom:width*0.05, zIndex: 10,  }}>
+                                            <SubscriptionCard data={val} onPress={() => navigation.navigate('SubscriptionPayment', { package: val })} style={{ width: width * 0.85, alignSelf: 'center' }} />
+                                        </View>
+                                    );
+                                })
+                            }
+                        </View>
             }
         </Background>
     );

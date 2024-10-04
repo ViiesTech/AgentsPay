@@ -10,6 +10,7 @@ import Input from '../components/Input';
 import { api, errHandler } from '../API';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import { ShowAlert } from '../utils/Alert';
+import Backbtn from '../components/Backbtn';
 
 const { width, height } = Dimensions.get('window');
 const ResetPassword = ({ navigation, route }) => {
@@ -74,6 +75,8 @@ const ResetPassword = ({ navigation, route }) => {
 
     return (
         <Background noAuth>
+                         <Backbtn onPress={() => navigation.goBack()} />
+
             <View style={{height: height * 0.9, width: width * 0.85, alignSelf: 'center'}}>
                 <Image source={require('../assets/images/icon.png')} style={{ alignSelf: 'center', width: width * 0.4, height: width * 0.4, resizeMode: 'contain', marginTop: height * 0.05 }} />
                 <Br space={0.05} />

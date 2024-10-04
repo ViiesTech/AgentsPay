@@ -204,6 +204,8 @@ const EditProfile = ({ navigation, route }) => {
                     data={[
                         {label: 'Male', value: 'male'},
                         {label: 'Female', value: 'female'},
+                        {label: 'Other', value: 'other'},
+
                     ]}
                     selectedValue={profile.gender}
                     onValueChange={(value) => setProfile({...profile, gender: value})}

@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Pressable, View } from 'react-native';
+import { Dimensions, Pressable, TextInput, View } from 'react-native';
 import Background from '../utils/Background';
 import { H6, Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -105,6 +105,8 @@ const Filters = ({ navigation }) => {
     });
     const amentitiesList = arr.join(', ').split(', ');
     const uniqueAmentitiesList = [...new Set(amentitiesList)];
+    console.log('====>',areaMax,areaMax,max,min);
+    
 
     return (
         <Background bgColor={Color('textColor')} noBackground>
@@ -163,32 +165,18 @@ const Filters = ({ navigation }) => {
 
             <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Price Range</H6>
             <Br space={0.02} />
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
-                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{min}</H6>
-                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{max}</H6>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <View>
+                <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold', marginLeft:5 }}>Max</Pera>
+                <TextInput value={max} onChangeText={(value) => setMax(value)} keyboardType="numeric" placeholder="$300" style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
+                </View>
+                <View>
+                <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold',marginLeft:5 }}>Min</Pera>
+                <TextInput value={min} onChangeText={(value) => setMin(value)} keyboardType="numeric" placeholder="$300" placeholderTextColor={Color('gray')} style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
+                    {/* <Br space={0.01} /> */}
+                </View>
             </View>
-            {
-                maxValue > 0 && (
-                    <MultiSlider
-                        values={twoWayValue}
-                        onValuesChange={handleTwoWaySliderChange}
-                        sliderLength={width * 0.85}
-                        containerStyle={{ alignSelf: 'center' }}
-                        min={0}
-                        max={maxValue}
-                        step={1}
-                        allowOverlap={false}
-                        snapped={true}
-                        markerStyle={{ backgroundColor: Color('propertyPrice') }}
-                        selectedStyle={{ backgroundColor: Color('propertyPrice') }}
-                        unselectedStyle={{ backgroundColor: Color('gray') }}
-                    />
-                )
-            }
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
-                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Min</H6>
-                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Max</H6>
-            </View>
+            
             <Br space={0.05} />
 
             <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Bedroom</Pera>
@@ -210,7 +198,7 @@ const Filters = ({ navigation }) => {
                     <Small style={{ fontFamily: 'Inter_28pt-Regular' }} theme={beds === 5 ? null : 'dark'}>5</Small>
                 </Pressable>
                 <Pressable onPress={() => setBeds(6)} style={{ borderWidth: 1, borderColor: beds === 6 ? Color('btnBackground') : Color('gray'), backgroundColor: beds === 6 ? Color('btnBackground') : null, paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 10 }}>
-                    <Small style={{ fontFamily: 'Inter_28pt-Regular' }} theme={beds === 6 ? null : 'dark'}>6</Small>
+                    <Small style={{ fontFamily: 'Inter_28pt-Regular' }} theme={beds === 6 ? null : 'dark'}>6+</Small>
                 </Pressable>
             </View>
             <Br space={0.03} />
@@ -234,19 +222,28 @@ const Filters = ({ navigation }) => {
                     <Small style={{ fontFamily: 'Inter_28pt-Regular' }} theme={baths === 5 ? null : 'dark'}>5</Small>
                 </Pressable>
                 <Pressable onPress={() => setBaths(6)} style={{ borderWidth: 1, borderColor: baths === 6 ? Color('btnBackground') : Color('gray'), backgroundColor: baths === 6 ? Color('btnBackground') : null, paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 10 }}>
-                    <Small style={{ fontFamily: 'Inter_28pt-Regular' }} theme={baths === 6 ? null : 'dark'}>6</Small>
+                    <Small style={{ fontFamily: 'Inter_28pt-Regular' }} theme={baths === 6 ? null : 'dark'}>6+</Small>
                 </Pressable>
             </View>
             <Br space={0.05} />
 
             <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Area Range (Sqft)</H6>
             <Br space={0.02} />
-            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <View>
+                <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold', marginLeft:5 }}>Min</Pera>
+                <TextInput value={min} onChangeText={(value) => setAreaMin(value)} keyboardType="numeric" placeholder="areaMin" style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
+                </View>
+                <View>
+                <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold',marginLeft:5 }}>Max</Pera>
+                <TextInput value={max} onChangeText={(value) => setAreaMax(value)} keyboardType="numeric" placeholder="areaMax" placeholderTextColor={Color('gray')} style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
+                </View>
+            </View>
+            {/* <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
                 <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{areaMin}</H6>
                 <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{areaMax}</H6>
             </View>
-            {
-                maxValueArea > 0 && (
+            {maxValueArea > 0 && (
                     <MultiSlider
                         values={twoWayValueArea}
                         onValuesChange={(value) => setTwoWayValueArea(value)}
@@ -266,7 +263,7 @@ const Filters = ({ navigation }) => {
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
                 <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Min</H6>
                 <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Max</H6>
-            </View>
+            </View> */}
             <Br space={0.05} />
             <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Amenities</H6>
             <Br space={0.02} />

@@ -11,17 +11,18 @@ import { Edit2 } from 'iconsax-react-native';
 import Dropdown from '../components/Dropdown';
 import { api, errHandler } from '../API';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { noImage } from '../utils/defaultValues';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import { ShowAlert } from '../utils/Alert';
+import Backbtn from '../components/Backbtn';
 
 const { width, height } = Dimensions.get('window');
 const CompleteProfile = ({ navigation, route }) => {
     const validator = require('validator');
 
     const [loading, setLoading] = useState(false);
-    const [ profile, setProfile ] = useState({
+    const [profile, setProfile] = useState({
         profile_image: noImage,
         gender: '',
         location: '',
@@ -67,7 +68,7 @@ const CompleteProfile = ({ navigation, route }) => {
                     license_number: profile?.license_number.toString(),
                     broker_name: profile?.broker_name.toString(),
                     profile_image: JSON.stringify(profile.profile_image),
-                }, {headers: {Authorization: `Bearer ${token}`}});
+                }, { headers: { Authorization: `Bearer ${token}` } });
 
                 if (route.name === 'CompleteProfile') {
                     Dialog.show({
@@ -80,7 +81,7 @@ const CompleteProfile = ({ navigation, route }) => {
                         onHide: () => navigation.replace('Subscriptions'),
                     });
                 }
-            } catch(err) {
+            } catch (err) {
                 await errHandler(err);
             }
             setLoading(false);
@@ -96,10 +97,12 @@ const CompleteProfile = ({ navigation, route }) => {
         });
 
         if (result?.assets) {
-            setProfile({...profile, profile_image: {
-                uri: result.assets[0].base64,
-                prefix: `data:${result.assets[0].type};base64,`,
-            }});
+            setProfile({
+                ...profile, profile_image: {
+                    uri: result.assets[0].base64,
+                    prefix: `data:${result.assets[0].type};base64,`,
+                }
+            });
         }
     };
 
@@ -113,16 +116,19 @@ const CompleteProfile = ({ navigation, route }) => {
         });
 
         if (result?.assets) {
-            setProfile({...profile, profile_image: {
-                uri: result.assets[0].base64,
-                prefix: `data:${result.assets[0].type};base64,`,
-            }});
+            setProfile({
+                ...profile, profile_image: {
+                    uri: result.assets[0].base64,
+                    prefix: `data:${result.assets[0].type};base64,`,
+                }
+            });
         }
     };
 
     return (
         <Background>
-            <View style={{width: width * 0.85, alignSelf: 'center'}}>
+            <Backbtn position="static" onPress={() => navigation.goBack()} />
+            <View style={{ width: width * 0.85, alignSelf: 'center' }}>
                 <Br space={0.1} />
                 <H5 theme="light" style={{ fontFamily: 'Poppins-SemiBold', textAlign: 'center' }}>Complete your Profile</H5>
                 <Pera theme="transparent" style={{ textAlign: 'center' }}>Please enter below details to complete your profile</Pera>
@@ -133,17 +139,17 @@ const CompleteProfile = ({ navigation, route }) => {
                     width: width * 0.25,
                     alignSelf: 'center',
                 }}
-                onPress={() => {
-                    Alert.alert(
-                        'Select an Option',
-                        'Do you want to upload an image or click one from the camera?',
-                        [
-                            {text: 'Cancel'},
-                            {text: 'Camera', onPress: () => clickProfileImage()},
-                            {text: 'Upload', onPress: () => uploadProfileImage()},
-                        ]
-                    );
-                }}
+                    onPress={() => {
+                        Alert.alert(
+                            'Select an Option',
+                            'Do you want to upload an image or click one from the camera?',
+                            [
+                                { text: 'Cancel' },
+                                { text: 'Camera', onPress: () => clickProfileImage() },
+                                { text: 'Upload', onPress: () => uploadProfileImage() },
+                            ]
+                        );
+                    }}
                 >
                     <Image source={{ uri: `${profile.profile_image?.prefix}${profile.profile_image?.uri}` }} resizeMode="cover" style={{
                         width: width * 0.25,
@@ -172,11 +178,13 @@ const CompleteProfile = ({ navigation, route }) => {
                 <Br space={0.02} />
                 <Dropdown
                     data={[
-                        {label: 'Male', value: 'male'},
-                        {label: 'Female', value: 'female'},
+                        { label: 'Male', value: 'male' },
+                        { label: 'Female', value: 'female' },
+                        { label: 'Other', value: 'other' },
+
                     ]}
                     selectedValue={profile.gender}
-                    onValueChange={(value) => setProfile({...profile, gender: value})}
+                    onValueChange={(value) => setProfile({ ...profile, gender: value })}
                     style={undefined}
                     defaultStyle={undefined}
                     label={undefined}
@@ -186,22 +194,22 @@ const CompleteProfile = ({ navigation, route }) => {
                     value={profile?.location}
                     labelText="Location"
                     style={{ marginBottom: height * 0.015 }}
-                    onChange={(value) => setProfile({...profile, location: value})}
+                    onChange={(value) => setProfile({ ...profile, location: value })}
                 />
                 <Input
                     value={profile?.license_number}
                     labelText="Agent License Number"
                     style={{ marginBottom: height * 0.015 }}
-                    onChange={(value) => setProfile({...profile, license_number: value})}
+                    onChange={(value) => setProfile({ ...profile, license_number: value })}
                 />
                 <Input
                     value={profile?.broker_name}
                     labelText="Broker Name"
                     style={{ marginBottom: height * 0.015 }}
-                    onChange={(value) => setProfile({...profile, broker_name: value})}
+                    onChange={(value) => setProfile({ ...profile, broker_name: value })}
                 />
                 <Br space={0.03} />
-                <ButtonOutline loading={loading} style={{width: width * 0.85}} onPress={onCompleteProfile}>Submit</ButtonOutline>
+                <ButtonOutline loading={loading} style={{ width: width * 0.85 }} onPress={onCompleteProfile}>Submit</ButtonOutline>
                 <Br space={0.02} />
             </View>
         </Background>
