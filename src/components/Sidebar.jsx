@@ -220,6 +220,11 @@ const Sidebar = ({ user, isOpen }) => {
                             label="Uploaded Properties"
                             screen="UploadedProperties"
                         />
+                         <DrawerItem
+                            icon={<Home size="25" color={Color('whiteText')} variant="Bold" />}
+                            label="Inbox"
+                            screen="Inbox"
+                        />
                         <DrawerItem
                             icon={<Profile size="25" color={Color('whiteText')} variant="Bold" />}
                             label="Add Property"

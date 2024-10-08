@@ -509,7 +509,7 @@ const EditProperty = ({ navigation, route }) => {
                     backgroundColor: Color('btnOutline'),
                     borderRadius: 20,
                 }}>
-                    <TextInput multiline value={property.property_description} onChangeText={(value) => setProperty({ ...property, agent_remarks: value })} placeholder="Enter information" numberOfLines={height < 650 ? 8 : 10} style={{ textAlignVertical: 'top', color: Color('darkTheme') }} placeholderTextColor={Color('gray')} />
+                    <TextInput multiline value={property.agent_remarks} onChangeText={(value) => setProperty({ ...property, agent_remarks: value })} placeholder="Enter information" numberOfLines={height < 650 ? 8 : 10} style={{ textAlignVertical: 'top', color: Color('darkTheme') }} placeholderTextColor={Color('gray')} />
                 </View>
             </View>
             <Br space={0.03} />

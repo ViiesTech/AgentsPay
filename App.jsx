@@ -67,6 +67,7 @@ import EditProfile from './src/screens/EditProfile';
 import EditProperty from './src/screens/EditProperty';
 // const Chat = lazy(() => import('./src/screens/Chat'));
 import Chat from './src/screens/Chat';
+import Inbox from './src/screens/Inbox';
 
 const Stack = createNativeStackNavigator();
 
@@ -165,7 +166,9 @@ function App() {
             <Stack.Screen name="Chat">
               {props => <Sus component={<Chat {...props} />} />}
             </Stack.Screen>
-
+            <Stack.Screen name="Inbox">
+              {props => <Sus component={<Inbox {...props} />} />}
+            </Stack.Screen>
             {/* ACT & RIGHTS */}
             <Stack.Screen name="PrivacyPolicy">
               {props => <Sus component={<PrivacyPolicy {...props} />} />}
