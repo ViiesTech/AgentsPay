@@ -2,7 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { Animated, Dimensions, Image, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Animated, Dimensions, Image, Linking, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { hideDrawer } from '../redux/Reducers/drawerSlice';
 import { Color } from '../utils/Colors';
@@ -26,6 +26,8 @@ const Sidebar = ({ user, isOpen }) => {
     const [visible, setVisible] = useState(false);
     const [userData, setUserData] = useState();
     const [genderPronouns, setGenderPronouns] = useState('');
+    const [isAppInstalled, setIsAppInstalled] = useState(false);
+    const [qrCodeData, setQRCodeData] = useState('');
 
     useEffect(() => {
         Animated.timing(slideAnim, {
@@ -75,15 +77,30 @@ const Sidebar = ({ user, isOpen }) => {
         );
     };
 
+    const qrOpen = () => {
+        setVisible(true);
+        const url = 'https://play.google.com/store/apps/details?id=com.example.yourapp';
+    }
+
     if (!isOpen || !userData) { return; }
 
     return (
         <>
             <Models visible={visible} onClose={setVisible}>
-                <View style={{alignItems: 'center', padding: height * 0.02, borderRadius: height * 0.01, width: width * 0.8, backgroundColor: Color('textColor')}}>
-                    <Pera style={{color: Color('btnText'), fontWeight: 'bold', textAlign: 'center'}}>Referral Code</Pera>
+                <View style={{ alignItems: 'center', padding: height * 0.02, borderRadius: height * 0.01, width: width * 0.8, backgroundColor: Color('textColor') }}>
+                    <Pera style={{ color: Color('btnText'), fontWeight: 'bold', textAlign: 'center' }}>Referral Code</Pera>
                     <Br space={0.01} />
-                    {userData && userData?.referral_code && <QRCode value={userData?.referral_code?.toString()} />}
+                    {userData && userData?.referral_code &&
+                        <View>
+                            <QRCode
+                                value={qrCodeData}
+                                size={200}
+                                logoBackgroundColor="white"
+                                logoSize={40}
+                                logoMargin={2}
+                            />
+                         </View>
+                    }
                 </View>
             </Models>
             <Animated.View
@@ -137,7 +154,7 @@ const Sidebar = ({ user, isOpen }) => {
                                         />
                                     </View>
                                 </Pressable>
-                                <TouchableOpacity onPress={() => setVisible(true)}>
+                                <TouchableOpacity onPress={qrOpen}>
                                     <View style={{
                                         flexDirection: 'row',
                                         justifyContent: 'center',
