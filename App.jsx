@@ -9,8 +9,6 @@ import { store } from './src/redux/Store';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar } from 'react-native';
 
-
-
 import Splash from './src/screens/Splash';
 import Loading from './src/screens/Loading';
 // const Welcome = lazy(() => import('./src/screens/Welcome'));
@@ -67,6 +65,8 @@ import Logout from './src/screens/Logout';
 import EditProfile from './src/screens/EditProfile';
 // const EditProperty = lazy(() => import('./src/screens/EditProperty'));
 import EditProperty from './src/screens/EditProperty';
+// const Chat = lazy(() => import('./src/screens/Chat'));
+import Chat from './src/screens/Chat';
 
 const Stack = createNativeStackNavigator();
 
@@ -161,6 +161,9 @@ function App() {
             </Stack.Screen>
             <Stack.Screen name="EditProperty">
               {props => <Sus component={<EditProperty {...props} />} />}
+            </Stack.Screen>
+            <Stack.Screen name="Chat">
+              {props => <Sus component={<Chat {...props} />} />}
             </Stack.Screen>
 
             {/* ACT & RIGHTS */}

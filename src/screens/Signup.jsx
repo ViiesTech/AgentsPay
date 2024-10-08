@@ -23,6 +23,7 @@ const Signup = ({ navigation, route }) => {
         phone: '',
         password: '',
         confirm_password: '',
+        referral_code: '',
     });
     const [agreeToTerms, setAgreeToTerms] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -91,6 +92,7 @@ const Signup = ({ navigation, route }) => {
                     email: user?.email.toString(),
                     phone: user?.phone.toString(),
                     password: user?.password.toString(),
+                    referral_code: user?.referral_code.toString(),
                 });
 
                 if (route.name === 'Signup') {
@@ -150,6 +152,13 @@ const Signup = ({ navigation, route }) => {
                     style={{ marginBottom: height * 0.015 }}
                     onChange={(value) => setUser({...user, confirm_password: value})}
                     secure
+                />
+                <Input
+                    value={user?.referral_code}
+                    keyboardType="numeric"
+                    labelText="Referral Code (optional)"
+                    style={{ marginBottom: height * 0.015 }}
+                    onChange={(value) => setUser({...user, referral_code: value})}
                 />
                 <Br space={0.01} />
                 <View style={{

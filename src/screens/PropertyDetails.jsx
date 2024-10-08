@@ -2,14 +2,14 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, Linking, Pressable, View } from 'react-native';
+import { Dimensions, Image, Linking, Pressable, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import { H6, Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
 import Br from '../components/Br';
 import PropertyInfo from '../components/PropertyInfo';
 import NavigationBar from '../components/NavigationBar';
-import { DocumentDownload } from 'iconsax-react-native';
+import { DocumentDownload, MessageText1 } from 'iconsax-react-native';
 import { Button } from '../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, baseUrl, errHandler } from '../API';
@@ -21,13 +21,28 @@ import Backbtn from '../components/Backbtn';
 const { width, height } = Dimensions.get('window');
 const PropertyDetails = ({ navigation, route }) => {
     const [details, setDetails] = useState();
+    const [paramData, setParamData] = useState();
     const [showAgentDetails, setShowAgentDetails] = useState(false);
 
     useEffect(() => {
+        checkId();
+        return () => {
+            AsyncStorage.removeItem('propertyDetails');
+        };
+    }, []);
+
+    const checkId = async () => {
+        const data = await AsyncStorage.getItem('propertyDetails');
+        if (data) {
+            setParamData(JSON.parse(data));
+            loadDetails(JSON.parse(data)?.id);
+        }else
         if (route?.params?.data?.id) {
+            AsyncStorage.setItem('propertyDetails', JSON.stringify(route?.params?.data));
+            setParamData(route?.params?.data);
             loadDetails(route?.params?.data?.id);
         }
-    }, [route]);
+    };
 
     const loadDetails = async (id) => {
         try {
@@ -110,18 +125,25 @@ const PropertyDetails = ({ navigation, route }) => {
                 contenStyle={{
                     paddingHorizontal: 0,
                 }}>
-                <Backbtn
-                    style={{ marginLeft: width * 0.03 }}
-                    position="static"
-                    onPress={() => {
-                        navigation.goBack();
-                    }} />
+                <View style={{width: width * 0.85, alignSelf: 'center', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                    <Backbtn
+                        position="static"
+                        onPress={() => {
+                            navigation.goBack();
+                        }} />
+                    <TouchableOpacity onPress={() => navigation.navigate('Chat', {user: details?.tbl_user, property_id: paramData?.id})}>
+                        <MessageText1
+                            size={height * 0.03}
+                            color={Color('textColor')}
+                        />
+                    </TouchableOpacity>
+                </View>
                 <View
                     style={{ position: 'relative' }}
                 >
                     <Br space={0.03} />
                     <View>
-                        <PropertyInfo data={route?.params?.data} isSwiper />
+                        <PropertyInfo data={paramData} isSwiper />
                     </View>
                     <Br space={0.07} />
                     <View

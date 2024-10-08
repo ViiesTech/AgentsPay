@@ -20,11 +20,13 @@ interface Props {
     secure?: boolean,
     isDefaultFocused?: boolean,
     keyboardType?: any,
-    plceHolderTextClr: string
+    plceHolderTextClr?: string,
+    color?: string,
+    inputStyling?: any
 }
 const inputHeight = Platform.OS === 'ios' ? 60 : height * 0.05;
 
-const Input = ({ secure, defaultValue, onBlur, labelText, style, numberOfLines, onChange, value, isDefaultFocused, keyboardType, plceHolderTextClr, ...props }: Props) => {
+const Input = ({ secure, defaultValue, onBlur, labelText, style, numberOfLines, onChange, value, isDefaultFocused, keyboardType, color, plceHolderTextClr, inputStyling, ...props }: Props) => {
     const [isFocused, setIsFocused] = useState(false);
     const [inputValue, setInputValue] = useState('');
     const halfHeight = inputHeight / 20;
@@ -65,26 +67,30 @@ const Input = ({ secure, defaultValue, onBlur, labelText, style, numberOfLines, 
     return (
         <>
             <View style={[styles.input, style, { alignItems: 'center' }]}>
-                <Animated.View style={{
-                    position: 'absolute',
-                    left: width * 0.02,
-                    transform: [{ translateY: labelMovement }],
-                    zIndex: 0,
-                }}>
-                    {
-                        isFocused
-                            ?
-                            <XSmall style={{
-                                color: Color('textLight'),
-                                fontFamily: 'Poppins-Regular',
-                            }}>{labelText}</XSmall>
-                            :
-                            <Pera style={{
-                                color: Color('textLight'),
-                                fontFamily: 'Poppins-Regular',
-                            }}>{labelText}</Pera>
-                    }
-                </Animated.View>
+                {
+                    labelText && (
+                        <Animated.View style={{
+                            position: 'absolute',
+                            left: width * 0.02,
+                            transform: [{ translateY: labelMovement }],
+                            zIndex: 0,
+                        }}>
+                            {
+                                isFocused
+                                    ?
+                                    <XSmall style={{
+                                        color: plceHolderTextClr || Color('textLight'),
+                                        fontFamily: 'Poppins-Regular',
+                                    }}>{labelText}</XSmall>
+                                    :
+                                    <Pera style={{
+                                        color: plceHolderTextClr || Color('textLight'),
+                                        fontFamily: 'Poppins-Regular',
+                                    }}>{labelText}</Pera>
+                            }
+                        </Animated.View>
+                    )
+                }
                 <TextInput
                     {...props}
                     keyboardType={keyboardType}
@@ -93,7 +99,7 @@ const Input = ({ secure, defaultValue, onBlur, labelText, style, numberOfLines, 
                     defaultValue={defaultValue}
                     onBlur={unFocused} value={value} onChangeText={onChangeHandler} multiline={numberOfLines && numberOfLines > 0 ? true : false}
                     numberOfLines={numberOfLines}
-                    style={[styles.field, { color: Color('textColor'), textAlignVertical: numberOfLines && numberOfLines > 0 ? 'top' : 'center' }]}
+                    style={[styles.field, inputStyling, { color: color || Color('textColor'), textAlignVertical: numberOfLines && numberOfLines > 0 ? 'top' : 'center' }]}
                     placeholderTextColor={plceHolderTextClr} />
             </View>
         </>

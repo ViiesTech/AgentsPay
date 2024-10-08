@@ -4,9 +4,11 @@ import Toast from 'react-native-simple-toast';
 import RNRestart from 'react-native-restart';
 import { ShowAlert } from './utils/Alert';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { io } from 'socket.io-client';
 
-// export const baseUrl = 'http://192.168.1.21:8080';
-export const baseUrl = 'https://agentspay.predemo.site';
+export const socket = io('http://192.168.1.21:8080');
+export const baseUrl = 'http://192.168.1.21:8080';
+// export const baseUrl = 'https://agentspay.predemo.site';
 export const api = axios.create({
     baseURL: baseUrl,
 });
