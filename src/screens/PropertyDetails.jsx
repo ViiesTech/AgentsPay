@@ -23,25 +23,30 @@ const PropertyDetails = ({ navigation, route }) => {
     const [details, setDetails] = useState();
     const [paramData, setParamData] = useState();
     const [showAgentDetails, setShowAgentDetails] = useState(false);
+    const [currentUserId, setCurrentUserID] = useState();
 
     useEffect(() => {
         checkId();
         return () => {
             AsyncStorage.removeItem('propertyDetails');
+
         };
     }, []);
 
     const checkId = async () => {
         const data = await AsyncStorage.getItem('propertyDetails');
+        const token = await AsyncStorage.getItem('token');
+        const res = await api.get('/user/profile/data', { headers: { Authorization: `Bearer ${token}` } });
+        setCurrentUserID(res.data.data?.user_id)
         if (data) {
             setParamData(JSON.parse(data));
             loadDetails(JSON.parse(data)?.id);
-        }else
-        if (route?.params?.data?.id) {
-            AsyncStorage.setItem('propertyDetails', JSON.stringify(route?.params?.data));
-            setParamData(route?.params?.data);
-            loadDetails(route?.params?.data?.id);
-        }
+        } else
+            if (route?.params?.data?.id) {
+                AsyncStorage.setItem('propertyDetails', JSON.stringify(route?.params?.data));
+                setParamData(route?.params?.data);
+                loadDetails(route?.params?.data?.id);
+            }
     };
 
     const loadDetails = async (id) => {
@@ -118,6 +123,8 @@ const PropertyDetails = ({ navigation, route }) => {
         return <Loading />;
     }
 
+    console.log('==>', details?.tbl_user?.user_id, currentUserId);
+
     return (
         <>
             <Background
@@ -125,13 +132,25 @@ const PropertyDetails = ({ navigation, route }) => {
                 contenStyle={{
                     paddingHorizontal: 0,
                 }}>
-                <View style={{width: width * 0.85, alignSelf: 'center', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+                <View style={{ width: width * 0.85, alignSelf: 'center', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <Backbtn
                         position="static"
                         onPress={() => {
                             navigation.goBack();
                         }} />
-                    <TouchableOpacity onPress={() => navigation.navigate('Chat', {user: details?.tbl_user, property_id: paramData?.id})}>
+                    <TouchableOpacity onPress={() => {
+                        if (details?.tbl_user?.user_id !== currentUserId) {
+                            navigation.navigate('Chat', {
+                                user: details?.tbl_user,
+                                property_id: paramData?.id,
+                                sender_id:  currentUserId,
+                                receiver_id: details?.tbl_user?.user_id
+                            })
+                        } else {
+                            navigation.navigate('Inbox', { user: details?.tbl_user, property_id: paramData?.id })
+                        }
+                    }}
+                    >
                         <MessageText1
                             size={height * 0.03}
                             color={Color('textColor')}
@@ -186,6 +205,7 @@ const PropertyDetails = ({ navigation, route }) => {
                             })
                         }
                     </View>
+
                     <Br space={0.03} />
                     <H6 style={{ fontFamily: 'Jost-Regular' }}>
                         Documents

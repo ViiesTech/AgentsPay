@@ -20,6 +20,7 @@ const Chat = ({ navigation, route }) => {
     const [currUserEmail, setCurrUserEmail] = useState('');
     const [message, setMessage] = useState('');
 
+
     useEffect(() => {
         getContent();
     }, []);
@@ -35,18 +36,25 @@ const Chat = ({ navigation, route }) => {
         setCurrUserEmail(JSON.parse(token)?.email);
         socket.emit('get_chat', {
             property_id: route?.params?.property_id,
-            sender: JSON.parse(token)?.email,
+            sender: route?.params?.sender_id,
+            receiver: route?.params?.receiver_id
         });
         socket.on('chat', (data) => {
-            if (parseInt(data[1]) === parseInt(route?.params?.property_id)) {
-                setChats(data[0]);
-            }
+            console.log('datataa', data[1]);
+            setChats(data[0]);
+            // if (parseInt(data[1]) === parseInt(route?.params?.property_id)) {
+            // }
         });
     };
 
     const onSendMessage = () => {
         if (message.length > 0) {
-            socket.emit('set_chat', { message: message, property_id: route?.params?.property_id, sender: currUserEmail, receiver: route?.params?.user?.email });
+            socket.emit('set_chat', {
+                message: message,
+                property_id: route?.params?.property_id,
+                sender: route?.params?.sender_id,
+                receiver: route?.params?.receiver_id
+            });
             setMessage('');
         }
     };
@@ -54,6 +62,7 @@ const Chat = ({ navigation, route }) => {
     if (!chat) {
         return <Loading noAuth />;
     }
+
 
     return (
         <>
@@ -80,7 +89,7 @@ const Chat = ({ navigation, route }) => {
                     showsVerticalScrollIndicator={false}
                     ref={scrollViewRef}
                 >
-                    <View style={{ paddingVertical: height * 0.01 , marginBottom:height*0.01}}>
+                    <View style={{ paddingVertical: height * 0.01, marginBottom: height * 0.01 }}>
                         {
                             chat.length === 0
                                 ?
