@@ -23,6 +23,11 @@ const Chat = ({ navigation, route }) => {
 
     useEffect(() => {
         getContent();
+        socket.on('chat', (data) => {
+            setChats(data[0]);
+            // if (parseInt(data[1]) === parseInt(route?.params?.property_id)) {
+            // }
+        });
     }, []);
 
     useEffect(() => {
@@ -39,12 +44,6 @@ const Chat = ({ navigation, route }) => {
             sender: route?.params?.sender_id,
             receiver: route?.params?.receiver_id
         });
-        socket.on('chat', (data) => {
-            console.log('datataa', data[1]);
-            setChats(data[0]);
-            // if (parseInt(data[1]) === parseInt(route?.params?.property_id)) {
-            // }
-        });
     };
 
     const onSendMessage = () => {
@@ -52,8 +51,9 @@ const Chat = ({ navigation, route }) => {
             socket.emit('set_chat', {
                 message: message,
                 property_id: route?.params?.property_id,
-                sender: route?.params?.sender_id,
-                receiver: route?.params?.receiver_id
+                sender: route?.params?.owner ? route?.params?.receiver_id : route?.params?.sender_id,
+                receiver: route?.params?.owner ? route?.params?.receiver_id : route?.params?.sender_id
+
             });
             setMessage('');
         }

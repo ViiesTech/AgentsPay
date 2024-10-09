@@ -123,8 +123,6 @@ const PropertyDetails = ({ navigation, route }) => {
         return <Loading />;
     }
 
-    console.log('==>', details?.tbl_user?.user_id, currentUserId);
-
     return (
         <>
             <Background
@@ -144,8 +142,8 @@ const PropertyDetails = ({ navigation, route }) => {
                                 user: details?.tbl_user,
                                 property_id: paramData?.id,
                                 sender_id:  currentUserId,
-                                receiver_id: details?.tbl_user?.user_id
-                            })
+                                receiver_id: details?.tbl_user?.user_id,
+                            });
                         } else {
                             navigation.navigate('Inbox', { user: details?.tbl_user, property_id: paramData?.id })
                         }
