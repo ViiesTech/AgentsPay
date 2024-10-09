@@ -52,7 +52,7 @@ const Chat = ({ navigation, route }) => {
                 message: message,
                 property_id: route?.params?.property_id,
                 sender: route?.params?.owner ? route?.params?.receiver_id : route?.params?.sender_id,
-                receiver: route?.params?.owner ? route?.params?.receiver_id : route?.params?.sender_id
+                receiver: route?.params?.owner ? route?.params?.sender_id : route?.params?.receiver_id,
 
             });
             setMessage('');
