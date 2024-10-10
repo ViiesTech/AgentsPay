@@ -54,13 +54,16 @@ const Inbox = ({ navigation, route }) => {
                         <Pera style={{ textAlign: 'center' }}>No Chats Found</Pera>
                         :
                         <>
-                            {inboxData?.map((item, index) => {
+                            {inboxData?.map((item, index) => {                                
                                 return (
                                     <TouchableOpacity
                                         key={index}
                                         onPress={() => {
                                             navigation.navigate('Chat', {
-                                                user: route?.params?.user,
+                                                user:{
+                                                    profile_image:item.sender_profile_image,
+                                                    name:item.sender_name
+                                                },
                                                 property_id: route?.params?.property_id,
                                                 sender_id: item?.sender_id,
                                                 receiver_id: item?.receiver_id,

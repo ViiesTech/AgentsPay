@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, Image, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, KeyboardAvoidingView, ScrollView, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
-import { Pera, Small } from '../utils/Text';
+import { H4, H6, Pera, Small } from '../utils/Text';
 import Hr from '../components/Hr';
 import { socket } from '../API';
 import Loading from './Loading';
@@ -11,6 +11,8 @@ import Input from '../components/Input';
 import { Send2 } from 'iconsax-react-native';
 import { Color } from '../utils/Colors';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Backbtn from '../components/Backbtn';
+import KeyboardView from '../utils/KeyboardView';
 
 const { width, height } = Dimensions.get('window');
 const Chat = ({ navigation, route }) => {
@@ -24,6 +26,7 @@ const Chat = ({ navigation, route }) => {
     useEffect(() => {
         getContent();
         socket.on('chat', (data) => {
+            console.log('DATA',data);            
             setChats(data[0]);
             // if (parseInt(data[1]) === parseInt(route?.params?.property_id)) {
             // }
@@ -66,28 +69,44 @@ const Chat = ({ navigation, route }) => {
 
     return (
         <>
-            <Background noAuth>
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: width * 0.05, paddingBottom: height * 0.005 }}>
-                    {/* <Backbtn position="static" onPress={() => navigation.goBack()} backToSidebar={route?.params?.backToSidebar} /> */}
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: width * 0.02 }}>
-                        <Image source={{ uri: `${JSON.parse(route?.params?.user?.profile_image).prefix}${JSON.parse(route?.params?.user?.profile_image).uri}` }}
-                            style={{
-                                width: width * 0.1,
-                                height: width * 0.1,
-                                borderRadius: width,
-                            }}
-                        />
-                        <View>
-                            <Pera style={{ textTransform: 'capitalize' }}>{route?.params?.user?.full_name}</Pera>
-                            <Small style={{ textTransform: 'capitalize' }}>{route?.params?.user?.broker_name}</Small>
-                        </View>
+            <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: width * 0.08,
+                paddingBottom: height * 0.005,
+                position: 'absolute',
+                top: height * 0.01,
+                backgroundColor: Color('navigationBackground'),
+                width: width,
+                zIndex: 1,
+                height: height * 0.08
+            }}>
+                <Backbtn position="static" onPress={() => navigation.goBack()} backToSidebar={route?.params?.backToSidebar} />
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: width * 0.02 }}>
+                    <Image source={{ uri:  `${JSON.parse(route?.params?.user?.profile_image).prefix}${JSON.parse(route?.params?.user?.profile_image).uri}` }}
+                        style={{
+                            width: width * 0.1,
+                            height: width * 0.1,
+                            borderRadius: width,
+                        }}
+                    />
+                    <View>
+                        <H6 style={{ textTransform: 'capitalize' }}>{route?.params?.owner ? route?.params?.user?.name :  route?.params?.user?.full_name}</H6>
+                        {/* <Small style={{ textTransform: 'capitalize' }}>{route?.params?.user?.broker_name}</Small> */}
                     </View>
                 </View>
+            </View>
+            <Background noAuth  >
                 <ScrollView
-                    style={{ height: height * 0.8 }}
+                    style={{
+                        // height: height * 0.85,
+                        paddingVertical: height * 0.05,
+                        // overflow: 'hidden'
+                    }}
                     keyboardShouldPersistTaps="handled"
                     showsVerticalScrollIndicator={false}
                     ref={scrollViewRef}
+                    contentContainerStyle={{ paddingBottom: 20 }}
                 >
                     <View style={{ paddingVertical: height * 0.01, marginBottom: height * 0.01 }}>
                         {
@@ -128,7 +147,7 @@ const Chat = ({ navigation, route }) => {
                     borderRadius: 30,
                     borderWidth: 1,
                     borderColor: Color('textColor'),
-                    paddingVertical: height * 0.005,
+                    // paddingVertical: height * 0.005,
                     paddingHorizontal: width * 0.05,
                     position: 'absolute',
                     bottom: height * 0.02,
