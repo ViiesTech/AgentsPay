@@ -136,24 +136,6 @@ const PropertyDetails = ({ navigation, route }) => {
                         onPress={() => {
                             navigation.goBack();
                         }} />
-                    {/* <TouchableOpacity onPress={() => {
-                        if (details?.tbl_user?.user_id !== currentUserId) {
-                            navigation.navigate('Chat', {
-                                user: details?.tbl_user,
-                                property_id: paramData?.id,
-                                sender_id:  currentUserId,
-                                receiver_id: details?.tbl_user?.user_id,
-                            });
-                        } else {
-                            navigation.navigate('Inbox', { user: details?.tbl_user, property_id: paramData?.id })
-                        }
-                    }}
-                    >
-                        <MessageText1
-                            size={height * 0.03}
-                            color={Color('textColor')}
-                        />
-                    </TouchableOpacity> */}
                 </View>
                 <View
                     style={{ position: 'relative' }}
@@ -263,20 +245,24 @@ const PropertyDetails = ({ navigation, route }) => {
                     <Br space={0.03} />
                     <Button onPress={() => setShowAgentDetails(true)}>View Contact Details</Button>
                     <Br space={0.015} />
-                    <Button
-                        onPress={() => {
-                            if (details?.tbl_user?.user_id !== currentUserId) {
-                                navigation.navigate('Chat', {
-                                    user: details?.tbl_user,
-                                    property_id: paramData?.id,
-                                    sender_id: currentUserId,
-                                    receiver_id: details?.tbl_user?.user_id,
-                                });
-                            } else {
-                                navigation.navigate('Inbox', { user: details?.tbl_user, property_id: paramData?.id })
-                            }
-                        }}
-                    >Chat </Button>
+                    {
+                        details?.tbl_user?.user_id !== currentUserId && (
+                            <Button
+                                onPress={() => {
+                                    if (details?.tbl_user?.user_id !== currentUserId) {
+                                        navigation.navigate('Chat', {
+                                            user: details?.tbl_user,
+                                            property_id: paramData?.id,
+                                            sender_id: currentUserId,
+                                            receiver_id: details?.tbl_user?.user_id,
+                                        });
+                                    } else {
+                                        navigation.navigate('Inbox', { user: details?.tbl_user, property_id: paramData?.id });
+                                    }
+                                }}
+                            >Chat </Button>
+                        )
+                    }
 
                     <Br space={0.15} />
                 </View>

@@ -139,7 +139,7 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                     },
                     shadowOpacity: 0.41,
                     shadowRadius: 9.11,
-                }} source={{ uri: `${baseUrl}/images/properties/${data?.tbl_property_images?.filter((val: any) => val.cover_image === 1)[0]?.url}` }} resizeMode="cover" />
+                }} source={{ uri: data?.tbl_property_images?.length > 0 ? `${baseUrl}/images/properties/${data?.tbl_property_images?.filter((val: any) => val.cover_image === 1)[0]?.url}` : 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=' }} resizeMode="cover" />
             }
             <View style={{ paddingHorizontal: width * 0.03, paddingTop: height * 0.02 }}>
                 <View style={{

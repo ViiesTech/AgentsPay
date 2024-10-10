@@ -105,7 +105,6 @@ const Filters = ({ navigation }) => {
     });
     const amentitiesList = arr.join(', ').split(', ');
     const uniqueAmentitiesList = [...new Set(amentitiesList)];
-    console.log('====>',areaMax,areaMax,max,min);
     
 
     return (

@@ -51,7 +51,11 @@ const Home = ({ navigation }) => {
     const recentProperties = homepageData[2];
     const popularProperties = homepageData[3];
 
-    const filteredRecentProperties = recentProperties?.filter(val => (val.title.toLowerCase().includes(keywords) || val.address.toLowerCase().includes(keywords)) && val?.tbl_property_type?.label.toLowerCase().includes(propertyType));
+    const filteredRecentProperties = recentProperties?.filter(
+        val => (val?.title?.toLowerCase()?.includes(keywords) ||
+        val?.address?.toLowerCase()?.includes(keywords)) &&
+        (val?.tbl_property_type?.label?.toLowerCase()?.includes(propertyType) || ''.includes(propertyType))
+    );
 
     return (
         <>
@@ -97,9 +101,6 @@ const Home = ({ navigation }) => {
                     <View>
                          <View style={{ width: width * 0.85, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', alignSelf: 'center', marginBottom: height * 0.025 }}>
                             <Pera theme="light">Recent</Pera>
-                            {/* <TouchableOpacity onPress={() => navigation.navigate('ListedProperties')}>
-                                <Pera style={{ color: Color('gray') }}>See All</Pera>
-                            </TouchableOpacity> */}
                         </View>
                         {filteredRecentProperties && filteredRecentProperties.length > 1
                             ?
@@ -143,7 +144,7 @@ const Home = ({ navigation }) => {
                             popularProperties?.filter(
                                 val =>
                                     (val.title.toLowerCase().includes(keywords) || val.address.toLowerCase().includes(keywords.toLowerCase())) &&
-                                    val?.tbl_property_type?.label.toLowerCase().includes(propertyType)
+                                    (val?.tbl_property_type?.label.toLowerCase().includes(propertyType) || ''.includes(propertyType))
                             )?.map((val, index) => {
                                 return (
                                     <View key={index}>

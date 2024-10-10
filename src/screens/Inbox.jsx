@@ -19,10 +19,20 @@ const { width, height } = Dimensions.get('window');
 const Inbox = ({ navigation, route }) => {
     const [inboxData, setInboxData] = useState();
     const isFocused = useIsFocused();
+    const [currentUserId, setCurrentUserID] = useState();
 
     useEffect(() => {
-        if (isFocused) { loadInbox(); }
-    }, [isFocused]);
+        if (isFocused && currentUserId) { loadInbox(); }
+    }, [isFocused, currentUserId]);
+    useEffect(() => {
+        loadCurrentUser();
+    });
+
+    const loadCurrentUser = async () => {
+        const token = await AsyncStorage.getItem('token');
+        const res = await api.get('/user/profile/data', { headers: { Authorization: `Bearer ${token}` } });
+        setCurrentUserID(res.data.data?.user_id);
+    };
 
     const loadInbox = async () => {
         try {
@@ -54,29 +64,31 @@ const Inbox = ({ navigation, route }) => {
                         <Pera style={{ textAlign: 'center' }}>No Chats Found</Pera>
                         :
                         <>
-                            {inboxData?.map((item, index) => {                                
+                            {inboxData?.map((item, index) => {
+                                const sender = item.sender_profile_image ? `${JSON.parse(item.sender_profile_image).prefix}${JSON.parse(item.sender_profile_image).uri}` : 'https://random.imagecdn.app/500/150';
+                                const receiver = item.receiver_profile_image ? `${JSON.parse(item.receiver_profile_image).prefix}${JSON.parse(item.receiver_profile_image).uri}` : 'https://random.imagecdn.app/500/150';
                                 return (
                                     <TouchableOpacity
                                         key={index}
                                         onPress={() => {
                                             navigation.navigate('Chat', {
                                                 user:{
-                                                    profile_image:item.sender_profile_image,
-                                                    name:item.sender_name
+                                                    profile_image: currentUserId === item?.sender_id ? item.receiver_profile_image : item.sender_profile_image,
+                                                    name: currentUserId === item?.sender_id ? item.receiver_name : item.sender_name,
                                                 },
                                                 property_id: route?.params?.property_id,
-                                                sender_id: item?.sender_id,
-                                                receiver_id: item?.receiver_id,
+                                                sender_id: currentUserId,
+                                                receiver_id: currentUserId === item?.receiver_id ? item?.sender_id : item?.receiver_id,
                                                 owner: true,
                                             });
                                         }}
                                         style={styles.container}
                                     >
                                         <Image
-                                            source={{ uri: item.sender_profile_image ? `${JSON.parse(item.sender_profile_image).prefix}${JSON.parse(item.sender_profile_image).uri}` : 'https://random.imagecdn.app/500/150' }}
+                                            source={{ uri: currentUserId === item?.sender_id ? receiver : sender }}
                                             style={styles.imgStyle} resizeMode="cover" />
                                         <View>
-                                            <H6 numberOfLines={1} style={{ fontFamily: 'Poppins-SemiBold', textTransform: 'capitalize' }}>{item.sender_name}</H6>
+                                            <H6 numberOfLines={1} style={{ fontFamily: 'Poppins-SemiBold', textTransform: 'capitalize' }}>{currentUserId === item?.sender_id ? item.receiver_name : item.sender_name}</H6>
                                             <Small>{item?.last_message ? item.last_message : 'This chat has no messages'}</Small>
                                         </View>
                                     </TouchableOpacity>

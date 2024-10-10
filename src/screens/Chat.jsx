@@ -62,7 +62,7 @@ const Chat = ({ navigation, route }) => {
         socket.emit('get_chat', {
             property_id: route?.params?.property_id,
             sender: route?.params?.sender_id,
-            receiver: route?.params?.receiver_id
+            receiver: route?.params?.receiver_id,
         });
     };
 
@@ -71,8 +71,8 @@ const Chat = ({ navigation, route }) => {
             socket.emit('set_chat', {
                 message: message,
                 property_id: route?.params?.property_id,
-                sender: route?.params?.owner ? route?.params?.receiver_id : route?.params?.sender_id,
-                receiver: route?.params?.owner ? route?.params?.sender_id : route?.params?.receiver_id,
+                sender: route?.params?.sender_id,
+                receiver: route?.params?.receiver_id,
 
             });
             setMessage('');
