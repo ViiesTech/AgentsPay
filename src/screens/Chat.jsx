@@ -85,84 +85,70 @@ const Chat = ({ navigation, route }) => {
 
     return (
         <>
-            <View style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: width * 0.08,
-                paddingBottom: height * 0.005,
-                position: 'absolute',
-                top: Platform.OS === 'ios' ? height*0.04 : height * 0.01,
-                backgroundColor: Color('navigationBackground'),
-                width: width,
-                zIndex: 1,
-                height: height * 0.08,
-            }}>
-                <Backbtn position="static" onPress={() => navigation.goBack()} backToSidebar={route?.params?.backToSidebar} />
-                <View style={{ flexDirection: 'row', alignItems: 'center', gap: width * 0.02 }}>
-                    <Image source={{ uri:route?.params?.user ? `${JSON.parse(route?.params?.user?.profile_image).prefix}${JSON.parse(route?.params?.user?.profile_image).uri}`: "https://random.imagecdn.app/500/150" }}
-                        style={{
-                            width: width * 0.1,
-                            height: width * 0.1,
-                            borderRadius: width,
-                        }}
-                    />
-                    <View>
-                        <H6 style={{ textTransform: 'capitalize' }}>{route?.params?.owner ? route?.params?.user?.name : route?.params?.user?.full_name}</H6>
-                    </View>
-                </View>
-            </View>
             <Background noAuth  >
-                <ScrollView
-                    style={{
-                        height: isShown && height * 0.49,
-                        paddingVertical: height * 0.05,
-                    }}
-                    keyboardShouldPersistTaps="handled"
-                    showsVerticalScrollIndicator={false}
-                    ref={scrollViewRef}
-                    contentContainerStyle={{ paddingBottom: 20 }}
-                    automaticallyAdjustKeyboardInsets={true}
-                >
-                    <View style={{ paddingVertical: height * 0.01, marginBottom: height * 0.01 }}>
-                        {chat.length === 0
-                            ?
-                            <>
-                                <Hr style={{ alignSelf: 'center' }} />
-                                <Pera style={{ textAlign: 'center' }}>No Chat Found</Pera>
-                            </>
-                            :
-                            <>
-                                {route.params.owner ?
-                                    <>
-                                        {chat.map((val, index) => {
-                                            if (val?.senderUser?.email === currUserEmail) {
-                                                return (
-                                                    <View key={index} style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingVertical: height * 0.01 }}>
-                                                        <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('darkTheme'), borderRadius: height * 0.01 }}>
-                                                            <Pera style={{ paddingBottom: 0 }}>{val?.message}</Pera>
-                                                        </View>
-                                                    </View>
-                                                );
-                                            }
-                                            return (
-                                                <View key={index} style={{ flexDirection: 'row', paddingVertical: height * 0.01 }}>
-                                                    <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('textLight'), borderRadius: height * 0.01 }}>
-                                                        <Pera style={{ paddingBottom: 0 }}>{val?.message}</Pera>
-                                                    </View>
-                                                </View>
-                                            );
-                                        })
-
-                                        }
-                                    </>
-                                    :
-                                    <>
-                                        {
-
-                                            chat.filter(val => (val.receiverUser.email === currUserEmail || val.senderUser.email === currUserEmail) && (val.receiverUser.email === route?.params?.user?.email || val.senderUser.email === route?.params?.user?.email)).map((val, index) => {
+                <View style={{ height: height * 0.85 }}>
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: width * 0.08,
+                        paddingBottom: height * 0.005,
+                        position: 'absolute',
+                        top: Platform.OS === 'ios' ? height * 0.04 : height * 0.0001,
+                        backgroundColor: Color('navigationBackground'),
+                        width: width,
+                        zIndex: 1,
+                        // height: height * 0.08,
+                    }}>
+                        <Backbtn position="static" onPress={() => navigation.goBack()} backToSidebar={route?.params?.backToSidebar} />
+                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: width * 0.02 }}>
+                            <Image source={{ uri: route?.params?.user ? `${JSON.parse(route?.params?.user?.profile_image).prefix}${JSON.parse(route?.params?.user?.profile_image).uri}` : "https://random.imagecdn.app/500/150" }}
+                                style={{
+                                    width: width * 0.1,
+                                    height: width * 0.1,
+                                    borderRadius: width,
+                                }}
+                            />
+                            <View>
+                                <H6 style={{ textTransform: 'capitalize' }}>{route?.params?.owner ? route?.params?.user?.name : route?.params?.user?.full_name}</H6>
+                            </View>
+                        </View>
+                    </View>
+                    <ScrollView
+                        style={{
+                            height: isShown && height * 0.49,
+                            paddingVertical: height * 0.03,
+                        }}
+                        keyboardShouldPersistTaps="handled"
+                        showsVerticalScrollIndicator={false}
+                        ref={scrollViewRef}
+                        contentContainerStyle={{ paddingBottom: 20 }}
+                        automaticallyAdjustKeyboardInsets={true}
+                    >
+                        <View style={{ paddingVertical: height * 0.01, marginBottom: height * 0.01 }}>
+                            {chat.length === 0
+                                ?
+                                <>
+                                    <Hr style={{ alignSelf: 'center' }} />
+                                    <Pera style={{ textAlign: 'center' }}>No Chat Found</Pera>
+                                </>
+                                :
+                                <>
+                                    {route.params.owner ?
+                                        <>
+                                            {chat.map((val, index) => {
+                                                console.log('valll', JSON.parse(val?.receiverUser?.profile_image).prefix,);
                                                 if (val?.senderUser?.email === currUserEmail) {
                                                     return (
-                                                        <View key={index} style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingVertical: height * 0.01 }}>
+                                                        <View key={index} style={{ flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 1, paddingVertical: height * 0.01 }}>
+                                                            <Image
+                                                               resizeMode='contain'
+                                                               style={{
+                                                                   width: 20,
+                                                                   height: 20,
+                                                                   borderRadius: 20
+                                                               }}
+                                                                source={{ uri: `${JSON.parse(val?.receiverUser?.profile_image).prefix}${JSON.parse(val?.receiverUser?.profile_image).uri}` }}
+                                                            />
                                                             <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('darkTheme'), borderRadius: height * 0.01 }}>
                                                                 <Pera style={{ paddingBottom: 0 }}>{val?.message}</Pera>
                                                             </View>
@@ -170,22 +156,85 @@ const Chat = ({ navigation, route }) => {
                                                     );
                                                 }
                                                 return (
-                                                    <View key={index} style={{ flexDirection: 'row', paddingVertical: height * 0.01 }}>
+                                                    <View key={index} style={{ 
+                                                        flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 1, paddingVertical: height * 0.01
+                                                        // flexDirection: 'row', paddingVertical: height * 0.01
+                                                         }}>
+                                                         <View>
+                                                                <Image
+                                                                    resizeMode='contain'
+                                                                    style={{
+                                                                        width: 20,
+                                                                        height: 20,
+                                                                        borderRadius: 20
+                                                                    }}
+                                                                    source={{ uri: `${JSON.parse(val?.receiverUser?.profile_image).prefix}${JSON.parse(val?.receiverUser?.profile_image).uri}` }}
+                                                                />
+                                                            </View>
                                                         <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('textLight'), borderRadius: height * 0.01 }}>
                                                             <Pera style={{ paddingBottom: 0 }}>{val?.message}</Pera>
                                                         </View>
                                                     </View>
                                                 );
                                             })
-                                        }
-                                    </>
-                                }
-                            </>
 
-                        }
+                                            }
+                                        </>
+                                        :
+                                        <>
+                                            { chat.filter(val => (val.receiverUser.email === currUserEmail || val.senderUser.email === currUserEmail) && (val.receiverUser.email === route?.params?.user?.email || val.senderUser.email === route?.params?.user?.email)).map((val, index) => {
+                                                    if (val?.senderUser?.email === currUserEmail) {
+                                                        return (
+                                                            <View key={index} style={{ flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 1, paddingVertical: height * 0.01 }}>
+                                                                <View>
+                                                                    <Image
+                                                                        resizeMode='contain'
+                                                                        style={{
+                                                                            width: 20,
+                                                                            height: 20,
+                                                                            borderRadius: 20
+                                                                        }}
+                                                                        source={{ uri: `${JSON.parse(val?.senderUser?.profile_image).prefix}${JSON.parse(val?.senderUser?.profile_image).uri}` }}
+                                                                    />
+                                                                </View>
+                                                                <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('darkTheme'), borderRadius: height * 0.01 }}>
+                                                                    <Pera style={{ paddingBottom: 0 }}>{val?.message}</Pera>
+                                                                </View>
+                                                            </View>
+                                                        );
+                                                    }
+                                                    return (
+                                                        <View key={index} style={{ 
+                                                            flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 1, paddingVertical: height * 0.01
+                                                            // flexDirection: 'row', paddingVertical: height * 0.01
+                                                             }}>
+                                                             <View>
+                                                                    <Image
+                                                                        resizeMode='contain'
+                                                                        style={{
+                                                                            width: 20,
+                                                                            height: 20,
+                                                                            borderRadius: 20
+                                                                        }}
+                                                                        source={{ uri: `${JSON.parse(val?.receiverUser?.profile_image).prefix}${JSON.parse(val?.receiverUser?.profile_image).uri}` }}
+                                                                    />
+                                                                </View>
+                                                            <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('textLight'), borderRadius: height * 0.01 }}>
+                                                                <Pera style={{ paddingBottom: 0 }}>{val?.message}</Pera>
+                                                            </View>
+                                                        </View>
+                                                    );
+                                                })
+                                            }
+                                        </>
+                                    }
+                                </>
 
-                    </View>
-                </ScrollView>
+                            }
+
+                        </View>
+                    </ScrollView>
+                </View>
             </Background>
             <View
                 style={{
