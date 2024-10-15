@@ -204,7 +204,7 @@ const CompleteProfile = ({ navigation, route }) => {
                 />
                 <Input
                     value={profile?.broker_name}
-                    labelText="Broker Name"
+                    labelText="Brokerage Name"
                     style={{ marginBottom: height * 0.015 }}
                     onChange={(value) => setProfile({ ...profile, broker_name: value })}
                 />

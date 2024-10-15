@@ -243,6 +243,9 @@ const Filters = ({ navigation }) => {
                 {
                     uniqueAmentitiesList.map((val, index) => {
                         const isActive = amenity.includes(val.toLowerCase());
+                        if (val === '') {
+                            return <></>;
+                        }
                         return (
                             <Pressable onPress={() => setAmenity(val.toLowerCase())} key={index} style={{ borderWidth: 1, borderColor: isActive ? Color('btnBackground') : Color('gray'), backgroundColor: isActive ? Color('btnBackground') : null, paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30 }}>
                                 <Small style={{ fontFamily: 'Inter_28pt-Regular', textTransform: 'capitalize' }} theme={isActive ? null : 'dark'}>{val}</Small>

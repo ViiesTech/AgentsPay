@@ -63,7 +63,7 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                     centerContent
                     showsButtons={isSwiper}
                     style={{
-                        height: height * 0.4,
+                        height: height * 0.3,
                     }}
                     showsPagination={isSwiper}
                     activeDotColor={Color('btnBackground')}
@@ -142,20 +142,26 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                 }} source={{ uri: data?.tbl_property_images?.length > 0 ? `${baseUrl}/images/properties/${data?.tbl_property_images?.filter((val: any) => val.cover_image === 1)[0]?.url}` : 'https://media.istockphoto.com/id/1409329028/vector/no-picture-available-placeholder-thumbnail-icon-illustration-design.jpg?s=612x612&w=0&k=20&c=_zOuJu755g2eEUioiOUdz_mHKJQJn-tDgIAhQzyeKUQ=' }} resizeMode="cover" />
             }
             <View style={{ paddingHorizontal: width * 0.03, paddingTop: height * 0.02 }}>
-                <View style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    justifyContent: 'flex-end',
-                }}>
-                    <Small style={{
-                        fontFamily: 'Jost-SemiBold',
-                        paddingVertical: height * 0.005,
-                        paddingHorizontal: width * 0.06,
-                        backgroundColor: Color('btnBackground'),
-                        borderRadius: 10,
-                    }}>{data?.tbl_property_type?.label}</Small>
-                </View>
-                <Br space={0.03} />
+                {
+                    data?.tbl_property_type && (
+                        <>
+                            <View style={{
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                justifyContent: 'flex-end',
+                            }}>
+                                <Small style={{
+                                    fontFamily: 'Jost-SemiBold',
+                                    paddingVertical: height * 0.005,
+                                    paddingHorizontal: width * 0.06,
+                                    backgroundColor: Color('btnBackground'),
+                                    borderRadius: 10,
+                                }}>{data?.tbl_property_type?.label}</Small>
+                            </View>
+                            <Br space={0.03} />
+                        </>
+                    )
+                }
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',

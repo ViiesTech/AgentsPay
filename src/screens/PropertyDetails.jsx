@@ -151,12 +151,13 @@ const PropertyDetails = ({ navigation, route }) => {
                             position: 'absolute',
                             width: width * 20,
                             paddingVertical: height * 0.005,
+                            paddingBottom: height * 0.01,
                             bottom: 0, backgroundColor:
                                 Color('btnBackground'),
                             alignItems: 'center',
                         }}
                     >
-                        <H6 numberOfLines={1}>Agent Commission {details?.agent_percentage > 0 && `${details?.agent_percentage}%`} {details?.agent_amount > 0 && `(${details?.agent_amount.toLocaleString('en')}/-)`}</H6>
+                        <H6 numberOfLines={1} style={{fontWeight: 'bold'}}>Agent Commission {details?.agent_percentage > 0 && `${details?.agent_percentage}%`} {details?.agent_amount > 0 && `(${details?.agent_amount.toLocaleString('en')}/-)`}</H6>
                     </View>
                 </View>
                 <View style={{ width: width * 0.85, alignSelf: 'center' }}>

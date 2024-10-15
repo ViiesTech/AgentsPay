@@ -8,7 +8,7 @@ import { Pera } from '../utils/Text';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 const { width, height } = Dimensions.get('screen');
-const Dropdown = ({ style, data, selectedValue, onValueChange, defaultStyle, label, icon }) => {
+const Dropdown = ({ defaultValue, style, data, selectedValue, onValueChange, defaultStyle, label, icon }) => {
     const [isVisible, setIsVisible] = useState(false);
 
     const handleSelect = (item) => {
@@ -32,7 +32,7 @@ const Dropdown = ({ style, data, selectedValue, onValueChange, defaultStyle, lab
         <View style={style}>
             <TouchableOpacity style={[styles.dropdownButton, defaulDropdownButton]} onPress={() => setIsVisible(true)}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                    <Pera style={[styles.dropdownButtonText, defaultDropdownButtonText]}>{selectedValue || 'Select an option'}</Pera>
+                    <Pera style={[styles.dropdownButtonText, defaultDropdownButtonText]}>{selectedValue || defaultValue || 'Select an option'}</Pera>
                 </View>
                 <ArrowDown2
                     size="15"

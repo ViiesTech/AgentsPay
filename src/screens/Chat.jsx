@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useRef, useState } from 'react';
-import { Dimensions, Image, Keyboard, KeyboardAvoidingView, ScrollView, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, Keyboard, KeyboardAvoidingView, Platform, ScrollView, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import { H4, H6, Pera, Small } from '../utils/Text';
 import Hr from '../components/Hr';
@@ -91,11 +91,11 @@ const Chat = ({ navigation, route }) => {
                 gap: width * 0.08,
                 paddingBottom: height * 0.005,
                 position: 'absolute',
-                top: height * 0.01,
+                top: Platform.OS === 'ios' ? height*0.04 : height * 0.01,
                 backgroundColor: Color('navigationBackground'),
                 width: width,
                 zIndex: 1,
-                height: height * 0.08
+                height: height * 0.08,
             }}>
                 <Backbtn position="static" onPress={() => navigation.goBack()} backToSidebar={route?.params?.backToSidebar} />
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: width * 0.02 }}>
@@ -160,7 +160,6 @@ const Chat = ({ navigation, route }) => {
                                         {
 
                                             chat.filter(val => (val.receiverUser.email === currUserEmail || val.senderUser.email === currUserEmail) && (val.receiverUser.email === route?.params?.user?.email || val.senderUser.email === route?.params?.user?.email)).map((val, index) => {
-
                                                 if (val?.senderUser?.email === currUserEmail) {
                                                     return (
                                                         <View key={index} style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingVertical: height * 0.01 }}>

@@ -8,26 +8,36 @@ require Pod::Executable.execute_command('node', ['-p',
 platform :ios, min_ios_version_supported
 prepare_react_native_project!
 
+# linkage = ENV['USE_FRAMEWORKS']
+# if linkage != nil
+#   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
+#   use_frameworks! :linkage => linkage.to_sym
+# end
 linkage = ENV['USE_FRAMEWORKS']
 if linkage != nil
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
   use_frameworks! :linkage => linkage.to_sym
+else
+  use_frameworks! :linkage => :static  # Default to static linkage if no ENV variable is set
 end
 
 target 'agents_pay' do
   config = use_native_modules!
+  use_modular_headers!
 
   use_react_native!(
     :path => config[:reactNativePath],
     # An absolute path to your application root.
     :app_path => "#{Pod::Config.instance.installation_root}/.."
-  )
-
-  target 'agents_payTests' do
-    inherit! :complete
-    # Pods for testing
+    )
+    
+    target 'agents_payTests' do
+      inherit! :complete
+      # Pods for testing
+      pod 'Firebase/Core'
+      pod 'GoogleUtilities', :modular_headers => true
   end
-
+  
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(

@@ -1,4 +1,4 @@
-/* eslint-disable radix */
+
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
@@ -50,7 +50,7 @@ const UploadProperty = ({ navigation, route }) => {
         no_of_bathrooms: 0,
         property_description: '',
         property_type: '',
-        agent_remarks: ''
+        agent_remarks: '',
     });
 
     useEffect(() => {
@@ -212,8 +212,8 @@ const UploadProperty = ({ navigation, route }) => {
                     no_of_bedrooms: property?.no_of_bedrooms,
                     no_of_bathrooms: property?.no_of_bathrooms,
                     property_description: property?.property_description.toString(),
-                    property_type: propertyType ? propertyType?.id : "",
-                    agent_remarks: property?.agent_remarks?.toString()
+                    property_type: propertyType ? propertyType?.id : '',
+                    agent_remarks: property?.agent_remarks?.toString(),
                 }, { headers: { Authorization: `Bearer ${token}` } });
 
                 if (route.name === 'UploadProperty') {
@@ -248,16 +248,34 @@ const UploadProperty = ({ navigation, route }) => {
             <Br space={0.05} />
             <H5 theme="light" style={{ fontFamily: 'Poppins-Medium', textAlign: 'center' }}>Upload Property</H5>
             <Pera theme="transparent" style={{ textAlign: 'center', width: width * 0.85, alignSelf: 'center' }}>We have sent you an email containing 6 digits verification code. Please enter the code to verify your identity</Pera>
+
+
+
+            <Br space={0.03} />
+            <Pera theme="transparent" style={{ width: width * 0.85, alignSelf: 'center' }}>Upload Property Images</Pera>
             <Br space={0.02} />
-            <Input
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 15, width: width * 0.85, alignSelf: 'center' }}>
+                {images.map((item, index) => (
+                    <Image source={{ uri: `data:${images[index].type};base64,${images[index].base64}` }}
+                        style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20, marginBottom: 10 }}
+                        resizeMode="stretch" />
+                ))}
+                {images.length <= 5 ? <Pressable
+                    onPress={uploadImage}
+                    style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
+                    <Image source={require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
+                </Pressable> : null}
+            </View>
+            {/* <Input
                 value={property?.title}
                 labelText="Property"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
                 onChange={(value) => setProperty({ ...property, title: value })}
-            />
+            /> */}
             <Dropdown
                 data={states}
                 selectedValue={property.state}
+                defaultValue="Select a State"
                 onValueChange={(value) => {
                     setProperty({ ...property, state: value });
                     const selectedCities = searchCity.filter(function (creature) {
@@ -280,6 +298,7 @@ const UploadProperty = ({ navigation, route }) => {
             {cities.length !== 0 &&
                 <Dropdown
                     data={cities}
+                    defaultValue="Select a City"
                     selectedValue={property.city}
                     onValueChange={(value) => { setProperty({ ...property, city: value }); }}
                     style={{ width: width * 0.86, alignSelf: 'center' }}
@@ -299,6 +318,7 @@ const UploadProperty = ({ navigation, route }) => {
             <Dropdown
                 data={propertyTypes}
                 selectedValue={property.property_type}
+                defaultValue="Select Property Type"
                 onValueChange={(value) => setProperty({ ...property, property_type: value })}
                 style={{ width: width * 0.86, alignSelf: 'center' }}
                 defaultStyle={undefined}
@@ -338,22 +358,7 @@ const UploadProperty = ({ navigation, route }) => {
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
                 onChange={(value) => setProperty({ ...property, agent_amount: value })}
             />
-            <Br space={0.03} />
-            <Pera theme="transparent" style={{ width: width * 0.85, alignSelf: 'center' }}>Upload Property Images</Pera>
-            <Br space={0.02} />
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 15, width: width * 0.85, alignSelf: 'center' }}>
-                {images.map((item, index) => (
-                    <Image source={{ uri: `data:${images[index].type};base64,${images[index].base64}` }}
-                        style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20, marginBottom: 10 }}
-                        resizeMode="stretch" />
-                ))}
-                {images.length <= 5 ? <Pressable
-                    onPress={uploadImage}
-                    style={{ flexGrow: 1, marginBottom: height * 0.025 }}>
-                    <Image source={require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
-                </Pressable> : null}
-            </View>
-            <Br space={0.03} />
+            {/* <Br space={0.02} /> */}
             <Input
                 keyboardType="numeric"
                 value={property?.no_of_bedrooms}
@@ -418,7 +423,7 @@ const UploadProperty = ({ navigation, route }) => {
                 if (documents?.length === 2) {
                     ShowAlert('Only 2 document is allowed!',);
                 } else {
-                    uploadDocuments()
+                    uploadDocuments();
                 }
             }} style={{ width: width * 0.85, alignSelf: 'center' }}>Upload Documents</Button>
             {documents.length > 0 && (
