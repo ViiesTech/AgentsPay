@@ -103,6 +103,7 @@ const Chat = ({ navigation, route }) => {
                         onPress={()=>{navigation.navigate('UserChatProfile',{userData:{
                             url:route?.params?.user ? `${JSON.parse(route?.params?.user?.profile_image).prefix}${JSON.parse(route?.params?.user?.profile_image).uri}` : 'https://random.imagecdn.app/500/150',
                             name:route?.params?.owner ? route?.params?.user?.name : route?.params?.user?.full_name,
+                            ...route?.params?.user,
                         }})}}
                         style={{ flexDirection: 'row', alignItems: 'center', gap: width * 0.02 }}>
                             <Image source={{ uri: route?.params?.user ? `${JSON.parse(route?.params?.user?.profile_image).prefix}${JSON.parse(route?.params?.user?.profile_image).uri}` : 'https://random.imagecdn.app/500/150' }}

@@ -38,6 +38,7 @@ const Inbox = ({ navigation, route }) => {
         try {
             const token = await AsyncStorage.getItem('token');
             const res = await api.get(`/user/inbox?property_id=${route.params?.property_id}`, { headers: { Authorization: `Bearer ${token}` } });
+            console.log(res.data?.data);
             setInboxData(res.data?.data);
         } catch (err) {
             await errHandler(err, () => loadInbox());
@@ -67,6 +68,7 @@ const Inbox = ({ navigation, route }) => {
                             {inboxData?.map((item, index) => {
                                 const sender = item.sender_profile_image ? `${JSON.parse(item.sender_profile_image).prefix}${JSON.parse(item.sender_profile_image).uri}` : 'https://random.imagecdn.app/500/150';
                                 const receiver = item.receiver_profile_image ? `${JSON.parse(item.receiver_profile_image).prefix}${JSON.parse(item.receiver_profile_image).uri}` : 'https://random.imagecdn.app/500/150';
+
                                 return (
                                     <TouchableOpacity
                                         key={index}

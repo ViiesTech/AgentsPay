@@ -8,20 +8,18 @@ import Br from '../components/Br';
 import Backbtn from '../components/Backbtn';
 import Hr from '../components/Hr';
 import { Color } from '../utils/Colors';
-import { useIsFocused } from '@react-navigation/native';
 import { api, errHandler } from '../API';
 import Loading from './Loading';
 
 const { width, height } = Dimensions.get('window');
 const UserTerms = ({ navigation }) => {
-    const isFocused = useIsFocused();
 
     const [ content, setContent ] = useState('');
     const [ points, setPoints ] = useState([]);
 
     useEffect(() => {
-        if (isFocused) {loadContent();}
-    }, [isFocused]);
+        loadContent();
+    }, []);
 
     const loadContent = async () => {
         try {
@@ -32,7 +30,7 @@ const UserTerms = ({ navigation }) => {
                 setPoints(JSON.parse(res.data?.data?.points));
             }
         } catch(err) {
-            await errHandler(err, () => loadContent());
+            await errHandler(err);
         }
     };
 

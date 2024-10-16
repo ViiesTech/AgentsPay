@@ -1,7 +1,10 @@
-import { Dimensions, Image, View } from "react-native";
-import Backbtn from "../components/Backbtn"
-import Background from "../utils/Background"
-import { H4, H5, H6 } from "../utils/Text";
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/react-in-jsx-scope */
+import { Dimensions, Image, View } from 'react-native';
+import Backbtn from '../components/Backbtn';
+import Background from '../utils/Background';
+import { H4, H5, H6, Pera } from '../utils/Text';
+import Br from '../components/Br';
 const { width, height } = Dimensions.get('window');
 
 const UserChatProfile = ({ navigation, route }) => {
@@ -21,11 +24,24 @@ const UserChatProfile = ({ navigation, route }) => {
                     }}
                     source={{ uri: route?.params?.userData?.url }}
                 />
-                <H5 numberOfLines={1} >{route?.params?.userData?.name}</H5>
+                <H5>{route?.params?.userData?.name}</H5>
+                <View style={{alignItems: 'center'}}>
+                    <Pera theme="transparent">Email</Pera>
+                    <H6>{route?.params?.userData?.email}</H6>
+                    <Br space={0.03} />
+                    <Pera theme="transparent">Phone</Pera>
+                    <H6>{route?.params?.userData?.phone}</H6>
+                    <Br space={0.03} />
+                    <Pera theme="transparent">Broker Name</Pera>
+                    <H6>{route?.params?.userData?.broker_name}</H6>
+                    <Br space={0.03} />
+                    <Pera theme="transparent">License Number</Pera>
+                    <H6>{route?.params?.userData?.license_number}</H6>
+                </View>
             </View>
         </Background>
-    )
-}
+    );
+};
 
 
 export default UserChatProfile;
