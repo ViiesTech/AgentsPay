@@ -19,7 +19,6 @@
 		7BEF8E3BCE2A49EEA3D67920 /* Jost-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D01B6BBCFFC34AE59CA6FF5E /* Jost-SemiBold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		8E3F87802CB9B19200BBAB41 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EDFB9612CB9B04D00E11D66 /* UIKit.framework */; };
-		8E3F87812CB9B19200BBAB41 /* UIKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8EDFB9612CB9B04D00E11D66 /* UIKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A83708EA3F5B42C798244C4B /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 65689C79D7D449DBB0036EBB /* Poppins-SemiBold.ttf */; };
 		B3F7A96A16584077BF4197BB /* Jost-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7899DBD96EAD4751892B3863 /* Jost-Regular.ttf */; };
 		D7593ED108554B71816E6D69 /* IBMPlexMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = EDE52F13B1C1430E9BE84CED /* IBMPlexMono-Regular.ttf */; };
@@ -35,20 +34,6 @@
 			remoteInfo = agents_pay;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		8E3F87822CB9B19200BBAB41 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				8E3F87812CB9B19200BBAB41 /* UIKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* agents_payTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = agents_payTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -238,7 +223,6 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				8E3F87822CB9B19200BBAB41 /* Embed Frameworks */,
 				6E03B1CC52F209D0084AB52C /* [CP] Embed Pods Frameworks */,
 				3FC26A8F8D18A0BE8667502D /* [CP] Copy Pods Resources */,
 				F4689451C5C0B4A31BBEB0D4 /* [CP-User] [RNFB] Core Configuration */,
@@ -548,6 +532,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 39ZKCT373N;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = agents_pay/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -560,7 +545,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.agentspay;
 				PRODUCT_NAME = agents_pay;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -575,6 +560,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 39ZKCT373N;
 				INFOPLIST_FILE = agents_pay/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -586,7 +572,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.agentspay;
 				PRODUCT_NAME = agents_pay;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -677,10 +663,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -764,10 +747,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
@@ -785,7 +765,7 @@
 				00E356F71AD99517003FC87E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "agents_pay" */ = {
 			isa = XCConfigurationList;
@@ -794,7 +774,7 @@
 				13B07F951A680F5B00A75B9A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "agents_pay" */ = {
 			isa = XCConfigurationList;
@@ -803,7 +783,7 @@
 				83CBBA211A601CBA00E9B192 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

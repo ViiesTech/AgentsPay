@@ -20,7 +20,7 @@ if linkage != nil
 else
   use_frameworks! :linkage => :static  # Default to static linkage if no ENV variable is set
 end
-
+#Agnt1234
 target 'agents_pay' do
   config = use_native_modules!
   use_modular_headers!
@@ -34,8 +34,8 @@ target 'agents_pay' do
     target 'agents_payTests' do
       inherit! :complete
       # Pods for testing
-      pod 'Firebase/Core'
-      pod 'GoogleUtilities', :modular_headers => true
+      # pod 'Firebase/Core'
+      # pod 'GoogleUtilities', :modular_headers => true
   end
   
   post_install do |installer|
