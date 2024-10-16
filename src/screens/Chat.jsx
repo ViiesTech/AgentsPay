@@ -99,7 +99,12 @@ const Chat = ({ navigation, route }) => {
                         zIndex: 1,
                     }}>
                         <Backbtn position="static" onPress={() => navigation.goBack()} backToSidebar={route?.params?.backToSidebar} />
-                        <View style={{ flexDirection: 'row', alignItems: 'center', gap: width * 0.02 }}>
+                        <TouchableOpacity 
+                        onPress={()=>{navigation.navigate('UserChatProfile',{userData:{
+                            url:route?.params?.user ? `${JSON.parse(route?.params?.user?.profile_image).prefix}${JSON.parse(route?.params?.user?.profile_image).uri}` : 'https://random.imagecdn.app/500/150',
+                            name:route?.params?.owner ? route?.params?.user?.name : route?.params?.user?.full_name,
+                        }})}}
+                        style={{ flexDirection: 'row', alignItems: 'center', gap: width * 0.02 }}>
                             <Image source={{ uri: route?.params?.user ? `${JSON.parse(route?.params?.user?.profile_image).prefix}${JSON.parse(route?.params?.user?.profile_image).uri}` : 'https://random.imagecdn.app/500/150' }}
                                 style={{
                                     width: width * 0.1,
@@ -110,7 +115,7 @@ const Chat = ({ navigation, route }) => {
                             <View>
                                 <H6 style={{ textTransform: 'capitalize' }}>{route?.params?.owner ? route?.params?.user?.name : route?.params?.user?.full_name}</H6>
                             </View>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                     <ScrollView
                         style={{
@@ -139,11 +144,11 @@ const Chat = ({ navigation, route }) => {
                                                     return (
                                                         <View key={index} style={{ flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 1, paddingVertical: height * 0.01 }}>
                                                             <Image
-                                                               style={{
-                                                                   width: 20,
-                                                                   height: 20,
-                                                                   borderRadius: 20,
-                                                               }}
+                                                                style={{
+                                                                    width: 20,
+                                                                    height: 20,
+                                                                    borderRadius: 20,
+                                                                }}
                                                                 source={{ uri: `${JSON.parse(val?.senderUser?.profile_image).prefix}${JSON.parse(val?.senderUser?.profile_image).uri}` }}
                                                             />
                                                             <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('darkTheme'), borderRadius: height * 0.01 }}>
@@ -154,20 +159,23 @@ const Chat = ({ navigation, route }) => {
                                                 }
                                                 return (
                                                     <View key={index} style={{
-                                                        flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 1, paddingVertical: height * 0.01,
-                                                        // flexDirection: 'row', paddingVertical: height * 0.01
-                                                         }}>
-                                                         <View>
-                                                                <Image
-                                                                    style={{
-                                                                        width: 20,
-                                                                        height: 20,
-                                                                        borderRadius: 20,
-                                                                    }}
-                                                                    source={{ uri: `${JSON.parse(val?.receiverUser?.profile_image).prefix}${JSON.parse(val?.receiverUser?.profile_image).uri}` }}
-                                                                />
-                                                            </View>
-                                                        <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('textLight'), borderRadius: height * 0.01 }}>
+                                                        flexDirection: 'column',
+                                                        paddingVertical: height * 0.01,
+                                                        justifyContent: 'flex-start',
+                                                        alignItems: 'flex-start',
+                                                        gap: 2,
+                                                    }}>
+                                                        <View>
+                                                            <Image
+                                                                style={{
+                                                                    width: 20,
+                                                                    height: 20,
+                                                                    borderRadius: 20,
+                                                                }}
+                                                                source={{ uri: `${JSON.parse(val?.receiverUser?.profile_image).prefix}${JSON.parse(val?.receiverUser?.profile_image).uri}` }}
+                                                            />
+                                                        </View>
+                                                        <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.009, paddingHorizontal: width * 0.04, backgroundColor: Color('textLight'), borderRadius: height * 0.01 }}>
                                                             <Pera style={{ paddingBottom: 0 }}>{val?.message}</Pera>
                                                         </View>
                                                     </View>
@@ -178,51 +186,54 @@ const Chat = ({ navigation, route }) => {
                                         </>
                                         :
                                         <>
-                                            { chat.filter(val => (val.receiverUser.email === currUserEmail || val.senderUser.email === currUserEmail) && (val.receiverUser.email === route?.params?.user?.email || val.senderUser.email === route?.params?.user?.email)).map((val, index) => {
+                                            {chat.filter(val => (val.receiverUser.email === currUserEmail || val.senderUser.email === currUserEmail) && (val.receiverUser.email === route?.params?.user?.email || val.senderUser.email === route?.params?.user?.email)).map((val, index) => {
                                                 // const currentTime = moment(val?.createdAt).format('HH:mm');
                                                 // const previousTime = moment(chat[index- 1]?.createdAt).format('HH:mm');
-                                                    if (val?.senderUser?.email === currUserEmail) {
-                                                        return (
-                                                            <View key={index} style={{ flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 1, paddingVertical: height * 0.01 }}>
-                                                                <View>
-                                                                    <Image
-                                                                        // resizeMode="contain"
-                                                                        style={{
-                                                                            width: 20,
-                                                                            height: 20,
-                                                                            borderRadius: 20,
-                                                                        }}
-                                                                        source={{ uri: `${JSON.parse(val?.senderUser?.profile_image).prefix}${JSON.parse(val?.senderUser?.profile_image).uri}` }}
-                                                                    />
-                                                                </View>
-                                                                <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('darkTheme'), borderRadius: height * 0.01 }}>
-                                                                    <Pera style={{ paddingBottom: 0 }}>{val?.message}</Pera>
-                                                                </View>
-                                                            </View>
-                                                        );
-                                                    }
+                                                if (val?.senderUser?.email === currUserEmail) {
                                                     return (
-                                                        <View key={index} style={{
-                                                            flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 1, paddingVertical: height * 0.01,
-                                                            // flexDirection: 'row', paddingVertical: height * 0.01
-                                                             }}>
-                                                             <View>
-                                                                    <Image
-                                                                        // resizeMode="contain"
-                                                                        style={{
-                                                                            width: 20,
-                                                                            height: 20,
-                                                                            borderRadius: 20,
-                                                                        }}
-                                                                        source={{ uri: `${JSON.parse(val?.receiverUser?.profile_image).prefix}${JSON.parse(val?.receiverUser?.profile_image).uri}` }}
-                                                                    />
-                                                                </View>
-                                                            <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('textLight'), borderRadius: height * 0.01 }}>
+                                                        <View key={index} style={{ flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 1, paddingVertical: height * 0.01 }}>
+                                                            <View>
+                                                                <Image
+                                                                    // resizeMode="contain"
+                                                                    style={{
+                                                                        width: 20,
+                                                                        height: 20,
+                                                                        borderRadius: 20,
+                                                                    }}
+                                                                    source={{ uri: `${JSON.parse(val?.senderUser?.profile_image).prefix}${JSON.parse(val?.senderUser?.profile_image).uri}` }}
+                                                                />
+                                                            </View>
+                                                            <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('darkTheme'), borderRadius: height * 0.01 }}>
                                                                 <Pera style={{ paddingBottom: 0 }}>{val?.message}</Pera>
                                                             </View>
                                                         </View>
                                                     );
-                                                })
+                                                }
+                                                return (
+                                                    <View key={index} style={{
+                                                        flexDirection: 'column',
+                                                        paddingVertical: height * 0.01,
+                                                        justifyContent: 'flex-start',
+                                                        alignItems: 'flex-start',
+                                                        gap: 2,
+                                                    }}>
+                                                        <View>
+                                                            <Image
+                                                                // resizeMode="contain"
+                                                                style={{
+                                                                    width: 20,
+                                                                    height: 20,
+                                                                    borderRadius: 20,
+                                                                }}
+                                                                source={{ uri: `${JSON.parse(val?.receiverUser?.profile_image).prefix}${JSON.parse(val?.receiverUser?.profile_image).uri}` }}
+                                                            />
+                                                        </View>
+                                                        <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('textLight'), borderRadius: height * 0.01 }}>
+                                                            <Pera style={{ paddingBottom: 0 }}>{val?.message}</Pera>
+                                                        </View>
+                                                    </View>
+                                                );
+                                            })
                                             }
                                         </>
                                     }

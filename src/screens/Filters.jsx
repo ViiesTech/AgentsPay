@@ -16,6 +16,7 @@ import Loading from './Loading';
 import Dropdown from '../components/Dropdown';
 import Toast from 'react-native-simple-toast';
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
+import { ShowAlert } from '../utils/Alert';
 
 const { width, height } = Dimensions.get('window');
 const Filters = ({ navigation }) => {
@@ -48,6 +49,8 @@ const Filters = ({ navigation }) => {
         setMax(twoWayValue[1]);
     }, [twoWayValue]);
 
+    // console.log('max_min', max > min);
+
     useEffect(() => {
         setAreaMin(twoWayValueArea[0]);
         setAreaMax(twoWayValueArea[1]);
@@ -59,7 +62,6 @@ const Filters = ({ navigation }) => {
             const res = await api.get('/user/properties/filter/data', { headers: { Authorization: `Bearer ${token}` } });
             const maxAmount = parseFloat(res.data?.data[4]) > 0 ? parseFloat(res.data?.data[4]) : 1;
             const maxAreaValue = parseFloat(res.data?.data[5]) > 0 ? parseFloat(res.data?.data[5]) : 1;
-
             setFilterOptions(res.data?.data);
             setTwoWayValue([0, maxAmount]);
             setTwoWayValueArea([0, maxAreaValue]);
@@ -105,7 +107,7 @@ const Filters = ({ navigation }) => {
     });
     const amentitiesList = arr.join(', ').split(', ');
     const uniqueAmentitiesList = [...new Set(amentitiesList)];
-    
+
 
     return (
         <Background bgColor={Color('textColor')} noBackground>
@@ -166,12 +168,19 @@ const Filters = ({ navigation }) => {
             <Br space={0.02} />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <View>
-                    <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold',marginLeft:5 }}>Min</Pera>
-                    <TextInput value={min} onChangeText={(value) => setMin(value)} keyboardType="numeric" placeholderTextColor={Color('gray')} style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
+                    <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold', marginLeft: 5 }}>Min</Pera>
+                    <TextInput value={min}
+                        onChangeText={(value) => {
+                            setMin(value)
+                        }
+                        }
+                        keyboardType="numeric"
+                        placeholderTextColor={Color('gray')} style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
                 </View>
                 <View>
-                    <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold', marginLeft:5 }}>Max</Pera>
-                    <TextInput value={max} onChangeText={(value) => setMax(value)} keyboardType="numeric" style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
+                    <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold', marginLeft: 5 }}>Max</Pera>
+                    <TextInput value={max} onChangeText={(value) => { setMax(value) }
+                    } keyboardType="numeric" style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
                 </View>
             </View>
             <Br space={0.05} />
@@ -224,35 +233,33 @@ const Filters = ({ navigation }) => {
             </View>
             <Br space={0.05} />
 
-            <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Area Range (Sqft)</H6>
+            <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Area Range (sq. yd)</H6>
             <Br space={0.02} />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <View>
-                <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold', marginLeft:5 }}>Min</Pera>
-                <TextInput value={min} onChangeText={(value) => setAreaMin(value)} keyboardType="numeric" style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
+                    <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold', marginLeft: 5 }}>Min</Pera>
+                    <TextInput value={areaMin} onChangeText={(value) => setAreaMin(value)} keyboardType="numeric" style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
                 </View>
                 <View>
-                <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold',marginLeft:5 }}>Max</Pera>
-                <TextInput value={max} onChangeText={(value) => setAreaMax(value)} keyboardType="numeric" placeholderTextColor={Color('gray')} style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
+                    <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold', marginLeft: 5 }}>Max</Pera>
+                    <TextInput value={areaMax} onChangeText={(value) => setAreaMax(value)} keyboardType="numeric" placeholderTextColor={Color('gray')} style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
                 </View>
             </View>
             <Br space={0.05} />
             <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Amenities</H6>
             <Br space={0.02} />
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 15 }}>
-                {
-                    uniqueAmentitiesList.map((val, index) => {
-                        const isActive = amenity.includes(val.toLowerCase());
-                        if (val === '') {
-                            return <></>;
-                        }
-                        return (
-                            <Pressable onPress={() => setAmenity(val.toLowerCase())} key={index} style={{ borderWidth: 1, borderColor: isActive ? Color('btnBackground') : Color('gray'), backgroundColor: isActive ? Color('btnBackground') : null, paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30 }}>
-                                <Small style={{ fontFamily: 'Inter_28pt-Regular', textTransform: 'capitalize' }} theme={isActive ? null : 'dark'}>{val}</Small>
-                            </Pressable>
-                        );
-                    })
-                }
+                {uniqueAmentitiesList.map((val, index) => {
+                    const isActive = amenity.includes(val.toLowerCase());
+                    if (val === '') {
+                        return <></>;
+                    }
+                    return (
+                        <Pressable onPress={() => setAmenity(val.toLowerCase())} key={index} style={{ borderWidth: 1, borderColor: isActive ? Color('btnBackground') : Color('gray'), backgroundColor: isActive ? Color('btnBackground') : null, paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30 }}>
+                            <Small style={{ fontFamily: 'Inter_28pt-Regular', textTransform: 'capitalize' }} theme={isActive ? null : 'dark'}>{val}</Small>
+                        </Pressable>
+                    );
+                })}
             </View>
             <Br space={0.05} />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
@@ -263,7 +270,15 @@ const Filters = ({ navigation }) => {
                     />
                     <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Reset all</Pera>
                 </Pressable>
-                <Button style={{ backgroundColor: Color('darkTheme') }} onPress={() => navigation.navigate('ListedProperties', { propertyType: propertyType, state: state, city: city, min: min, max: max, beds: beds, baths: baths, areaMin: areaMin, areaMax: areaMax })}>
+                <Button style={{ backgroundColor: Color('darkTheme') }} onPress={() => {
+                    if (parseFloat(min) < parseFloat(max)) {
+                        navigation.navigate('ListedProperties', { propertyType: propertyType, state: state, city: city, min: min, max: max, beds: beds, baths: baths, areaMin: areaMin, areaMax: areaMax })
+                        return
+                    } else {
+                        ShowAlert('Min value should be greater than or equal to Max value', 'check the values');
+                        return
+                    }  }
+                }>
                     Search Properties
                 </Button>
             </View>

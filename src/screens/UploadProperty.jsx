@@ -247,7 +247,7 @@ const UploadProperty = ({ navigation, route }) => {
             </View>
             <Br space={0.05} />
             <H5 theme="light" style={{ fontFamily: 'Poppins-Medium', textAlign: 'center' }}>Upload Property</H5>
-            <Pera theme="transparent" style={{ textAlign: 'center', width: width * 0.85, alignSelf: 'center' }}>We have sent you an email containing 6 digits verification code. Please enter the code to verify your identity</Pera>
+            <Pera theme="transparent" style={{ textAlign: 'center', width: width * 0.85, alignSelf: 'center' }}>Make your property stand out from the crowd! Upload your listing now and get noticed by serious buyers and renters who are looking for a property just like yours</Pera>
 
 
 
@@ -328,14 +328,14 @@ const UploadProperty = ({ navigation, route }) => {
             <Input
                 keyboardType="numeric"
                 value={property?.property_size}
-                labelText="Property Area  (Sq)"
+                labelText="Property Area  (sq. yd)"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
                 onChange={(value) => setProperty({ ...property, property_size: value })}
             />
             <Input
                 keyboardType="numeric"
                 value={property?.property_value}
-                labelText="Property Price"
+                labelText="Property Price $"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
                 onChange={(value) => setProperty({ ...property, property_value: value })}
             />
