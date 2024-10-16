@@ -138,7 +138,7 @@ const Chat = ({ navigation, route }) => {
                                 </>
                                 :
                                 <>
-                                    {route.params.owner ?
+                                    {route.params?.owner ?
                                         <>
                                             {chat.map((val, index) => {
                                                 if (val?.senderUser?.email === currUserEmail) {

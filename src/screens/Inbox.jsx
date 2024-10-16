@@ -38,7 +38,6 @@ const Inbox = ({ navigation, route }) => {
         try {
             const token = await AsyncStorage.getItem('token');
             const res = await api.get(`/user/inbox?property_id=${route.params?.property_id}`, { headers: { Authorization: `Bearer ${token}` } });
-            console.log(res.data?.data);
             setInboxData(res.data?.data);
         } catch (err) {
             await errHandler(err, () => loadInbox());
@@ -74,9 +73,13 @@ const Inbox = ({ navigation, route }) => {
                                         key={index}
                                         onPress={() => {
                                             navigation.navigate('Chat', {
-                                                user:{
+                                                user: {
                                                     profile_image: currentUserId === item?.sender_id ? item.receiver_profile_image : item.sender_profile_image,
                                                     name: currentUserId === item?.sender_id ? item.receiver_name : item.sender_name,
+                                                    email: currentUserId === inboxData[0]?.sender_id ? inboxData[0]?.receiver_email : inboxData[0]?.sender_email,
+                                                    license_number: currentUserId === inboxData[0]?.sender_id ? inboxData[0]?.receiver_license_number : inboxData[0]?.sender_license_number,
+                                                    broker_name: currentUserId === inboxData[0]?.sender_id ? inboxData[0]?.receiver_broker_name : inboxData[0]?.sender_broker_name,
+                                                    phone:currentUserId === inboxData[0]?.sender_id ? inboxData[0]?.receiver_phone : inboxData[0]?.sender_phone,
                                                 },
                                                 property_id: route?.params?.property_id,
                                                 sender_id: currentUserId,
