@@ -21,6 +21,7 @@ const Chat = ({ navigation, route }) => {
 
     const [chat, setChats] = useState();
     const [currUserEmail, setCurrUserEmail] = useState('');
+    const [currUserImage, setCurrUserImage] = useState();
     const [message, setMessage] = useState('');
 
     const [isShown, setIsShown] = useState(false);
@@ -59,6 +60,8 @@ const Chat = ({ navigation, route }) => {
 
     const getContent = async () => {
         const token = await AsyncStorage.getItem('user');
+        const image = JSON.parse(token)?.profile_image;
+        setCurrUserImage(JSON.parse(image));
         setCurrUserEmail(JSON.parse(token)?.email);
         socket.emit('get_chat', {
             property_id: route?.params?.property_id,
@@ -99,12 +102,12 @@ const Chat = ({ navigation, route }) => {
                         zIndex: 1,
                     }}>
                         <Backbtn position="static" onPress={() => navigation.goBack()} backToSidebar={route?.params?.backToSidebar} />
-                        <TouchableOpacity 
+                        <TouchableOpacity
                         onPress={()=>{navigation.navigate('UserChatProfile',{userData:{
                             url:route?.params?.user ? `${JSON.parse(route?.params?.user?.profile_image).prefix}${JSON.parse(route?.params?.user?.profile_image).uri}` : 'https://random.imagecdn.app/500/150',
                             name:route?.params?.owner ? route?.params?.user?.name : route?.params?.user?.full_name,
                             ...route?.params?.user,
-                        }})}}
+                        }});}}
                         style={{ flexDirection: 'row', alignItems: 'center', gap: width * 0.02 }}>
                             <Image source={{ uri: route?.params?.user ? `${JSON.parse(route?.params?.user?.profile_image).prefix}${JSON.parse(route?.params?.user?.profile_image).uri}` : 'https://random.imagecdn.app/500/150' }}
                                 style={{
@@ -141,6 +144,9 @@ const Chat = ({ navigation, route }) => {
                                     {route.params?.owner ?
                                         <>
                                             {chat.map((val, index) => {
+                                                const src = val?.senderUser?.email === currUserEmail ?
+                                                `${currUserImage?.prefix}${currUserImage?.uri}` :
+                                                `${JSON.parse(val?.senderUser?.profile_image).prefix}${JSON.parse(val?.senderUser?.profile_image).uri}`;
                                                 if (val?.senderUser?.email === currUserEmail) {
                                                     return (
                                                         <View key={index} style={{ flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 1, paddingVertical: height * 0.01 }}>
@@ -150,7 +156,7 @@ const Chat = ({ navigation, route }) => {
                                                                     height: 20,
                                                                     borderRadius: 20,
                                                                 }}
-                                                                source={{ uri: `${JSON.parse(val?.senderUser?.profile_image).prefix}${JSON.parse(val?.senderUser?.profile_image).uri}` }}
+                                                                source={{ uri: src }}
                                                             />
                                                             <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('darkTheme'), borderRadius: height * 0.01 }}>
                                                                 <Pera style={{ paddingBottom: 0 }}>{val?.message}</Pera>
@@ -173,7 +179,7 @@ const Chat = ({ navigation, route }) => {
                                                                     height: 20,
                                                                     borderRadius: 20,
                                                                 }}
-                                                                source={{ uri: `${JSON.parse(val?.receiverUser?.profile_image).prefix}${JSON.parse(val?.receiverUser?.profile_image).uri}` }}
+                                                                source={{ uri: src }}
                                                             />
                                                         </View>
                                                         <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.009, paddingHorizontal: width * 0.04, backgroundColor: Color('textLight'), borderRadius: height * 0.01 }}>
@@ -182,26 +188,25 @@ const Chat = ({ navigation, route }) => {
                                                     </View>
                                                 );
                                             })
-
                                             }
                                         </>
                                         :
                                         <>
                                             {chat.filter(val => (val.receiverUser.email === currUserEmail || val.senderUser.email === currUserEmail) && (val.receiverUser.email === route?.params?.user?.email || val.senderUser.email === route?.params?.user?.email)).map((val, index) => {
-                                                // const currentTime = moment(val?.createdAt).format('HH:mm');
-                                                // const previousTime = moment(chat[index- 1]?.createdAt).format('HH:mm');
+                                                const src = val?.senderUser?.email === currUserEmail ?
+                                                `${currUserImage?.prefix}${currUserImage?.uri}` :
+                                                `${JSON.parse(val?.senderUser?.profile_image).prefix}${JSON.parse(val?.senderUser?.profile_image).uri}`;
                                                 if (val?.senderUser?.email === currUserEmail) {
                                                     return (
                                                         <View key={index} style={{ flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'flex-end', gap: 1, paddingVertical: height * 0.01 }}>
                                                             <View>
                                                                 <Image
-                                                                    // resizeMode="contain"
                                                                     style={{
                                                                         width: 20,
                                                                         height: 20,
                                                                         borderRadius: 20,
                                                                     }}
-                                                                    source={{ uri: `${JSON.parse(val?.senderUser?.profile_image).prefix}${JSON.parse(val?.senderUser?.profile_image).uri}` }}
+                                                                    source={{ uri: src }}
                                                                 />
                                                             </View>
                                                             <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('darkTheme'), borderRadius: height * 0.01 }}>
@@ -220,13 +225,12 @@ const Chat = ({ navigation, route }) => {
                                                     }}>
                                                         <View>
                                                             <Image
-                                                                // resizeMode="contain"
                                                                 style={{
                                                                     width: 20,
                                                                     height: 20,
                                                                     borderRadius: 20,
                                                                 }}
-                                                                source={{ uri: `${JSON.parse(val?.receiverUser?.profile_image).prefix}${JSON.parse(val?.receiverUser?.profile_image).uri}` }}
+                                                                source={{ uri: src }}
                                                             />
                                                         </View>
                                                         <View style={{ width: width * 0.8, paddingTop: height * 0.01, paddingBottom: height * 0.008, paddingHorizontal: width * 0.04, backgroundColor: Color('textLight'), borderRadius: height * 0.01 }}>

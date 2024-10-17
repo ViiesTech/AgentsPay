@@ -171,7 +171,7 @@ const Filters = ({ navigation }) => {
                     <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold', marginLeft: 5 }}>Min</Pera>
                     <TextInput value={min}
                         onChangeText={(value) => {
-                            setMin(value)
+                            setMin(value);
                         }
                         }
                         keyboardType="numeric"
@@ -179,7 +179,7 @@ const Filters = ({ navigation }) => {
                 </View>
                 <View>
                     <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold', marginLeft: 5 }}>Max</Pera>
-                    <TextInput value={max} onChangeText={(value) => { setMax(value) }
+                    <TextInput value={max} onChangeText={(value) => { setMax(value); }
                     } keyboardType="numeric" style={{ borderColor: Color('gray'), color: Color('darkTheme'), borderRadius: 10, borderWidth: 1, paddingVertical: height * 0.015, paddingHorizontal: width * 0.05 }} />
                 </View>
             </View>
@@ -271,12 +271,12 @@ const Filters = ({ navigation }) => {
                     <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Reset all</Pera>
                 </Pressable>
                 <Button style={{ backgroundColor: Color('darkTheme') }} onPress={() => {
-                    if (parseFloat(min) < parseFloat(max)) {
-                        navigation.navigate('ListedProperties', { propertyType: propertyType, state: state, city: city, min: min, max: max, beds: beds, baths: baths, areaMin: areaMin, areaMax: areaMax })
-                        return
+                    if (parseFloat(min) <= parseFloat(max)) {
+                        navigation.navigate('ListedProperties', { propertyType: propertyType, state: state, city: city, min: min, max: max, beds: beds, baths: baths, areaMin: areaMin, areaMax: areaMax });
+                        return;
                     } else {
                         ShowAlert('Min value should be greater than or equal to Max value', 'check the values');
-                        return
+                        return;
                     }  }
                 }>
                     Search Properties

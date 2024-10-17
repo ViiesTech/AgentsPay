@@ -335,7 +335,7 @@ const UploadProperty = ({ navigation, route }) => {
             <Input
                 keyboardType="numeric"
                 value={property?.property_value}
-                labelText="Property Price $"
+                labelText="Property Price ($)"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
                 onChange={(value) => setProperty({ ...property, property_value: value })}
             />
@@ -354,7 +354,7 @@ const UploadProperty = ({ navigation, route }) => {
                 readOnly={disableAgentAmount}
                 keyboardType="numeric"
                 value={property?.agent_amount}
-                labelText="Agent Amount"
+                labelText="Agent Amount ($)"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
                 onChange={(value) => setProperty({ ...property, agent_amount: value })}
             />
