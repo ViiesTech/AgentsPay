@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { Dimensions, View } from 'react-native';
+import { Dimensions, ToastAndroid, View } from 'react-native';
 import Background from '../utils/Background';
 import Backbtn from '../components/Backbtn';
 import Notificationbtn from '../components/Notificationbtn';
@@ -48,6 +48,11 @@ const AddCard = ({ navigation, route }) => {
             return false;
         }
 
+        if (card?.card_number?.length < 14) {
+            ShowAlert('Card Number is Invalid!', 'Please enter your card number.');
+            return false;
+        }
+
         if (validator.isEmpty(card?.owner)) {
             ShowAlert('Name is Required!', 'Please enter your name on card.');
             return false;
@@ -80,6 +85,11 @@ const AddCard = ({ navigation, route }) => {
             try {
                 const type = await getCardType(card?.card_number);
                 const service = await getServiceType(card?.card_number);
+                if (service === '') {
+                    ToastAndroid.show('Invalid Card Number', ToastAndroid.SHORT);
+                    setLoading(false);
+                    return;
+                }
                 const res = await api.post('/user/payment/add_card', {
                     card_type: type,
                     card_service: service,
