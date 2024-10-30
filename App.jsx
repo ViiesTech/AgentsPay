@@ -11,6 +11,8 @@ import { StatusBar } from 'react-native';
 
 import Splash from './src/screens/Splash';
 import Loading from './src/screens/Loading';
+// const SendAgreement = lazy(() => import('./src/screens/SendAgreement'));
+import SendAgreement from './src/screens/SendAgreement';
 // const Welcome = lazy(() => import('./src/screens/Welcome'));
 import Welcome from './src/screens/Welcome';
 // const Login = lazy(() => import('./src/screens/Login'));
@@ -92,6 +94,9 @@ function App() {
             {/* AUTH */}
             <Stack.Screen name="Login">
               {props => <Sus component={<Login {...props} />} />}
+            </Stack.Screen>
+            <Stack.Screen name="SendAgreement">
+              {props => <Sus component={<SendAgreement {...props} />} />}
             </Stack.Screen>
             <Stack.Screen name="Signup">
               {props => <Sus component={<Signup {...props} />} />}

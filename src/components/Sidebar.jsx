@@ -70,7 +70,7 @@ const Sidebar = ({ user, isOpen }) => {
                         borderRadius: 30,
                         marginBottom: height * 0.01,
                     }}>
-                        <Pera style={{ fontFamily: 'Poppins-SemiBold' }}>{label}</Pera>
+                        <Pera  style={{color:Color('navigationBackground'), fontFamily: 'Poppins-SemiBold' }}>{label}</Pera>
                     </View>
                 </TouchableOpacity>
             </>
@@ -165,7 +165,7 @@ const Sidebar = ({ user, isOpen }) => {
                                         alignSelf: 'center',
                                         marginTop: height * 0.03,
                                     }}>
-                                        <Pera style={{ fontFamily: 'Poppins-SemiBold' }}>Generate QR</Pera>
+                                        <Pera style={{ fontFamily: 'Poppins-SemiBold', color: Color('navigationBackground') }}>Generate QR</Pera>
                                     </View>
                                 </TouchableOpacity>
                             </View>

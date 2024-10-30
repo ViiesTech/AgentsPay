@@ -247,7 +247,7 @@ const PropertyDetails = ({ navigation, route }) => {
                     <Button onPress={() => setShowAgentDetails(true)}>View Contact Details</Button>
                     <Br space={0.015} />
                     {
-                        details?.tbl_user?.user_id !== currentUserId && (
+                        details?.tbl_user?.user_id !== currentUserId ? (
                             <Button
                                 onPress={() => {
                                     if (details?.tbl_user?.user_id !== currentUserId) {
@@ -261,7 +261,10 @@ const PropertyDetails = ({ navigation, route }) => {
                                         navigation.navigate('Inbox', { user: details?.tbl_user, property_id: paramData?.id });
                                     }
                                 }}
-                            >Chat </Button>
+                            >Chat</Button>
+                        ) :
+                        (
+                            <Button onPress={() => navigation.navigate('SendAgreement', {id: route?.params?.data?.id})}>Sign Agreement</Button>
                         )
                     }
 
