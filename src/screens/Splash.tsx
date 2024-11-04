@@ -6,6 +6,8 @@ import { Image, StyleSheet, View, Dimensions } from 'react-native';
 import { Button, ButtonOutline } from '../components/Button';
 import Br from '../components/Br';
 import { Color } from '../utils/Colors';
+import { WebView } from 'react-native-webview';
+import { baseUrl } from '../API';
 
 const { width, height } = Dimensions.get('screen');
 
@@ -37,9 +39,9 @@ const Splash = ({ navigation }: { navigation: any }) => {
   };
 
 
-
   return (
-    <View>
+    <View >
+ 
       <Image
         source={require('../assets/images/splash.png')}
         style={styles.container}
