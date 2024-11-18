@@ -77,7 +77,7 @@ const Stack = createNativeStackNavigator();
 function App() {
   const { navigationRef } = useNavigation();
 
-  const Sus = ({component}) => {
+  const Sus = ({ component }) => {
     return <Suspense fallback={<Loading />}>{component}</Suspense>;
   };
   return (

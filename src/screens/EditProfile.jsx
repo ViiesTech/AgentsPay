@@ -145,6 +145,33 @@ const EditProfile = ({ navigation, route }) => {
         }
     };
 
+    const confirmDelete = async () => {
+        try {
+            setLoading(true);
+            const token = await AsyncStorage.getItem('token');
+            const res = await api.delete('/user/profile/delete', {headers: {Authorization: `Bearer ${token}`}});
+            setLoading(false);
+            if (route.name === 'EditProfile') {
+                await AsyncStorage.removeItem('token');
+                await AsyncStorage.removeItem('fcm');
+                await AsyncStorage.removeItem('device');
+                await AsyncStorage.removeItem('user');
+                Dialog.show({
+                    type: ALERT_TYPE.SUCCESS,
+                    gravity: 'center',
+                    title: res.data?.title,
+                    textBody: res.data?.message,
+                    button: 'Okay',
+                    onPressButton: () => navigation.navigate('Logout'),
+                    onHide: () => navigation.navigate('Logout'),
+                });
+            }
+        }catch(err) {
+            setLoading(false);
+            console.log(err);
+        }
+    };
+
     if (profile.license_number === '' || profile.location === '' || profile.gender === '') {
         return <Loading />;
     }
@@ -239,6 +266,12 @@ const EditProfile = ({ navigation, route }) => {
                 <Br space={0.03} />
                 <ButtonOutline loading={loading} style={{width: width * 0.85}} onPress={onUpdateProfile}>Update Profile</ButtonOutline>
                 <Br space={0.02} />
+                <TouchableOpacity onPress={() => Alert.alert('Are You Sure?', 'Please confirm to delete your account.', [
+                    {text: 'Cancel', onPress: () => console.log('')},
+                    {text: 'Confirm', onPress: () => confirmDelete()},
+                ])}>
+                    <Pera style={{textAlign: 'center', color: Color('danger')}}>Delete My Account</Pera>
+                </TouchableOpacity>
             </View>
         </Background>
     );

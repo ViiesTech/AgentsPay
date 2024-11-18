@@ -30,8 +30,8 @@ android {
         applicationId "com.agents_pay"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 4
-        versionName "2.2"
+        versionCode 6
+        versionName "2.4"
     }
     signingConfigs {
         debug {
@@ -70,7 +70,7 @@ dependencies {
      implementation project(':react-native-async-storage_async-storage')
      implementation project(':react-native-checkbox')
      implementation project(':react-native-geolocation-service')
-    implementation project(':@react-native-community_geolocation')
+     implementation project(':@react-native-community_geolocation')
      implementation project(':@react-native-firebase_app')
      implementation project(':@react-native-firebase_messaging')
      implementation project(':react-native-device-info')

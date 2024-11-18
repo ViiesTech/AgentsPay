@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useMemo } from 'react';
-import { Alert, BackHandler, Dimensions, FlatList, Image, Keyboard, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { Alert, BackHandler, Dimensions, FlatList, Image, Keyboard, Linking, Platform, SafeAreaView, ScrollView, StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
 import KeyboardView from './KeyboardView';
 import Sidebar from '../components/Sidebar';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
@@ -80,6 +80,21 @@ const Background = ({ bgColor, home, children, noBackground, data, noScroll, det
             onScrollEnd();
         }
     };
+
+    const handleURL = () => {
+        navigation.navigate('Home');
+    };
+
+    Linking.getInitialURL().then((url) => {
+        if (url) {
+            console.log(url);
+            handleURL(url);
+        }
+    });
+
+    Linking.addEventListener('url', (event) => {
+        handleURL();
+    });
 
     return (
         <>

@@ -12,6 +12,7 @@ import { api, errHandler } from '../API';
 import { ALERT_TYPE, Dialog } from 'react-native-alert-notification';
 import { ShowAlert } from '../utils/Alert';
 import Backbtn from '../components/Backbtn';
+import Toast from 'react-native-simple-toast';
 
 const { width, height } = Dimensions.get('window');
 const Signup = ({ navigation, route }) => {
@@ -96,15 +97,28 @@ const Signup = ({ navigation, route }) => {
                 });
 
                 if (route.name === 'Signup') {
-                    Dialog.show({
-                        type: ALERT_TYPE.SUCCESS,
-                        gravity: 'center',
-                        title: res.data?.title,
-                        textBody: res.data?.message,
-                        button: 'Great',
-                        onPressButton: () => navigation.replace('Login', { email: user?.email }),
-                        onHide: () => navigation.replace('Login', { email: user?.email }),
-                    });
+                    if (res.data?.data?.accountRecoverable) {
+                        setLoading(false);
+                        Dialog.show({
+                            type: ALERT_TYPE.SUCCESS,
+                            gravity: 'center',
+                            title: res.data?.title,
+                            textBody: res.data?.message,
+                            button: 'Recover',
+                            onPressButton: () => recoverAccount(res.data?.data?.user_id),
+                            onHide: () => console.log(''),
+                        });
+                    }else {
+                        Dialog.show({
+                            type: ALERT_TYPE.SUCCESS,
+                            gravity: 'center',
+                            title: res.data?.title,
+                            textBody: res.data?.message,
+                            button: 'Great',
+                            onPressButton: () => navigation.replace('Login', { email: user?.email }),
+                            onHide: () => navigation.replace('Login', { email: user?.email }),
+                        });
+                    }
                 }
             } catch(err) {
                 setLoading(false);
@@ -112,6 +126,23 @@ const Signup = ({ navigation, route }) => {
             }
         }
     };
+
+    const recoverAccount = async (user_id) => {
+        Dialog.hide();
+        try {
+            setLoading(true);
+            const res = await api.put('/user/profile/recover', {
+                user_id: user_id,
+            });
+            setLoading(false);
+            Toast.show(res.data?.message, Toast.SHORT);
+            navigation.replace('Login', { email: user?.email });
+        }catch(err) {
+            setLoading(false);
+            console.log(err);
+        }
+    };
+
     return (
         <Background noAuth>
              <Backbtn onPress={() => navigation.goBack()} />

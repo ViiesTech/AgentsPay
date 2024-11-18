@@ -2,14 +2,25 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>agentpay</string>
+			</array>
+			<key>CFBundleURLName</key>
+			<string>My App</string>
+		</dict>
+	</array>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses location</string>
+	<string>The $(PRODUCT_NAME) app uses location services to provide users with property listings and services tailored to their geographic area. This ensures that users can find nearby properties and connect with local agents efficiently, making the app more relevant and effective for real estate professionals and clients.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses photos</string>
+	<string>The app requires camera access to allow users to capture high-quality photos of properties directly within the platform. This feature is essential for creating or updating property listings quickly and easily, streamlining the listing process for agents and clients.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>$(PRODUCT_NAME) uses photos</string>
+	<string>Access to the photo library and files is necessary to let users upload existing property photos, documents, and other files. This functionality enables smooth sharing of important visual and agreement details required for property listings and client communications.</string>
 	<key>App Uses Non-Exempt Encryption</key>
-	<true/>
+	<false/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
@@ -40,7 +51,7 @@
 		<true/>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to your location</string>
+	<string>The $(PRODUCT_NAME) app uses location services to provide users with property listings and services tailored to their geographic area. This ensures that users can find nearby properties and connect with local agents efficiently, making the app more relevant and effective for real estate professionals and clients.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Poppins-Regular.ttf</string>

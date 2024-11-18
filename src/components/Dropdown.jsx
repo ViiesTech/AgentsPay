@@ -3,17 +3,19 @@
 import { useState } from 'react';
 import { Dimensions, FlatList, Modal, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Color } from '../utils/Colors';
-import { ArrowDown2 } from 'iconsax-react-native';
-import { Pera } from '../utils/Text';
+import { ArrowDown2, ArrowRight2 } from 'iconsax-react-native';
+import { Pera, Small } from '../utils/Text';
 import { RFValue } from 'react-native-responsive-fontsize';
 
 const { width, height } = Dimensions.get('screen');
-const Dropdown = ({ defaultValue, style, data, selectedValue, onValueChange, defaultStyle, label, icon }) => {
+const Dropdown = ({ selectedData, multiple, defaultValue, style, data, selectedValue, onValueChange, defaultStyle, label, icon }) => {
     const [isVisible, setIsVisible] = useState(false);
 
     const handleSelect = (item) => {
         onValueChange(item);
-        setIsVisible(false);
+        if (!multiple) {
+            setIsVisible(false);
+        }
     };
 
     const defaulDropdownButton = defaultStyle ? {
@@ -48,7 +50,9 @@ const Dropdown = ({ defaultValue, style, data, selectedValue, onValueChange, def
                             keyExtractor={(item) => item.value}
                             renderItem={({ item }) => (
                                 <TouchableOpacity style={styles.dropdownItem} onPress={() => handleSelect(item.value || item.label)}>
+                                    {/* {multiple && selectedData.includes(item.value || item.label) && <ArrowRight2 size={height * 0.015} color={Color('btnText')} style={{marginBottom: height * 0.003}} />} */}
                                     <Pera style={styles.dropdownItemText}>{item.label}</Pera>
+                                    {multiple && selectedData.includes(item.value || item.label) && <Small style={[styles.dropdownItemText, { color: Color('navigationBackground') }]}>(Selected)</Small>}
                                 </TouchableOpacity>
                             )}
                         />
@@ -92,6 +96,9 @@ const styles = StyleSheet.create({
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: Color('gray'),
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: height * 0.007,
     },
     dropdownItemText: {
         color: Color('btnText'),

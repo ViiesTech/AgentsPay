@@ -21,7 +21,7 @@ import { ShowAlert } from '../utils/Alert';
 const { width, height } = Dimensions.get('window');
 const Filters = ({ navigation }) => {
     const [filterOptions, setFilterOptions] = useState();
-    const [amenity, setAmenity] = useState('');
+    const [amenity, setAmenity] = useState([]);
     const [propertyType, setPropertyType] = useState('');
     const [state, setState] = useState('');
     const [city, setCity] = useState('');
@@ -73,7 +73,7 @@ const Filters = ({ navigation }) => {
     };
 
     const resetFilters = () => {
-        setAmenity('');
+        setAmenity([]);
         setPropertyType('');
         setState('');
         setCity('');
@@ -106,7 +106,33 @@ const Filters = ({ navigation }) => {
         arr.push(val?.tags);
     });
     const amentitiesList = arr.join(', ').split(', ');
-    const uniqueAmentitiesList = [...new Set(amentitiesList)];
+    const uniqueAmentitiesList = [
+        'Loft',
+        'Private Pool',
+        'Area Pool',
+        'Area Tennis',
+        'Yard',
+        'Gerage',
+        'Sprinkler',
+
+        'Must have A/C',
+        'Must have pool',
+        'On-site Parking',
+        'Waterfront',
+        'In-unit Laundry',
+        'Accepts Agent Pay Applications',
+        'Income restricted',
+        'Hardwood Floors',
+        'Disabled Access',
+        'Utilities Included',
+        'Short term lease available',
+        'Furnished',
+        'Outdoor space',
+        'Controlled access',
+        'High speed internet',
+        'Elevator',
+        'Apartment Community',
+    ]; // [...new Set(amentitiesList)];
 
 
     return (
@@ -166,6 +192,28 @@ const Filters = ({ navigation }) => {
 
             <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Price Range</H6>
             <Br space={0.02} />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
+                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{min}</H6>
+                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{max}</H6>
+            </View>
+            {
+                maxValue > 0 && (
+                    <MultiSlider
+                        values={twoWayValue}
+                        onValuesChange={handleTwoWaySliderChange}
+                        sliderLength={width * 0.85}
+                        containerStyle={{ alignSelf: 'center' }}
+                        min={0}
+                        max={maxValue}
+                        step={1}
+                        allowOverlap={false}
+                        snapped={true}
+                        markerStyle={{ backgroundColor: Color('propertyPrice') }}
+                        selectedStyle={{ backgroundColor: Color('propertyPrice') }}
+                        unselectedStyle={{ backgroundColor: Color('gray') }}
+                    />
+                )
+            }
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <View>
                     <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold', marginLeft: 5 }}>Min</Pera>
@@ -235,6 +283,27 @@ const Filters = ({ navigation }) => {
 
             <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Area Range (sq. yd)</H6>
             <Br space={0.02} />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
+                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{areaMin}</H6>
+                <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{areaMax}</H6>
+            </View>
+            {maxValueArea > 0 && (
+                    <MultiSlider
+                        values={twoWayValueArea}
+                        onValuesChange={(value) => setTwoWayValueArea(value)}
+                        sliderLength={width * 0.85}
+                        containerStyle={{ alignSelf: 'center' }}
+                        min={0}
+                        max={maxValueArea}
+                        step={1}
+                        allowOverlap={false}
+                        snapped={true}
+                        markerStyle={{ backgroundColor: Color('propertyPrice') }}
+                        selectedStyle={{ backgroundColor: Color('propertyPrice') }}
+                        unselectedStyle={{ backgroundColor: Color('gray') }}
+                    />
+                )
+            }
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                 <View>
                     <Pera theme="dark" style={{ fontFamily: 'Inter_28pt-Regular', fontWeight: 'bold', marginLeft: 5 }}>Min</Pera>
@@ -255,7 +324,13 @@ const Filters = ({ navigation }) => {
                         return <></>;
                     }
                     return (
-                        <Pressable onPress={() => setAmenity(val.toLowerCase())} key={index} style={{ borderWidth: 1, borderColor: isActive ? Color('btnBackground') : Color('gray'), backgroundColor: isActive ? Color('btnBackground') : null, paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30 }}>
+                        <Pressable onPress={() => setAmenity((value) => {
+                            if (isActive) {
+                                return amenity.filter(item => item !== val.toLowerCase());
+                            }else {
+                                return [val.toLowerCase(), ...value];
+                            }
+                        })} key={index} style={{ borderWidth: 1, borderColor: isActive ? Color('btnBackground') : Color('gray'), backgroundColor: isActive ? Color('btnBackground') : null, paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30 }}>
                             <Small style={{ fontFamily: 'Inter_28pt-Regular', textTransform: 'capitalize' }} theme={isActive ? null : 'dark'}>{val}</Small>
                         </Pressable>
                     );
@@ -272,7 +347,7 @@ const Filters = ({ navigation }) => {
                 </Pressable>
                 <Button style={{ backgroundColor: Color('darkTheme') }} onPress={() => {
                     if (parseFloat(min) <= parseFloat(max)) {
-                        navigation.navigate('ListedProperties', { propertyType: propertyType, state: state, city: city, min: min, max: max, beds: beds, baths: baths, areaMin: areaMin, areaMax: areaMax });
+                        navigation.navigate('ListedProperties', { propertyType: propertyType, state: state, city: city, min: min, max: max, beds: beds, baths: baths, areaMin: areaMin, areaMax: areaMax, amenity: amenity });
                         return;
                     } else {
                         ShowAlert('Min value should be greater than or equal to Max value', 'check the values');

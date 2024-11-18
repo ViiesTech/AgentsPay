@@ -2,14 +2,14 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, Linking, Pressable, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, Linking, Pressable, View } from 'react-native';
 import Background from '../utils/Background';
 import { H6, Pera, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
 import Br from '../components/Br';
 import PropertyInfo from '../components/PropertyInfo';
 import NavigationBar from '../components/NavigationBar';
-import { DocumentDownload, MessageText1 } from 'iconsax-react-native';
+import { DocumentDownload } from 'iconsax-react-native';
 import { Button } from '../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { api, baseUrl, errHandler } from '../API';

@@ -2,18 +2,18 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
-import { Animated, Dimensions, Image, Linking, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Animated, Dimensions, Image, Linking, Pressable, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { hideDrawer } from '../redux/Reducers/drawerSlice';
 import { Color } from '../utils/Colors';
-import { Call, Card, Cards, Edit2, Hashtag, Home, MessageNotif, Notepad, Personalcard, Profile, Profile2User, ProfileTick, Reserve, SmsNotification, User } from 'iconsax-react-native';
+import { Call, Card, Cards, Edit2, Home, MessageNotif, Notepad, Personalcard, Profile, Profile2User, ProfileTick, Reserve, SmsNotification, User } from 'iconsax-react-native';
 import { H6, Pera, Small } from '../utils/Text';
 import Br from './Br';
 import Backbtn from './Backbtn';
 import Hr from './Hr';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { api } from '../API';
+import { api, baseUrl } from '../API';
 import Models from './Models';
 import QRCode from 'react-native-qrcode-svg';
 const { width, height } = Dimensions.get('screen');
@@ -26,7 +26,6 @@ const Sidebar = ({ user, isOpen }) => {
     const [visible, setVisible] = useState(false);
     const [userData, setUserData] = useState();
     const [genderPronouns, setGenderPronouns] = useState('');
-    const [isAppInstalled, setIsAppInstalled] = useState(false);
     const [qrCodeData, setQRCodeData] = useState('https://play.google.com/store/apps/details?id=com.example.yourapp');
 
     useEffect(() => {
@@ -53,10 +52,15 @@ const Sidebar = ({ user, isOpen }) => {
             setUserData(JSON.parse(savedData));
         }
     };
-    const DrawerItem = ({ label, screen }) => {
-        const clicked = () => {
-            navigation.navigate(screen, { backToSidebar: true });
-            dispatch(hideDrawer());
+    const DrawerItem = ({ label, screen, openOnWeb, href }) => {
+        const clicked = async () => {
+            if (openOnWeb) {
+                const token = await AsyncStorage.getItem('token');
+                Linking.openURL(href + '?token=' + token);
+            }else {
+                navigation.navigate(screen, { backToSidebar: true });
+                dispatch(hideDrawer());
+            }
         };
 
         return (
@@ -80,13 +84,13 @@ const Sidebar = ({ user, isOpen }) => {
     const qrOpen = () => {
         setVisible(true);
         const url = 'https://play.google.com/store/apps/details?id=com.example.yourapp';
-    }
+    };
 
     if (!isOpen || !userData) { return; }
 
     return (
         <>
-            <Models visible={visible} onClose={()=>{setVisible(false)}}>
+            <Models visible={visible} onClose={()=>{setVisible(false);}}>
                 <View style={{ alignItems: 'center', padding: height * 0.02, borderRadius: height * 0.01, width: width * 0.8, backgroundColor: Color('textColor') }}>
                     <Pera style={{ color: Color('btnText'), fontWeight: 'bold', textAlign: 'center' }}>Referral Code</Pera>
                     <Br space={0.01} />
@@ -205,11 +209,11 @@ const Sidebar = ({ user, isOpen }) => {
                                     <Small style={{ width: width * 0.35 }} numberOfLines={1}>{userData?.broker_name}</Small>
                                 </View>
                                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                                    <Hashtag
+                                    {/* <Hashtag
                                         size="22"
                                         color={Color('btnBackground')}
                                         variant="Outline"
-                                    />
+                                    /> */}
                                     <Small style={{ width: width * 0.45 }} numberOfLines={1}>{genderPronouns === 'male' ? 'He' : genderPronouns === 'female' ? 'She' : 'Other'}</Small>
                                 </View>
                             </View>
@@ -233,7 +237,8 @@ const Sidebar = ({ user, isOpen }) => {
                         <DrawerItem
                             icon={<Profile2User size="25" color={Color('whiteText')} variant="Bold" />}
                             label="Subscription"
-                            screen="MySubscription"
+                            href={`${baseUrl}/current_subscription`}
+                            openOnWeb
                         />
                         <DrawerItem
                             icon={<Reserve size="25" color={Color('whiteText')} variant="Bold" />}

@@ -30,7 +30,34 @@ const UploadProperty = ({ navigation, route }) => {
     const [disableAgentAmount, setDisableAgentAmount] = useState(false);
     const [loading, setLoading] = useState(false);
     const [tag, setTag] = useState('');
-    const [tags, setTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [tags, setTags] = useState([
+        {label: 'Loft', value: 'Loft'},
+        {label: 'Private Pool', value: 'Private Pool'},
+        {label: 'Area Pool', value: 'Area Pool'},
+        {label: 'Area Tennis', value: 'Area Tennis'},
+        {label: 'Yard', value: 'Yard'},
+        {label: 'Gerage', value: 'Gerage'},
+        {label: 'Sprinkler', value: 'Sprinkler'},
+
+        {label: 'Must have A/C', value: 'Must have A/C'},
+        {label: 'Must have pool', value: 'Must have pool'},
+        {label: 'On-site Parking', value: 'On-site Parking'},
+        {label: 'Waterfront', value: 'Waterfront'},
+        {label: 'In-unit Laundry', value: 'In-unit Laundry'},
+        {label: 'Accepts Agent Pay Applications', value: 'Accepts Agent Pay Applications'},
+        {label: 'Income restricted', value: 'Income restricted'},
+        {label: 'Hardwood Floors', value: 'Hardwood Floors'},
+        {label: 'Disabled Access', value: 'Disabled Access'},
+        {label: 'Utilities Included', value: 'Utilities Included'},
+        {label: 'Short term lease available', value: 'Short term lease available'},
+        {label: 'Furnished', value: 'Furnished'},
+        {label: 'Outdoor space', value: 'Outdoor space'},
+        {label: 'Controlled access', value: 'Controlled access'},
+        {label: 'High speed internet', value: 'High speed internet'},
+        {label: 'Elevator', value: 'Elevator'},
+        {label: 'Apartment Community', value: 'Apartment Community'},
+    ]);
     const [documents, setDocuments] = useState([]);
     const [images, setImages] = useState([]);
     const [cities, setCities] = useState([]);
@@ -198,7 +225,7 @@ const UploadProperty = ({ navigation, route }) => {
                 const token = await AsyncStorage.getItem('token');
                 const propertyType = propertyTypes.filter(val => val.label === property?.property_type)[0];
                 const res = await api.post('/user/properties/upload', {
-                    tags: JSON.stringify(tags),
+                    tags: JSON.stringify(selectedTags),
                     images: JSON.stringify(images),
                     documents: JSON.stringify(documents),
                     title: property?.title.toString(),
@@ -373,20 +400,29 @@ const UploadProperty = ({ navigation, route }) => {
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
                 onChange={(value) => setProperty({ ...property, no_of_bathrooms: value })}
             />
-            <Input
-                value={tag}
-                labelText="Amenities"
-                placeholder={tags.length > 0 ? 'You can add more' : ''}
-                plceHolderTextClr="rgba(255, 255, 255, 0.4)"
-                style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015, fontSize: 12 }}
-                onChange={(value) => setTag(value)}
-                onBlur={addTag}
+            <Dropdown
+                data={tags}
+                selectedData={selectedTags}
+                defaultValue="Amenities"
+                style={{ width: width * 0.86, alignSelf: 'center' }}
+                defaultStyle={undefined}
+                label={undefined}
+                icon={undefined}
+                multiple
+                onValueChange={(value) => {
+                    if (selectedTags.includes(value)) {
+                        setSelectedTags(() => selectedTags.filter(val => val !== value));
+                    }else {
+                        setSelectedTags(() => [...selectedTags, value]);
+                    }
+                }}
             />
+            <Br space={0.015} />
             <View style={{ width: width * 0.85, alignSelf: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
                 {
-                    tags.map((label, index) => {
+                    selectedTags.map((label, index) => {
                         return (
-                            <Pressable onPress={() => removeTag(label)} key={index} style={{ borderWidth: 1, borderColor: Color('textColor'), paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30 }}>
+                            <Pressable key={index} style={{ borderWidth: 1, borderColor: Color('textColor'), paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30 }}>
                                 <Small style={{ fontFamily: 'Inter_28pt-Regular', textTransform: 'capitalize' }}>{label}</Small>
                             </Pressable>
                         );

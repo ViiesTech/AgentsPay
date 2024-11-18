@@ -74,12 +74,12 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                     }}
 
                     nextButton={
-                        <View style={{ backgroundColor: 'transparent', transform: [{ translateY: -45 }] }}>
+                        <View style={{ backgroundColor: 'transparent', transform: [{ translateY: height * 0.01 }] }}>
                             <ArrowRight2 size="32" color={Color('btnBackground')} />
                         </View>
                     }
                     prevButton={
-                        <View style={{ backgroundColor: 'transparent', transform: [{ translateY: -45 }] }}>
+                        <View style={{ backgroundColor: 'transparent', transform: [{ translateY: height * 0.01 }] }}>
                             <ArrowLeft2
                                 size="32"
                                 color={Color('btnBackground')}

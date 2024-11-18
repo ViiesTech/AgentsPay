@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { Alert, Dimensions, Image, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, Image, Linking, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -9,7 +9,7 @@ import { ButtonOutline } from '../components/Button';
 import Input from '../components/Input';
 import { Edit2 } from 'iconsax-react-native';
 import Dropdown from '../components/Dropdown';
-import { api, errHandler } from '../API';
+import { api, baseUrl, errHandler } from '../API';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { noImage } from '../utils/defaultValues';
@@ -77,8 +77,8 @@ const CompleteProfile = ({ navigation, route }) => {
                         title: res.data?.title,
                         textBody: res.data?.message,
                         button: 'Okay',
-                        onPressButton: () => navigation.replace('Subscriptions'),
-                        onHide: () => navigation.replace('Subscriptions'),
+                        onPressButton: () => openSubscriptions(),
+                        onHide: () => openSubscriptions(),
                     });
                 }
             } catch (err) {
@@ -86,6 +86,11 @@ const CompleteProfile = ({ navigation, route }) => {
             }
             setLoading(false);
         }
+    };
+
+    const openSubscriptions = async () => {
+        const token = await AsyncStorage.getItem('token');
+        Linking.openURL(`${baseUrl}/subscriptions?token=${token}`);
     };
 
     const uploadProfileImage = async () => {

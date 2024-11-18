@@ -20,7 +20,7 @@ const Welcome = ({ navigation }) => {
                 <Br space={0.03} />
                 <View style={{borderColor: Color('textColor'), borderLeftWidth: 1, paddingVertical: height * 0.01, paddingLeft: width * 0.05}}>
                     <Small>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                        Welcome To Agent Pay
                     </Small>
                     <Br space={0.02} />
                     <View style={{flexDirection: 'row', gap: 30, alignItems: 'center'}}>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.usernotifications.service</string>
+		<key>NSExtensionPrincipalClass</key>
+		<string>$(PRODUCT_MODULE_NAME).NotificationService</string>
+		<key>CFBundleURLTypes</key>
+		<array>
+			<dict>
+				<key>CFBundleURLSchemes</key>
+				<array>
+					<string>agentpay</string>
+				</array>
+				<key>CFBundleURLName</key>
+				<string>My App</string>
+			</dict>
+		</array>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>The $(PRODUCT_NAME) app uses location services to provide users with property listings and services tailored to their geographic area. This ensures that users can find nearby properties and connect with local agents efficiently, making the app more relevant and effective for real estate professionals and clients.</string>
+		<key>NSCameraUsageDescription</key>
+		<string>The app requires camera access to allow users to capture high-quality photos of properties directly within the platform. This feature is essential for creating or updating property listings quickly and easily, streamlining the listing process for agents and clients.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>Access to the photo library and files is necessary to let users upload existing property photos, documents, and other files. This functionality enables smooth sharing of important visual and agreement details required for property listings and client communications.</string>
+		<key>App Uses Non-Exempt Encryption</key>
+		<false/>
+		<key>CFBundleDevelopmentRegion</key>
+		<string>en</string>
+		<key>CFBundleDisplayName</key>
+		<string>agents_pay</string>
+		<key>CFBundleExecutable</key>
+		<string>$(EXECUTABLE_NAME)</string>
+		<key>CFBundleIdentifier</key>
+		<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		<key>CFBundleInfoDictionaryVersion</key>
+		<string>6.0</string>
+		<key>CFBundleName</key>
+		<string>$(PRODUCT_NAME)</string>
+		<key>CFBundlePackageType</key>
+		<string>APPL</string>
+		<key>CFBundleShortVersionString</key>
+		<string>$(MARKETING_VERSION)</string>
+		<key>CFBundleSignature</key>
+		<string>????</string>
+		<key>CFBundleVersion</key>
+		<string>$(CURRENT_PROJECT_VERSION)</string>
+		<key>LSRequiresIPhoneOS</key>
+		<true/>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsArbitraryLoads</key>
+			<false/>
+			<key>NSAllowsLocalNetworking</key>
+			<true/>
+		</dict>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>The $(PRODUCT_NAME) app uses location services to provide users with property listings and services tailored to their geographic area. This ensures that users can find nearby properties and connect with local agents efficiently, making the app more relevant and effective for real estate professionals and clients.</string>
+		<key>UIAppFonts</key>
+		<array>
+			<string>Poppins-Regular.ttf</string>
+			<string>Poppins-SemiBold.ttf</string>
+			<string>Poppins-Medium.ttf</string>
+			<string>Jost-Regular.ttf</string>
+			<string>Jost-SemiBold.ttf</string>
+			<string>Inter_28pt-Regular.ttf</string>
+			<string>IBMPlexMono-Regular.ttf</string>
+		</array>
+		<key>UILaunchStoryboardName</key>
+		<string>LaunchScreen</string>
+		<key>UIRequiredDeviceCapabilities</key>
+		<array>
+			<string>arm64</string>
+		</array>
+		<key>UISupportedInterfaceOrientations</key>
+		<array>
+			<string>UIInterfaceOrientationPortrait</string>
+			<string>UIInterfaceOrientationLandscapeLeft</string>
+			<string>UIInterfaceOrientationLandscapeRight</string>
+		</array>
+		<key>UIViewControllerBasedStatusBarAppearance</key>
+		<false/>
+	</dict>
+</dict>
+</plist>

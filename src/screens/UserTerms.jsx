@@ -47,7 +47,7 @@ const UserTerms = ({ navigation }) => {
                 <Br space={0.01} />
                 <View style={{width: width * 0.85, alignItems: 'center'}}>
                     <H5 theme="light" style={{fontFamily: 'Poppins-SemiBold'}}>User Terms</H5>
-                    <Pera theme="transparent" style={{textAlign: 'center'}}>Please enter your new password to reset password</Pera>
+                    <Pera theme="transparent" style={{textAlign: 'center'}}>This Privacy Notice describes information we collect, process and use</Pera>
                     <Br space={0.01} />
                     <Hr style={{ width: width * 0.5 }} />
                     <Br space={0.02} />

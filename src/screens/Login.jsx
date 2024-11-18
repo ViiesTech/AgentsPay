@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, Linking, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -10,7 +10,7 @@ import { Button, ButtonOutline } from '../components/Button';
 import Input from '../components/Input';
 import Toast from 'react-native-simple-toast';
 import Backbtn from '../components/Backbtn';
-import { api, errHandler } from '../API';
+import { api, baseUrl, errHandler } from '../API';
 import DeviceInfo from 'react-native-device-info';
 import { connectFirebase } from '../firebase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -46,14 +46,22 @@ const Login = ({ navigation, route }) => {
     }, []);
 
     async function checkIsUserAlreadyLogged() {
-        const token = await AsyncStorage.getItem('token');
-        const fcm = await AsyncStorage.getItem('fcm');
-        const device = await AsyncStorage.getItem('device');
-        if (token && fcm && device) {
-            Toast.show('Login Successfull!', Toast.SHORT);
-            navigation.replace('Home');
+        if (!route?.params?.email) {
+            const token = await AsyncStorage.getItem('token');
+            const fcm = await AsyncStorage.getItem('fcm');
+            const device = await AsyncStorage.getItem('device');
+            if (token && fcm && device) {
+                Toast.show('Login Successfull!', Toast.SHORT);
+                navigation.replace('Home');
+            }else {
+                setIsLoggedChecked(true);
+            }
         }else {
             setIsLoggedChecked(true);
+            await AsyncStorage.removeItem('token');
+            await AsyncStorage.removeItem('fcm');
+            await AsyncStorage.removeItem('device');
+            await AsyncStorage.removeItem('user');
         }
     }
     async function getFCM() {
@@ -131,7 +139,7 @@ const Login = ({ navigation, route }) => {
                     if (res.data?.data?.is_subscription_activated) {
                         navigation.replace('Home');
                     }else {
-                        navigation.replace('Subscriptions');
+                        openSubscriptions();
                     }
                 }else {
                     navigation.replace('CompleteProfile');
@@ -141,6 +149,11 @@ const Login = ({ navigation, route }) => {
             }
             setLoading(false);
         }
+    };
+
+    const openSubscriptions = async () => {
+        const token = await AsyncStorage.getItem('token');
+        Linking.openURL(`${baseUrl}/subscriptions?token=${token}`);
     };
     return (
         <Background noAuth>
