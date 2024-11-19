@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { Dimensions, ToastAndroid, View } from 'react-native';
+import { Alert, Dimensions, Platform, ToastAndroid, View } from 'react-native';
 import Background from '../utils/Background';
 import Backbtn from '../components/Backbtn';
 import Notificationbtn from '../components/Notificationbtn';
@@ -100,15 +100,24 @@ const AddCard = ({ navigation, route }) => {
                 }, {headers: {Authorization: `Bearer ${token}`}});
 
                 if (route.name === 'AddCard') {
-                    Dialog.show({
-                        type: ALERT_TYPE.SUCCESS,
-                        gravity: 'center',
-                        title: res.data?.title,
-                        textBody: res.data?.message,
-                        button: 'Great',
-                        onPressButton: () => navigation.navigate('PaymentCards'),
-                        onHide: () => navigation.navigate('PaymentCards'),
-                    });
+                    if (Platform.OS === 'android') {
+                        Dialog.show({
+                            type: ALERT_TYPE.SUCCESS,
+                            gravity: 'center',
+                            title: res.data?.title,
+                            textBody: res.data?.message,
+                            button: 'Great',
+                            onPressButton: () => navigation.navigate('PaymentCards'),
+                            onHide: () => navigation.navigate('PaymentCards'),
+                        });
+                    }else {
+                        Alert.alert(
+                            res.data?.title,
+                            res.data?.message, [
+                                {text: 'Great', onPress: () => navigation.navigate('PaymentCards')},
+                            ]
+                        );
+                    }
                 }
             } catch(err) {
                 await errHandler(err);

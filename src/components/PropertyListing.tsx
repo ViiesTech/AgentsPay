@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, Pressable, View } from 'react-native';
+import { Alert, Dimensions, Image, Platform, Pressable, View } from 'react-native';
 import { Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
 import Br from './Br';
@@ -50,13 +50,23 @@ const PropertyListing = ({ route, routeShouldBe, isBookmarked, own, style, data,
 
     const del = () => {
         if (route.name === routeShouldBe) {
-            Dialog.show({
-                type: ALERT_TYPE.SUCCESS,
-                title: 'Confirm To Delete?',
-                textBody: 'Please confirm to delete the property.',
-                button: 'Confirm',
-                onPressButton: async () => await deleteProperty(),
-            });
+            if (Platform.OS === 'android') {
+                Dialog.show({
+                    type: ALERT_TYPE.SUCCESS,
+                    title: 'Confirm To Delete?',
+                    textBody: 'Please confirm to delete the property.',
+                    button: 'Confirm',
+                    onPressButton: async () => await deleteProperty(),
+                });
+            }else {
+                Alert.alert(
+                    'Confirm To Delete?',
+                    'Please confirm to delete the property.', [
+                        {text: 'Cancel', onPress: () => console.log('')},
+                        {text: 'Confirm', onPress: async () => await deleteProperty()},
+                    ]
+                );
+            }
         }
     };
 

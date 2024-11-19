@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { Dimensions, Image, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, Image, Platform, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import { H3, Small } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -99,25 +99,44 @@ const Signup = ({ navigation, route }) => {
                 if (route.name === 'Signup') {
                     if (res.data?.data?.accountRecoverable) {
                         setLoading(false);
-                        Dialog.show({
-                            type: ALERT_TYPE.SUCCESS,
-                            gravity: 'center',
-                            title: res.data?.title,
-                            textBody: res.data?.message,
-                            button: 'Recover',
-                            onPressButton: () => recoverAccount(res.data?.data?.user_id),
-                            onHide: () => console.log(''),
-                        });
+                        if (Platform.OS === 'android') {
+                            Dialog.show({
+                                type: ALERT_TYPE.SUCCESS,
+                                gravity: 'center',
+                                title: res.data?.title,
+                                textBody: res.data?.message,
+                                button: 'Recover',
+                                onPressButton: () => recoverAccount(res.data?.data?.user_id),
+                                onHide: () => console.log(''),
+                            });
+                        }else {
+                            Alert.alert(
+                                res.data?.title,
+                                res.data?.message, [
+                                    {text: 'Cancel', onPress: () => console.log('Login')},
+                                    {text: 'Recover', onPress: () => recoverAccount(res.data?.data?.user_id)},
+                                ]
+                            );
+                        }
                     }else {
-                        Dialog.show({
-                            type: ALERT_TYPE.SUCCESS,
-                            gravity: 'center',
-                            title: res.data?.title,
-                            textBody: res.data?.message,
-                            button: 'Great',
-                            onPressButton: () => navigation.replace('Login', { email: user?.email }),
-                            onHide: () => navigation.replace('Login', { email: user?.email }),
-                        });
+                        if (Platform.OS === 'android') {
+                            Dialog.show({
+                                type: ALERT_TYPE.SUCCESS,
+                                gravity: 'center',
+                                title: res.data?.title,
+                                textBody: res.data?.message,
+                                button: 'Great',
+                                onPressButton: () => navigation.replace('Login', { email: user?.email }),
+                                onHide: () => navigation.replace('Login', { email: user?.email }),
+                            });
+                        }else {
+                            Alert.alert(
+                                res.data?.title,
+                                res.data?.message, [
+                                    {text: 'Great', onPress: () => navigation.replace('Login', { email: user?.email })},
+                                ]
+                            );
+                        }
                     }
                 }
             } catch(err) {

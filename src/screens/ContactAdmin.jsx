@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, TextInput, View } from 'react-native';
+import { Alert, Dimensions, Platform, TextInput, View } from 'react-native';
 import Background from '../utils/Background';
 import Backbtn from '../components/Backbtn';
 import Notificationbtn from '../components/Notificationbtn';
@@ -80,15 +80,24 @@ const ContactAdmin = ({ navigation, route }) => {
                 }, { headers: { Authorization: `Bearer ${token}` } });
 
                 if (route.name === 'ContactAdmin') {
-                    Dialog.show({
-                        type: ALERT_TYPE.SUCCESS,
-                        gravity: 'center',
-                        title: res.data?.title,
-                        textBody: res.data?.message,
-                        button: 'Great',
-                        onPressButton: () => navigation.replace('Home'),
-                        onHide: () => navigation.replace('Home'),
-                    });
+                    if (Platform.OS === 'android') {
+                        Dialog.show({
+                            type: ALERT_TYPE.SUCCESS,
+                            gravity: 'center',
+                            title: res.data?.title,
+                            textBody: res.data?.message,
+                            button: 'Great',
+                            onPressButton: () => navigation.replace('Home'),
+                            onHide: () => navigation.replace('Home'),
+                        });
+                    }else {
+                        Alert.alert(
+                            res.data?.title,
+                            res.data?.message, [
+                                {text: 'Great', onPress: () => navigation.replace('Home')},
+                            ]
+                        );
+                    }
                 }
             } catch (err) {
                 setLoading(false);

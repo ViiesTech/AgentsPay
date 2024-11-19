@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { Dimensions, Image, View } from 'react-native';
+import { Alert, Dimensions, Image, Platform, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
 import Br from '../components/Br';
@@ -56,15 +56,24 @@ const ResetPassword = ({ navigation, route }) => {
                 });
 
                 if (route.name === 'ResetPassword') {
-                    Dialog.show({
-                        type: ALERT_TYPE.SUCCESS,
-                        gravity: 'center',
-                        title: res.data?.title,
-                        textBody: res.data?.message,
-                        button: 'Okay',
-                        onPressButton: () => navigation.replace('Login'),
-                        onHide: () => navigation.replace('Login'),
-                    });
+                    if (Platform.OS === 'android') {
+                        Dialog.show({
+                            type: ALERT_TYPE.SUCCESS,
+                            gravity: 'center',
+                            title: res.data?.title,
+                            textBody: res.data?.message,
+                            button: 'Okay',
+                            onPressButton: () => navigation.replace('Login'),
+                            onHide: () => navigation.replace('Login'),
+                        });
+                    }else {
+                        Alert.alert(
+                            res.data?.title,
+                            res.data?.message, [
+                                {text: 'Okay', onPress: () => navigation.replace('Login')},
+                            ]
+                        );
+                    }
                 }
             } catch(err) {
                 await errHandler(err);

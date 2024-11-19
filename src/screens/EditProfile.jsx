@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Alert, Dimensions, Image, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, Image, Platform, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -95,15 +95,24 @@ const EditProfile = ({ navigation, route }) => {
                 }, {headers: {Authorization: `Bearer ${token}`}});
 
                 if (route.name === 'EditProfile') {
-                    Dialog.show({
-                        type: ALERT_TYPE.SUCCESS,
-                        gravity: 'center',
-                        title: res.data?.title,
-                        textBody: res.data?.message,
-                        button: 'Okay',
-                        onPressButton: () => navigation.replace('Home'),
-                        onHide: () => navigation.replace('Home'),
-                    });
+                    if (Platform.OS === 'android') {
+                        Dialog.show({
+                            type: ALERT_TYPE.SUCCESS,
+                            gravity: 'center',
+                            title: res.data?.title,
+                            textBody: res.data?.message,
+                            button: 'Okay',
+                            onPressButton: () => navigation.replace('Home'),
+                            onHide: () => navigation.replace('Home'),
+                        });
+                    }else {
+                        Alert.alert(
+                            res.data?.title,
+                            res.data?.message, [
+                                {text: 'Okay', onPress: () => navigation.replace('Home')},
+                            ]
+                        );
+                    }
                 }
             } catch(err) {
                 await errHandler(err);
@@ -156,15 +165,24 @@ const EditProfile = ({ navigation, route }) => {
                 await AsyncStorage.removeItem('fcm');
                 await AsyncStorage.removeItem('device');
                 await AsyncStorage.removeItem('user');
-                Dialog.show({
-                    type: ALERT_TYPE.SUCCESS,
-                    gravity: 'center',
-                    title: res.data?.title,
-                    textBody: res.data?.message,
-                    button: 'Okay',
-                    onPressButton: () => navigation.navigate('Logout'),
-                    onHide: () => navigation.navigate('Logout'),
-                });
+                if (Platform.OS === 'android') {
+                    Dialog.show({
+                        type: ALERT_TYPE.SUCCESS,
+                        gravity: 'center',
+                        title: res.data?.title,
+                        textBody: res.data?.message,
+                        button: 'Okay',
+                        onPressButton: () => navigation.navigate('Logout'),
+                        onHide: () => navigation.navigate('Logout'),
+                    });
+                }else {
+                    Alert.alert(
+                        res.data?.title,
+                        res.data?.message, [
+                            {text: 'Okay', onPress: () => navigation.navigate('Logout')},
+                        ]
+                    );
+                }
             }
         }catch(err) {
             setLoading(false);

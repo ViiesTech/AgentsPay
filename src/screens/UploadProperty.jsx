@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, Pressable, Text, TextInput, View } from 'react-native';
+import { Alert, Dimensions, Image, Platform, Pressable, Text, TextInput, View } from 'react-native';
 import Background from '../utils/Background';
 import Backbtn from '../components/Backbtn';
 import { H5, Pera, Small } from '../utils/Text';
@@ -190,9 +190,9 @@ const UploadProperty = ({ navigation, route }) => {
     };
 
     const removeTag = (label) => {
-        const arr = tags.slice();
+        const arr = selectedTags.slice();
         const filter = arr.filter(val => val !== label);
-        setTags(filter);
+        setSelectedTags(filter);
     };
 
     const removeDoc = (index) => {
@@ -244,15 +244,24 @@ const UploadProperty = ({ navigation, route }) => {
                 }, { headers: { Authorization: `Bearer ${token}` } });
 
                 if (route.name === 'UploadProperty') {
-                    Dialog.show({
-                        type: ALERT_TYPE.SUCCESS,
-                        gravity: 'center',
-                        title: res.data?.title,
-                        textBody: res.data?.message,
-                        button: 'Okay',
-                        onPressButton: () => navigation.replace('UploadedProperties'),
-                        onHide: () => navigation.replace('UploadedProperties'),
-                    });
+                    if (Platform.OS === 'android') {
+                        Dialog.show({
+                            type: ALERT_TYPE.SUCCESS,
+                            gravity: 'center',
+                            title: res.data?.title,
+                            textBody: res.data?.message,
+                            button: 'Okay',
+                            onPressButton: () => navigation.replace('UploadedProperties'),
+                            onHide: () => navigation.replace('UploadedProperties'),
+                        });
+                    }else {
+                        Alert.alert(
+                            res.data?.title,
+                            res.data?.message, [
+                                {text: 'Okay', onPress: () => navigation.replace('UploadedProperties')},
+                            ]
+                        );
+                    }
                 }
             } catch (err) {
                 await errHandler(err);
@@ -422,7 +431,7 @@ const UploadProperty = ({ navigation, route }) => {
                 {
                     selectedTags.map((label, index) => {
                         return (
-                            <Pressable key={index} style={{ borderWidth: 1, borderColor: Color('textColor'), paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30 }}>
+                            <Pressable onPress={() => removeTag(label)} key={index} style={{ borderWidth: 1, borderColor: Color('textColor'), paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30 }}>
                                 <Small style={{ fontFamily: 'Inter_28pt-Regular', textTransform: 'capitalize' }}>{label}</Small>
                             </Pressable>
                         );

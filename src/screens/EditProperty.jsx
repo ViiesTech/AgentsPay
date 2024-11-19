@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import { Dimensions, Image, Pressable, TextInput, View } from 'react-native';
+import { Alert, Dimensions, Image, Platform, Pressable, TextInput, View } from 'react-native';
 import Background from '../utils/Background';
 import Backbtn from '../components/Backbtn';
 import { H5, Pera, Small } from '../utils/Text';
@@ -31,7 +31,34 @@ const EditProperty = ({ navigation, route }) => {
     const [disableAgentAmount, setDisableAgentAmount] = useState(false);
     const [loading, setLoading] = useState(false);
     const [tag, setTag] = useState('');
-    const [tags, setTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [tags, setTags] = useState([
+        {label: 'Loft', value: 'Loft'},
+        {label: 'Private Pool', value: 'Private Pool'},
+        {label: 'Area Pool', value: 'Area Pool'},
+        {label: 'Area Tennis', value: 'Area Tennis'},
+        {label: 'Yard', value: 'Yard'},
+        {label: 'Gerage', value: 'Gerage'},
+        {label: 'Sprinkler', value: 'Sprinkler'},
+
+        {label: 'Must have A/C', value: 'Must have A/C'},
+        {label: 'Must have pool', value: 'Must have pool'},
+        {label: 'On-site Parking', value: 'On-site Parking'},
+        {label: 'Waterfront', value: 'Waterfront'},
+        {label: 'In-unit Laundry', value: 'In-unit Laundry'},
+        {label: 'Accepts Agent Pay Applications', value: 'Accepts Agent Pay Applications'},
+        {label: 'Income restricted', value: 'Income restricted'},
+        {label: 'Hardwood Floors', value: 'Hardwood Floors'},
+        {label: 'Disabled Access', value: 'Disabled Access'},
+        {label: 'Utilities Included', value: 'Utilities Included'},
+        {label: 'Short term lease available', value: 'Short term lease available'},
+        {label: 'Furnished', value: 'Furnished'},
+        {label: 'Outdoor space', value: 'Outdoor space'},
+        {label: 'Controlled access', value: 'Controlled access'},
+        {label: 'High speed internet', value: 'High speed internet'},
+        {label: 'Elevator', value: 'Elevator'},
+        {label: 'Apartment Community', value: 'Apartment Community'},
+    ]);
     const [documents, setDocuments] = useState([]);
     const [images, setImages] = useState([]);
     const [cities, setCities] = useState([]);
@@ -51,7 +78,7 @@ const EditProperty = ({ navigation, route }) => {
         no_of_bathrooms: 0,
         property_description: '',
         property_type: '',
-        agent_remarks: ''
+        agent_remarks: '',
 
     });
 
@@ -96,7 +123,7 @@ const EditProperty = ({ navigation, route }) => {
             const res = await api.get('/user/properties/edit?id=' + route?.params?.id, { headers: { Authorization: `Bearer ${token}` } });
             const data = res.data.data;
             const tagList = data?.tags.toLowerCase().split(', ');
-            setTags(tagList);
+            setSelectedTags(tagList);
             setProperty({
                 title: data?.title,
                 city: data?.city,
@@ -110,7 +137,7 @@ const EditProperty = ({ navigation, route }) => {
                 no_of_bathrooms: data?.no_of_bathrooms.toString(),
                 property_description: data?.property_description,
                 property_type: data?.tbl_property_type?.label,
-                agent_remarks: data?.agent_remarks
+                agent_remarks: data?.agent_remarks,
             });
             if (cities.length === 0 || states.length === 0) { loadPropertyTypes(); }
 
@@ -239,9 +266,9 @@ const EditProperty = ({ navigation, route }) => {
     };
 
     const removeTag = (label) => {
-        const arr = tags.slice();
+        const arr = selectedTags.slice();
         const filter = arr.filter(val => val !== label);
-        setTags(filter);
+        setSelectedTags(filter);
     };
 
     const removeDoc = (index) => {
@@ -271,9 +298,10 @@ const EditProperty = ({ navigation, route }) => {
 
             try {
                 const token = await AsyncStorage.getItem('token');
-                const propertyType = propertyTypes.filter(val => val.label === property?.property_type)[0].id;
+                const propertyType = property?.property_type ? propertyTypes.filter(val => val.label === property?.property_type)[0]?.id : '';
+
                 const res = await api.post('/user/properties/update', {
-                    tags: JSON.stringify(tags),
+                    tags: JSON.stringify(selectedTags),
                     documents: JSON.stringify(documents),
                     images: JSON.stringify(images),
                     title: property?.title,
@@ -287,29 +315,39 @@ const EditProperty = ({ navigation, route }) => {
                     no_of_bedrooms: property?.no_of_bedrooms,
                     no_of_bathrooms: property?.no_of_bathrooms,
                     property_description: property?.property_description,
-                    property_type: propertyType,
+                    property_type: propertyType || '',
                     id: route?.params?.id,
                 }, { headers: { Authorization: `Bearer ${token}` } });
 
                 if (route.name === 'EditProperty') {
-                    Dialog.show({
-                        type: ALERT_TYPE.SUCCESS,
-                        gravity: 'center',
-                        title: res.data?.title,
-                        textBody: res.data?.message,
-                        button: 'Okay',
-                        onPressButton: () => navigation.replace('UploadedProperties'),
-                        onHide: () => navigation.replace('UploadedProperties'),
-                    });
+                    if (Platform.OS === 'android') {
+                        Dialog.show({
+                            type: ALERT_TYPE.SUCCESS,
+                            gravity: 'center',
+                            title: res.data?.title,
+                            textBody: res.data?.message,
+                            button: 'Okay',
+                            onPressButton: () => navigation.replace('UploadedProperties'),
+                            onHide: () => navigation.replace('UploadedProperties'),
+                        });
+                    }else {
+                        Alert.alert(
+                            res.data?.title,
+                            res.data?.message, [
+                                {text: 'Okay', onPress: () => navigation.replace('UploadedProperties')},
+                            ]
+                        );
+                    }
                 }
             } catch (err) {
+                console.log(err);
                 await errHandler(err);
             }
             setLoading(false);
         }
     };
 
-    if (property?.title?.length === 0) {
+    if (property?.address?.length === 0) {
         return <Loading />;
     }
 
@@ -328,13 +366,13 @@ const EditProperty = ({ navigation, route }) => {
             <H5 theme="light" style={{ fontFamily: 'Poppins-Medium', textAlign: 'center' }}>Edit Property</H5>
             <Pera theme="transparent" style={{ textAlign: 'center', width: width * 0.85, alignSelf: 'center' }}>We have sent you an email containing 6 digits verification code. Please enter the code to verify your identity</Pera>
             <Br space={0.02} />
-            <Input
+            {/* <Input
                 defaultValue={property?.title}
                 value={property?.title}
                 labelText="Property Title"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
                 onChange={(value) => setProperty({ ...property, title: value })}
-            />
+            /> */}
             <Dropdown
                 data={states}
                 selectedValue={property.state}
@@ -469,16 +507,27 @@ const EditProperty = ({ navigation, route }) => {
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
                 onChange={(value) => setProperty({ ...property, no_of_bathrooms: value })}
             />
-            <Input
-                value={tag}
-                labelText="Amenities"
-                style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
-                onChange={(value) => setTag(value)}
-                onBlur={addTag}
+            <Dropdown
+                data={tags}
+                selectedData={selectedTags}
+                defaultValue="Amenities"
+                style={{ width: width * 0.86, alignSelf: 'center' }}
+                defaultStyle={undefined}
+                label={undefined}
+                icon={undefined}
+                multiple
+                onValueChange={(value) => {
+                    if (selectedTags.includes(value)) {
+                        setSelectedTags(() => selectedTags.filter(val => val !== value));
+                    }else {
+                        setSelectedTags(() => [...selectedTags, value]);
+                    }
+                }}
             />
+            <Br space={0.015} />
             <View style={{ width: width * 0.85, alignSelf: 'center', flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
                 {
-                    tags.map((label, index) => {
+                    selectedTags.map((label, index) => {
                         return (
                             <Pressable onPress={() => removeTag(label)} key={index} style={{ borderWidth: 1, borderColor: Color('textColor'), paddingVertical: height * 0.008, paddingHorizontal: width * 0.05, borderRadius: 30 }}>
                                 <Small style={{ fontFamily: 'Inter_28pt-Regular', textTransform: 'capitalize' }}>{label}</Small>
@@ -517,7 +566,7 @@ const EditProperty = ({ navigation, route }) => {
                 if (documents?.length === 2) {
                     ShowAlert('Only 2 document is allowed!',);
                 } else {
-                    uploadDocuments()
+                    uploadDocuments();
                 }
             }} style={{ width: width * 0.85, alignSelf: 'center' }}>Upload Documents</Button>
             {documents.length > 0 && (

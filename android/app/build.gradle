@@ -30,7 +30,7 @@ android {
         applicationId "com.agents_pay"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 6
+        versionCode 7
         versionName "2.4"
     }
     signingConfigs {

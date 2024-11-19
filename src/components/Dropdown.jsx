@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Dimensions, FlatList, Modal, Platform, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Color } from '../utils/Colors';
-import { ArrowDown2, ArrowRight2 } from 'iconsax-react-native';
+import { ArrowDown2 } from 'iconsax-react-native';
 import { Pera, Small } from '../utils/Text';
 import { RFValue } from 'react-native-responsive-fontsize';
 

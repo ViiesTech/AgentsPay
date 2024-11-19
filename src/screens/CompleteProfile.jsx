@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useState } from 'react';
-import { Alert, Dimensions, Image, Linking, TouchableOpacity, View } from 'react-native';
+import { Alert, Dimensions, Image, Linking, Platform, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import { H5, Pera } from '../utils/Text';
 import { Color } from '../utils/Colors';
@@ -71,15 +71,24 @@ const CompleteProfile = ({ navigation, route }) => {
                 }, { headers: { Authorization: `Bearer ${token}` } });
 
                 if (route.name === 'CompleteProfile') {
-                    Dialog.show({
-                        type: ALERT_TYPE.SUCCESS,
-                        gravity: 'center',
-                        title: res.data?.title,
-                        textBody: res.data?.message,
-                        button: 'Okay',
-                        onPressButton: () => openSubscriptions(),
-                        onHide: () => openSubscriptions(),
-                    });
+                    if (Platform.OS === 'android') {
+                        Dialog.show({
+                            type: ALERT_TYPE.SUCCESS,
+                            gravity: 'center',
+                            title: res.data?.title,
+                            textBody: res.data?.message,
+                            button: 'Okay',
+                            onPressButton: () => openSubscriptions(),
+                            onHide: () => openSubscriptions(),
+                        });
+                    }else {
+                        Alert.alert(
+                            res.data?.title,
+                            res.data?.message, [
+                                {text: 'Okay', onPress: () => openSubscriptions()},
+                            ]
+                        );
+                    }
                 }
             } catch (err) {
                 await errHandler(err);
@@ -90,6 +99,8 @@ const CompleteProfile = ({ navigation, route }) => {
 
     const openSubscriptions = async () => {
         const token = await AsyncStorage.getItem('token');
+        navigation.replace('Home');
+        Dialog.hide();
         Linking.openURL(`${baseUrl}/subscriptions?token=${token}`);
     };
 

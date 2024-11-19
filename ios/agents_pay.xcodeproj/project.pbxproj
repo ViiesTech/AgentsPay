@@ -545,7 +545,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = agents_pay/agents_pay.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development: Valerie Garza (PGRX3ZSXAU)";
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = YV6Y4B2258;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 39ZKCT373N;
 				ENABLE_BITCODE = NO;
@@ -555,7 +555,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 15;
+				MARKETING_VERSION = 18;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -579,7 +579,7 @@
 				CODE_SIGN_ENTITLEMENTS = agents_pay/agents_payRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 15;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = 39ZKCT373N;
 				INFOPLIST_FILE = agents_pay/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -587,7 +587,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 15;
+				MARKETING_VERSION = 18;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
