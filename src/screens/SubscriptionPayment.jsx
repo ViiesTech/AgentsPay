@@ -17,17 +17,17 @@ import Loading from './Loading';
 const { width, height } = Dimensions.get('window');
 const SubscriptionPayment = ({ navigation, route }) => {
     const [loading, setLoading] = useState(false);
-    const [token, setToken] = useState('')
+    const [token, setToken] = useState('');
 
 
     const subscribe = async () => {
         const isToken = await AsyncStorage.getItem('token');
-        setToken(isToken)
+        setToken(isToken);
     };
 
     useEffect(() => {
-        subscribe()
-    }, [])
+        subscribe();
+    }, []);
 
     const handleNavigationStateChange = (navState) => {
         // setUrl(navState.url);
@@ -49,7 +49,7 @@ const SubscriptionPayment = ({ navigation, route }) => {
                 <WebView
                     onNavigationStateChange={handleNavigationStateChange}
                     scalesPageToFit={true}
-                    source={{ uri: `${baseUrl}/stripe?id=${route?.params?.package?.subscription_id}&&token=${token}` }}
+                    source={{ uri: `https://agentpayapp.com/payment?id=${route?.params?.package?.subscription_id}&&token=${token}` }}
 
                 />
             }

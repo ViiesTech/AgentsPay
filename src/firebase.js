@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-vars */
-import { PermissionsAndroid } from 'react-native';
+import { PermissionsAndroid, Platform } from 'react-native';
 import firebase from '@react-native-firebase/app';
 import messaging from '@react-native-firebase/messaging';
 
-PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+if (Platform.OS === 'android') {
+  PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
+}
 
 const config = {
   apiKey: 'AIzaSyCcqJR5ch6nizGv09yk90N24YEmHf00KUQ',
@@ -20,10 +22,10 @@ const config = {
 export async function connectFirebase(setState) {
   try {
     console.log('connecting to firebase...');
-    const initializeLoginFramework = !firebase.apps.length ? firebase.initializeApp(config) : firebase.app();
-    const fcmToken = await messaging().getToken();
-    const subscribeToTopic = await messaging().subscribeToTopic('date420');
-    setState(fcmToken);
+    // const initializeLoginFramework = !firebase.apps.length ? firebase.initializeApp(config) : firebase.app();
+    // const fcmToken = await messaging().getToken();
+    // const subscribeToTopic = await messaging().subscribeToTopic('date420');
+    setState('fcmToken');
     // return fcmToken;
   }catch(err) {
     setTimeout(async () => {

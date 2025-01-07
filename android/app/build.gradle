@@ -82,6 +82,8 @@ dependencies {
      implementation project(':react-native-screens')
      implementation project(':react-native-svg')
      implementation project(':react-native-webview')
+     implementation project(':react-native-purchases')
+     implementation "com.android.billingclient:billing:4.0.0"
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {

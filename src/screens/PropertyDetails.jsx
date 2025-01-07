@@ -162,56 +162,73 @@ const PropertyDetails = ({ navigation, route }) => {
                 </View>
                 <View style={{ width: width * 0.85, alignSelf: 'center' }}>
                     <Br space={0.03} />
-                    <H6 style={{ fontFamily: 'Jost-Regular' }}>About the Property</H6>
-                    <Br space={0.01} />
-                    <Pera theme="transparent" style={{ fontFamily: 'Jost-Regular', textAlign: 'justify' }}>
-                        {details?.property_description}
-                    </Pera>
-                    <Br space={0.03} />
-                    <H6 style={{ fontFamily: 'Jost-Regular' }}>
-                        Amenities
-                    </H6>
-                    <Br space={0.01} />
-                    <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-around', flexWrap: 'wrap' }}>
-                        {
-                            details?.tags.split(', ').map((tag, index) => {
-                                return (
-
-                                    <React.Fragment key={index}>
-                                        <Pera style={{ textTransform: 'capitalize' }}>{tag}</Pera>
-                                        {(index + 1) < details?.tags.split(', ')?.length && <Pera theme="light">|</Pera>}
-                                    </React.Fragment>
-
-                                );
-                            })
-                        }
-                    </View>
-
-                    <Br space={0.03} />
-                    <H6 style={{ fontFamily: 'Jost-Regular' }}>
-                        Documents
-                    </H6>
-                    <Br space={0.02} />
                     {
-                        details?.tbl_property_documents?.map((val, index) => {
-                            return (
-                                <Pressable onPress={() => downloadDocument(val.url)} key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: width * 0.02, marginBottom: height * 0.015 }}>
-                                    <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between', alignItems: 'center' }}>
-                                        <View style={{ backgroundColor: Color('btnBackground'), width: width * 0.03, height: width * 0.03, borderRadius: 20 }} />
-                                        <Pera numberOfLines={1} style={{ marginTop: height * 0.002, textTransform: 'capitalize', width: width * 0.6 }}>{val.url}</Pera>
-                                    </View>
-                                    <DocumentDownload
-                                        size="25"
-                                        color={Color('btnBackground')}
-                                    />
-                                </Pressable>
-                            );
-                        })
+                        details?.property_description && (
+                            <>
+                                <H6 style={{ fontFamily: 'Jost-Regular' }}>About the Property</H6>
+                                <Br space={0.01} />
+                                <Pera theme="transparent" style={{ fontFamily: 'Jost-Regular', textAlign: 'justify' }}>
+                                    {details?.property_description}
+                                </Pera>
+                            </>
+                        )
+                    }
+                    {
+                        details?.tags?.length > 0 && (
+                            <>
+                                <Br space={0.03} />
+                                <H6 style={{ fontFamily: 'Jost-Regular' }}>
+                                    Amenities
+                                </H6>
+                                <Br space={0.01} />
+                                <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-around', flexWrap: 'wrap' }}>
+                                    {
+                                        details?.tags.split(', ').map((tag, index) => {
+                                            return (
+
+                                                <React.Fragment key={index}>
+                                                    <Pera style={{ textTransform: 'capitalize' }}>{tag}</Pera>
+                                                    {(index + 1) < details?.tags.split(', ')?.length && <Pera theme="light">|</Pera>}
+                                                </React.Fragment>
+
+                                            );
+                                        })
+                                    }
+                                </View>
+                            </>
+                        )
+                    }
+                    {
+                        details?.tbl_property_documents?.length > 0 && (
+                            <>
+                                <Br space={0.03} />
+                                <H6 style={{ fontFamily: 'Jost-Regular' }}>
+                                    Documents
+                                </H6>
+                                <Br space={0.02} />
+                                {
+                                    details?.tbl_property_documents?.map((val, index) => {
+                                        return (
+                                            <Pressable onPress={() => downloadDocument(val.url)} key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', paddingRight: width * 0.02, marginBottom: height * 0.015 }}>
+                                                <View style={{ flexDirection: 'row', gap: 10, justifyContent: 'space-between', alignItems: 'center' }}>
+                                                    <View style={{ backgroundColor: Color('btnBackground'), width: width * 0.03, height: width * 0.03, borderRadius: 20 }} />
+                                                    <Pera numberOfLines={1} style={{ marginTop: height * 0.002, textTransform: 'capitalize', width: width * 0.6 }}>{val.url}</Pera>
+                                                </View>
+                                                <DocumentDownload
+                                                    size="25"
+                                                    color={Color('btnBackground')}
+                                                />
+                                            </Pressable>
+                                        );
+                                    })
+                                }
+                            </>
+                        )
                     }
                     <Br space={0.03} />
                     <View style={{ backgroundColor: Color('navigationBackground'), borderRadius: 20, paddingVertical: height * 0.03, paddingHorizontal: width * 0.05 }}>
                         <Small>
-                            NOTE: After downloading the document. Sign it and email it to the Listing Agent Email address.
+                            Tip: Upload essential forms or documents for easy access by other agents.
                         </Small>
                     </View>
                     <Br space={0.03} />

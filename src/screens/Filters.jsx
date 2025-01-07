@@ -281,7 +281,7 @@ const Filters = ({ navigation }) => {
             </View>
             <Br space={0.05} />
 
-            <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Area Range (sq. yd)</H6>
+            <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>Area Range (sq. ft)</H6>
             <Br space={0.02} />
             <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: width * 0.85, alignSelf: 'center' }}>
                 <H6 theme="dark" style={{ fontFamily: 'Inter_28pt-Regular' }}>{areaMin}</H6>

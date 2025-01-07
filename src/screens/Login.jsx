@@ -139,7 +139,7 @@ const Login = ({ navigation, route }) => {
                     if (res.data?.data?.is_subscription_activated) {
                         navigation.replace('Home');
                     }else {
-                        openSubscriptions();
+                        navigation.replace('Subscriptions');
                     }
                 }else {
                     navigation.replace('CompleteProfile');

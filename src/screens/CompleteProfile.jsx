@@ -31,7 +31,7 @@ const CompleteProfile = ({ navigation, route }) => {
     });
 
     const isValid = () => {
-        if (validator.isEmpty(profile?.gender) || (profile?.gender !== 'male' && profile?.gender !== 'female' && profile?.gender !== 'other')) {
+        if (validator.isEmpty(profile?.gender) || (profile?.gender !== 'male' && profile?.gender !== 'female')) {
             ShowAlert('Gender is required!', 'Please enter your gender.');
             return false;
         }
@@ -78,14 +78,14 @@ const CompleteProfile = ({ navigation, route }) => {
                             title: res.data?.title,
                             textBody: res.data?.message,
                             button: 'Okay',
-                            onPressButton: () => openSubscriptions(),
-                            onHide: () => openSubscriptions(),
+                            onPressButton: () => navigation.replace('Subscriptions'),
+                            onHide: () => navigation.replace('Subscriptions'),
                         });
                     }else {
                         Alert.alert(
                             res.data?.title,
                             res.data?.message, [
-                                {text: 'Okay', onPress: () => openSubscriptions()},
+                                {text: 'Okay', onPress: () => navigation.replace('Subscriptions')},
                             ]
                         );
                     }
@@ -117,7 +117,7 @@ const CompleteProfile = ({ navigation, route }) => {
                 ...profile, profile_image: {
                     uri: result.assets[0].base64,
                     prefix: `data:${result.assets[0].type};base64,`,
-                }
+                },
             });
         }
     };
@@ -136,7 +136,7 @@ const CompleteProfile = ({ navigation, route }) => {
                 ...profile, profile_image: {
                     uri: result.assets[0].base64,
                     prefix: `data:${result.assets[0].type};base64,`,
-                }
+                },
             });
         }
     };
@@ -196,7 +196,6 @@ const CompleteProfile = ({ navigation, route }) => {
                     data={[
                         { label: 'Male', value: 'male' },
                         { label: 'Female', value: 'female' },
-                        { label: 'Other', value: 'other' },
 
                     ]}
                     selectedValue={profile.gender}

@@ -70,6 +70,8 @@ PODS:
   - nanopb/decode (2.30910.0)
   - nanopb/encode (2.30910.0)
   - PromisesObjC (2.4.0)
+  - PurchasesHybridCommon (13.9.0):
+    - RevenueCat (= 5.8.0)
   - RCT-Folly (2024.01.01.00):
     - boost
     - DoubleConversion
@@ -1634,6 +1636,7 @@ PODS:
     - React-logger (= 0.75.2)
     - React-perflogger (= 0.75.2)
     - React-utils (= 0.75.2)
+  - RevenueCat (5.8.0)
   - RNCAsyncStorage (2.0.0):
     - React-Core
   - RNCCheckbox (0.5.17):
@@ -1650,6 +1653,9 @@ PODS:
     - React-Core
     - RNFBApp
   - RNFS (2.20.0):
+    - React-Core
+  - RNPurchases (8.2.7):
+    - PurchasesHybridCommon (= 13.9.0)
     - React-Core
   - RNScreens (3.35.0):
     - DoubleConversion
@@ -1757,6 +1763,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNFS (from `../node_modules/react-native-fs`)
+  - RNPurchases (from `../node_modules/react-native-purchases`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -1774,6 +1781,8 @@ SPEC REPOS:
     - GoogleUtilities
     - nanopb
     - PromisesObjC
+    - PurchasesHybridCommon
+    - RevenueCat
     - SocketRocket
     - Toast
 
@@ -1929,6 +1938,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFS:
     :path: "../node_modules/react-native-fs"
+  RNPurchases:
+    :path: "../node_modules/react-native-purchases"
   RNScreens:
     :path: "../node_modules/react-native-screens"
   RNSVG:
@@ -1954,6 +1965,7 @@ SPEC CHECKSUMS:
   hermes-engine: 3b6e0717ca847e2fc90a201e59db36caf04dee88
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
+  PurchasesHybridCommon: 2e684a22e4aaf33c5fc10fd9e2ca2e27e6b7abff
   RCT-Folly: 4464f4d875961fce86008d45f4ecf6cef6de0740
   RCTDeprecation: 34cbf122b623037ea9facad2e92e53434c5c7422
   RCTRequired: 24c446d7bcd0f517d516b6265d8df04dc3eb1219
@@ -2017,12 +2029,14 @@ SPEC CHECKSUMS:
   React-utils: f908da1113885e2c08b25247e0ea892c68e2eaf6
   ReactCodegen: de94475c4712a61ba0b1e1c25eb54db32f56836d
   ReactCommon: 8da2bad9c1e5901f7b5484e42e59578edeece142
+  RevenueCat: 4cd1daad3a57d2b4015ed2b4aef0a0f24ffce0a1
   RNCAsyncStorage: d35c79ffba52c1013013e16b1fc295aec2feabb6
   RNCCheckbox: a3ca9978cb0846b981d28da4e9914bd437403d77
   RNDeviceInfo: b899ce37a403a4dea52b7cb85e16e49c04a5b88e
   RNFBApp: 5f87753a8d8b37d229adf85cd0ff37709ffdf008
   RNFBMessaging: 3fa1114c0868dd21f20dfe186adf42297ea316b1
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
+  RNPurchases: 314406aa3e431d19570360da91f58fd5d0ab68ac
   RNScreens: 16b782596e80e475b7f3ec769c9a97d789d9b0ed
   RNSVG: 8b1a777d54096b8c2a0fd38fc9d5a454332bbb4d
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d

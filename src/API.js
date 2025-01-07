@@ -8,8 +8,8 @@ import { io } from 'socket.io-client';
 
 export const socket = io('https://agentspay.predemo.site');
 export const baseUrl = 'https://agentspay.predemo.site';
-// export const socket = io('http://192.168.18.190:8080');
-// export const baseUrl = 'http://192.168.18.190:8080';
+// export const socket = io('http://192.168.10.166:8080');
+// export const baseUrl = 'http://192.168.10.166:8080';
 export const api = axios.create({
     baseURL: baseUrl,
 });

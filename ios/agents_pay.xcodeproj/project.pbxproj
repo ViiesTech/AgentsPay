@@ -18,8 +18,13 @@
 		68804188BCA449AD90E9C781 /* Inter_28pt-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E8AAE28F49624F2AA99474E3 /* Inter_28pt-Regular.ttf */; };
 		7BEF8E3BCE2A49EEA3D67920 /* Jost-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D01B6BBCFFC34AE59CA6FF5E /* Jost-SemiBold.ttf */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
+		8E1DCD032CECFA72008E7188 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E1DCD022CECFA72008E7188 /* StoreKit.framework */; };
 		8E304BEC2CDA99AB0048435C /* reacthermes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E304BEB2CDA99AB0048435C /* reacthermes.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		8E304BF02CDA9D810048435C /* reacthermes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8E304BEF2CDA9D810048435C /* reacthermes.framework */; };
+		8E3F273B2CEE5C4E004B4705 /* Agents Pay App.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 8E3F273A2CEE5C4E004B4705 /* Agents Pay App.storekit */; };
+		8E3F273C2CEE5C4E004B4705 /* Agents Pay App.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 8E3F273A2CEE5C4E004B4705 /* Agents Pay App.storekit */; };
+		8E3F273E2CEE5D6B004B4705 /* StoreKitTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 8E3F273D2CEE5D6B004B4705 /* StoreKitTestCertificate.cer */; };
+		8E3F273F2CEE5D6B004B4705 /* StoreKitTestCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 8E3F273D2CEE5D6B004B4705 /* StoreKitTestCertificate.cer */; };
 		8E3F87802CB9B19200BBAB41 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8EDFB9612CB9B04D00E11D66 /* UIKit.framework */; };
 		A83708EA3F5B42C798244C4B /* Poppins-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 65689C79D7D449DBB0036EBB /* Poppins-SemiBold.ttf */; };
 		B3F7A96A16584077BF4197BB /* Jost-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7899DBD96EAD4751892B3863 /* Jost-Regular.ttf */; };
@@ -58,8 +63,11 @@
 		7899DBD96EAD4751892B3863 /* Jost-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Jost-Regular.ttf"; path = "../src/assets/fonts/Jost-Regular.ttf"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = agents_pay/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89CC144D004BD12F951837E0 /* Pods_agents_pay.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_agents_pay.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E1DCD022CECFA72008E7188 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		8E304BEB2CDA99AB0048435C /* reacthermes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = reacthermes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8E304BEF2CDA9D810048435C /* reacthermes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = reacthermes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8E3F273A2CEE5C4E004B4705 /* Agents Pay App.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Agents Pay App.storekit"; sourceTree = "<group>"; };
+		8E3F273D2CEE5D6B004B4705 /* StoreKitTestCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = StoreKitTestCertificate.cer; sourceTree = "<group>"; };
 		8E8A3D6E2CDBDDD600C593AC /* agents_pay.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = agents_pay.entitlements; path = agents_pay/agents_pay.entitlements; sourceTree = "<group>"; };
 		8EDFB95C2CB9AA3E00E11D66 /* libReact-RCTAppDelegate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libReact-RCTAppDelegate.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8EDFB95E2CB9AB0500E11D66 /* libReact-RCTAppDelegate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = "libReact-RCTAppDelegate.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,6 +96,7 @@
 			files = (
 				8E304BF02CDA9D810048435C /* reacthermes.framework in Frameworks */,
 				8E3F87802CB9B19200BBAB41 /* UIKit.framework in Frameworks */,
+				8E1DCD032CECFA72008E7188 /* StoreKit.framework in Frameworks */,
 				8E304BEC2CDA99AB0048435C /* reacthermes.framework in Frameworks */,
 				252BB758DC2793BC3FED495B /* Pods_agents_pay.framework in Frameworks */,
 			);
@@ -133,6 +142,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8E1DCD022CECFA72008E7188 /* StoreKit.framework */,
 				8E304BEF2CDA9D810048435C /* reacthermes.framework */,
 				8E304BEB2CDA99AB0048435C /* reacthermes.framework */,
 				8EDFB9612CB9B04D00E11D66 /* UIKit.framework */,
@@ -169,6 +179,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				8E3F273A2CEE5C4E004B4705 /* Agents Pay App.storekit */,
+				8E3F273D2CEE5D6B004B4705 /* StoreKitTestCertificate.cer */,
 				13B07FAE1A68108700A75B9A /* agents_pay */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* agents_payTests */,
@@ -289,6 +301,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8E3F273C2CEE5C4E004B4705 /* Agents Pay App.storekit in Resources */,
+				8E3F273F2CEE5D6B004B4705 /* StoreKitTestCertificate.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -304,8 +318,10 @@
 				B3F7A96A16584077BF4197BB /* Jost-Regular.ttf in Resources */,
 				7BEF8E3BCE2A49EEA3D67920 /* Jost-SemiBold.ttf in Resources */,
 				68804188BCA449AD90E9C781 /* Inter_28pt-Regular.ttf in Resources */,
+				8E3F273B2CEE5C4E004B4705 /* Agents Pay App.storekit in Resources */,
 				D7593ED108554B71816E6D69 /* IBMPlexMono-Regular.ttf in Resources */,
 				3657F9D2A670477D1C7A3FEE /* PrivacyInfo.xcprivacy in Resources */,
+				8E3F273E2CEE5D6B004B4705 /* StoreKitTestCertificate.cer in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -544,10 +560,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = agents_pay/agents_pay.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development: Valerie Garza (PGRX3ZSXAU)";
-				CURRENT_PROJECT_VERSION = 18;
-				DEVELOPMENT_TEAM = YV6Y4B2258;
-				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 39ZKCT373N;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 27;
+				DEVELOPMENT_TEAM = 39ZKCT373N;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = agents_pay/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -555,7 +571,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 18;
+				MARKETING_VERSION = 27;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -563,7 +579,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.agentpayapp;
 				PRODUCT_NAME = agents_pay;
-				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Valerie Personal";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -579,7 +595,7 @@
 				CODE_SIGN_ENTITLEMENTS = agents_pay/agents_payRelease.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 18;
+				CURRENT_PROJECT_VERSION = 27;
 				DEVELOPMENT_TEAM = 39ZKCT373N;
 				INFOPLIST_FILE = agents_pay/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.business";
@@ -587,7 +603,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 18;
+				MARKETING_VERSION = 27;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -685,7 +701,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -769,7 +788,10 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = "$(inherited)  ";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					" ",
+				);
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;

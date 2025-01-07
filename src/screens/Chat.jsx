@@ -249,44 +249,46 @@ const Chat = ({ navigation, route }) => {
                     </ScrollView>
                 </View>
             </Background>
-            <View
-                style={{
-                    backgroundColor: Color('textColor'),
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    borderRadius: 30,
-                    borderWidth: 1,
-                    borderColor: Color('textColor'),
-                    // paddingVertical: height * 0.005,
-                    paddingHorizontal: width * 0.05,
-                    position: 'absolute',
-                    bottom: height * 0.02,
-                    marginHorizontal: width * 0.04,
-                }}
-            >
-                <Input
-                    value={message}
-                    plceHolderTextClr={Color('btnText')}
-                    color={Color('btnText')}
-                    placeholder="Write a Message"
-                    inputStyling={{ paddingTop: 0 }}
+            <KeyboardAvoidingView behavior="position">
+                <View
                     style={{
-                        flex: 1,
-                        paddingVertical: 0,
-                        paddingLeft: width * 0.02,
-                        borderColor: 'transparent',
+                        backgroundColor: Color('textColor'),
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        borderRadius: 30,
+                        borderWidth: 1,
+                        borderColor: Color('textColor'),
+                        // paddingVertical: height * 0.005,
+                        paddingHorizontal: width * 0.05,
+                        position: 'absolute',
+                        bottom: height * 0.02,
+                        marginHorizontal: width * 0.04,
                     }}
-                    onChange={(value) => setMessage(value)}
-                    onSubmitEditing={onSendMessage}
-                    returnKeyType="search"
-                />
-                <TouchableOpacity onPress={onSendMessage}>
-                    <Send2
-                        size={height * 0.035}
-                        color={Color('btnBackground')}
+                >
+                    <Input
+                        value={message}
+                        plceHolderTextClr={Color('btnText')}
+                        color={Color('btnText')}
+                        placeholder="Write a Message"
+                        inputStyling={{ paddingTop: 0 }}
+                        style={{
+                            flex: 1,
+                            paddingVertical: 0,
+                            paddingLeft: width * 0.02,
+                            borderColor: 'transparent',
+                        }}
+                        onChange={(value) => setMessage(value)}
+                        onSubmitEditing={onSendMessage}
+                        returnKeyType="next"
                     />
-                </TouchableOpacity>
-            </View>
+                    <TouchableOpacity onPress={onSendMessage}>
+                        <Send2
+                            size={height * 0.035}
+                            color={Color('btnBackground')}
+                        />
+                    </TouchableOpacity>
+                </View>
+            </KeyboardAvoidingView>
         </>
     );
 };

@@ -302,12 +302,6 @@ const UploadProperty = ({ navigation, route }) => {
                     <Image source={require('../assets/images/upload_image.png')} style={{ width: width * 0.25, height: width * 0.25, borderRadius: 20 }} resizeMode="stretch" />
                 </Pressable> : null}
             </View>
-            {/* <Input
-                value={property?.title}
-                labelText="Property"
-                style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
-                onChange={(value) => setProperty({ ...property, title: value })}
-            /> */}
             <Dropdown
                 data={states}
                 selectedValue={property.state}
@@ -364,7 +358,7 @@ const UploadProperty = ({ navigation, route }) => {
             <Input
                 keyboardType="numeric"
                 value={property?.property_size}
-                labelText="Property Area  (sq. yd)"
+                labelText="Property Area  (sq. ft)"
                 style={{ width: width * 0.85, alignSelf: 'center', marginBottom: height * 0.015 }}
                 onChange={(value) => setProperty({ ...property, property_size: value })}
             />

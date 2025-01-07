@@ -26,7 +26,6 @@ const Sidebar = ({ user, isOpen }) => {
     const [visible, setVisible] = useState(false);
     const [userData, setUserData] = useState();
     const [genderPronouns, setGenderPronouns] = useState('');
-    const [qrCodeData, setQRCodeData] = useState('https://play.google.com/store/apps/details?id=com.example.yourapp');
 
     useEffect(() => {
         Animated.timing(slideAnim, {
@@ -208,14 +207,14 @@ const Sidebar = ({ user, isOpen }) => {
                                     />
                                     <Small style={{ width: width * 0.35 }} numberOfLines={1}>{userData?.broker_name}</Small>
                                 </View>
-                                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
-                                    {/* <Hashtag
+                                {/* <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                                    <Hashtag
                                         size="22"
                                         color={Color('btnBackground')}
                                         variant="Outline"
-                                    /> */}
+                                    />
                                     <Small style={{ width: width * 0.45 }} numberOfLines={1}>{genderPronouns === 'male' ? 'He' : genderPronouns === 'female' ? 'She' : 'Other'}</Small>
-                                </View>
+                                </View> */}
                             </View>
                         </View>
                         <Br space={0.03} />
@@ -237,8 +236,7 @@ const Sidebar = ({ user, isOpen }) => {
                         <DrawerItem
                             icon={<Profile2User size="25" color={Color('whiteText')} variant="Bold" />}
                             label="Subscription"
-                            href={`${baseUrl}/current_subscription`}
-                            openOnWeb
+                            screen="MySubscription"
                         />
                         <DrawerItem
                             icon={<Reserve size="25" color={Color('whiteText')} variant="Bold" />}
@@ -287,7 +285,7 @@ const Sidebar = ({ user, isOpen }) => {
                                 <Pera style={{ fontFamily: 'Poppins-SemiBold', color: Color('btnText') }}>Logout</Pera>
                             </View>
                         </TouchableOpacity>
-                        <Br space={0.08} />
+                        <Br space={0.1} />
                     </View>
                 </ScrollView>
             </Animated.View>

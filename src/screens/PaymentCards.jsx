@@ -23,7 +23,7 @@ const PaymentCards = ({ navigation }) => {
     const isFocused = useIsFocused();
     const [ paymentCards, setPaymentCards ] = useState();
     const [ key, setKey ] = useState('');
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (isFocused) {loadCards();}
@@ -85,7 +85,7 @@ const PaymentCards = ({ navigation }) => {
                     alignSelf: 'center',
                 }}>
                     <Backbtn position="static" onPress={() => {
-                        navigation.goBack()}} />
+                        navigation.goBack();}} />
                     <Notificationbtn unSeen position="static" onPress={() => navigation.goBack()} />
                 </View>
                 <Br space={0.05} />
