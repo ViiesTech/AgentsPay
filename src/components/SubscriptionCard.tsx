@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Dimensions, Image, Platform, Pressable, View } from 'react-native';
+import { Dimensions, Image, Platform, Pressable, TouchableOpacity, View } from 'react-native';
 import { Color } from '../utils/Colors';
 import { H5, H6, Pera } from '../utils/Text';
 import Br from './Br';
@@ -14,7 +14,7 @@ const SubscriptionCard = ({ selectedPackage, data, style, onPress }: { selectedP
             if (onPress) { onPress(); }
         };
         return (
-            <Pressable onPress={onClicked} style={[{ padding: width * 0.05, backgroundColor: Color('textColor'), borderRadius: 10, zIndex: 1 }, style]}>
+            <TouchableOpacity onPress={onClicked} style={[{ padding: width * 0.05, backgroundColor: Color('textColor'), borderRadius: 10, zIndex: 1 }, style]}>
                 <View style={{
                     flexDirection: 'row',
                     alignItems: 'center',
@@ -29,7 +29,7 @@ const SubscriptionCard = ({ selectedPackage, data, style, onPress }: { selectedP
                 <Br space={0.02} />
                 <H6 numberOfLines={1} style={{ color: Color('btnText'), fontStyle: 'italic', fontFamily: 'Poppins-Medium' }}>{title}</H6>
                 <Pera style={{ color: Color('gray') }}>{description}</Pera>
-            </Pressable>
+            </TouchableOpacity>
         );
     }else {
         const { packageType } = data;

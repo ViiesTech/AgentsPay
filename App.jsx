@@ -1,13 +1,13 @@
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/react-in-jsx-scope */
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationProvider, useNavigation } from './src/utils/NavigationContext';
-import { Suspense, useEffect } from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {NavigationProvider, useNavigation} from './src/utils/NavigationContext';
+import {Suspense, useEffect, useState} from 'react';
 
-import { Provider } from 'react-redux';
-import { store } from './src/redux/Store';
-import { NavigationContainer } from '@react-navigation/native';
-import { Platform, StatusBar } from 'react-native';
+import {Provider} from 'react-redux';
+import {store} from './src/redux/Store';
+import {NavigationContainer} from '@react-navigation/native';
+import {Platform, StatusBar} from 'react-native';
 
 import Splash from './src/screens/Splash';
 import Loading from './src/screens/Loading';
@@ -43,11 +43,33 @@ import Chat from './src/screens/Chat';
 import Inbox from './src/screens/Inbox';
 import UserChatProfile from './src/screens/UserChatProfile';
 import Purchases from 'react-native-purchases';
+// import * as IAP from 'react-native-iap';
 
 const Stack = createNativeStackNavigator();
-
+// const items = Platform.select({
+//   ios: ['monthly_rc_499', 'yearly_rc_1499'],
+//   android: [''],
+// });
 function App() {
-  const { navigationRef } = useNavigation();
+  const {navigationRef} = useNavigation();
+  // const [purchases, setPurchase] = useState(false);
+
+  // useEffect(() => {
+  //   IAP.initConnection()
+  //     .catch(() => {
+  //       console.log('error connnecting to store');
+  //     })
+  //     .then(() => {
+  //       console.log('connected');
+  //       IAP.getSubscriptions({skus: items})
+  //         .catch((error) => {
+  //           console.log('error fining subscriptions',error);
+  //         })
+  //         .then((response) => {
+  //           console.log('res', response);
+  //         });
+  //     });
+  // }, []);
 
   useEffect(() => {
     if (Platform.OS === 'ios') {
@@ -55,15 +77,19 @@ function App() {
     }
   }, []);
 
-  const Sus = ({ component }) => {
+  const Sus = ({component}) => {
     return <Suspense fallback={<Loading />}>{component}</Suspense>;
   };
   return (
     <>
-      <Provider store={store} >
-        <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+      <Provider store={store}>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          barStyle="light-content"
+        />
         <NavigationContainer ref={navigationRef}>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen name="Splash" component={Splash} />
             <Stack.Screen name="Welcome">
               {props => <Sus component={<Welcome {...props} />} />}

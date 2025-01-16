@@ -27,7 +27,6 @@ export const appSlice = createSlice({
             state.splashTimeout = payload.splashTimeOut;
             state.ageFromRange = payload.ageFromRange;
             state.ageToRange = payload.ageToRange;
-
             state.ethencity = payload.ethencity;
             state.lookingFor = payload.lookingFor;
             state.hereFor = payload.hereFor;
@@ -52,7 +51,6 @@ export const appSlice = createSlice({
         endSession: async (state) => {
             await AsyncStorage.removeItem('token');
             await AsyncStorage.removeItem('session');
-            // state.loginSession = null;
         },
     },
 });

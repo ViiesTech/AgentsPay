@@ -1654,6 +1654,8 @@ PODS:
     - RNFBApp
   - RNFS (2.20.0):
     - React-Core
+  - RNIap (12.16.0):
+    - React-Core
   - RNPurchases (8.2.7):
     - PurchasesHybridCommon (= 13.9.0)
     - React-Core
@@ -1763,6 +1765,7 @@ DEPENDENCIES:
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
   - RNFS (from `../node_modules/react-native-fs`)
+  - RNIap (from `../node_modules/react-native-iap`)
   - RNPurchases (from `../node_modules/react-native-purchases`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSVG (from `../node_modules/react-native-svg`)
@@ -1938,6 +1941,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-firebase/messaging"
   RNFS:
     :path: "../node_modules/react-native-fs"
+  RNIap:
+    :path: "../node_modules/react-native-iap"
   RNPurchases:
     :path: "../node_modules/react-native-purchases"
   RNScreens:
@@ -2036,6 +2041,7 @@ SPEC CHECKSUMS:
   RNFBApp: 5f87753a8d8b37d229adf85cd0ff37709ffdf008
   RNFBMessaging: 3fa1114c0868dd21f20dfe186adf42297ea316b1
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
+  RNIap: 4a40df8443e6bc4f02ea936beda006743c487f6a
   RNPurchases: 314406aa3e431d19570360da91f58fd5d0ab68ac
   RNScreens: 16b782596e80e475b7f3ec769c9a97d789d9b0ed
   RNSVG: 8b1a777d54096b8c2a0fd38fc9d5a454332bbb4d

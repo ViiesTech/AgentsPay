@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Dimensions, Image, TouchableOpacity, View } from 'react-native';
 import Background from '../utils/Background';
 import { H1, H5, Pera, Small } from '../utils/Text';
@@ -10,6 +10,7 @@ import { AvatarList } from '../components/GroupAvatar';
 
 const { width, height } = Dimensions.get('window');
 const Welcome = ({ navigation }) => {
+    
     return (
         <Background noAuth>
             <View style={{paddingTop: height * 0.05, height: height * 0.9, width: width * 0.8, alignSelf: 'center'}}>
