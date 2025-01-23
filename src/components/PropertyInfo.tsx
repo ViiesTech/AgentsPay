@@ -47,6 +47,11 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
         }
     };
 
+    function convertSquareFeetToAcres(squareFeet: number) {
+        const squareFeetPerAcre = 43560;
+        return squareFeet / squareFeetPerAcre;
+      }
+
 
     return (
         <Pressable onPress={onPress} style={{ width: width * 0.85, alignSelf: 'center', position: 'relative' }}>
@@ -176,13 +181,16 @@ const PropertyInfo = ({ data, clickable, isSwiper }: { data?: any, clickable?: b
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                         <Image style={{ width: width * 0.06, height: width * 0.06 }} source={require('../assets/images/size.png')} resizeMode="contain" />
+                        <View>
                         <Small style={{ fontFamily: 'Jost-Regular' }}>{data?.property_size} Sq</Small>
+                        <Small style={{ fontFamily: 'Jost-Regular' }}>{convertSquareFeetToAcres(data?.property_size).toFixed(0) } acres</Small>
+                        </View>
                     </View>
                 </View>
                 <Br space={0.015} />
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
                     <Image style={{ width: width * 0.06, height: width * 0.06 }} source={require('../assets/images/location.png')} resizeMode="contain" />
-                    <Small style={{ fontFamily: 'Jost-Regular' }}>{data?.address}</Small>
+                    <Small style={{ fontFamily: 'Jost-Regular', width: width * 0.6 }}>{data?.address}</Small>
                 </View>
             </View>
         </Pressable>
