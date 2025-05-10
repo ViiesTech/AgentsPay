@@ -1,40 +1,63 @@
+# Podfile for the React Native project
+
 # Resolve react_native_pods.rb with node to allow for hoisting
-require Pod::Executable.execute_command('node', ['-p',
-  'require.resolve(
-    "react-native/scripts/react_native_pods.rb",
-    {paths: [process.argv[1]]},
-  )', __dir__]).strip
+require Pod::Executable.execute_command('node', [
+  '-p',
+  'require.resolve("react-native/scripts/react_native_pods.rb", { paths: [process.argv[1]] })',
+  __dir__
+]).strip
 
 platform :ios, min_ios_version_supported
+
+# Prepare the React Native project
 prepare_react_native_project!
 
+# Determine the linkage type based on the environment variable
 linkage = ENV['USE_FRAMEWORKS']
-if linkage != nil
+if linkage
   Pod::UI.puts "Configuring Pod with #{linkage}ally linked Frameworks".green
-  use_frameworks! :linkage => linkage.to_sym
+  use_frameworks! linkage: linkage.to_sym
+else
+  use_frameworks! linkage: :static  # Default to static linkage if no ENV variable is set
 end
-
+def fix_hermes(app_name)
+  path = "Pods/Target Support Files/Pods-" + app_name + "/Pods-" + app_name + "-frameworks.sh"
+  lines = File.readlines(path)
+  lines.insert(181, '  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/hermes.framework"'+"\n")
+  lines.insert(183, 'if [[ "$CONFIGURATION" == "Release" ]]; then'+"\n")
+  lines.insert(184, '  install_framework "${PODS_XCFRAMEWORKS_BUILD_DIR}/hermes-engine/hermes.framework"'+"\n")
+  lines.insert(185, "fi\n")
+  File.write(path, lines.join, mode: "w")
+  puts "Hermes fixed"
+end
 target 'agents_pay' do
   config = use_native_modules!
+  use_modular_headers!
 
+  # Include Firebase modules
+  pod 'RNFBApp', path: '../node_modules/@react-native-firebase/app'
+  pod 'RNFBMessaging', path: '../node_modules/@react-native-firebase/messaging'
+
+  # Integrate React Native
   use_react_native!(
-    :path => config[:reactNativePath],
-    # An absolute path to your application root.
-    :app_path => "#{Pod::Config.instance.installation_root}/.."
+    path: config[:reactNativePath],
+    app_path: "#{Pod::Config.instance.installation_root}/..",
+    hermes_enabled: true # Change to true to enable Hermes
   )
 
   target 'agents_payTests' do
-    inherit! :complete
-    # Pods for testing
+    inherit! :complete # Inherit all pods for testing
+    # Uncomment to include additional testing pods
+    # pod 'Firebase/Core'
+    # pod 'GoogleUtilities', modular_headers: true
   end
 
+  # Flipper integration
   post_install do |installer|
-    # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202
     react_native_post_install(
       installer,
       config[:reactNativePath],
-      :mac_catalyst_enabled => false,
-      # :ccache_enabled => true
+      mac_catalyst_enabled: false,
     )
   end
 end

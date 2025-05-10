@@ -4,3 +4,13 @@ extensions.configure(com.facebook.react.ReactSettingsExtension){ ex -> ex.autoli
 rootProject.name = 'agents_pay'
 include ':app'
 includeBuild('../node_modules/@react-native/gradle-plugin')
+include ':react-native-checkbox'
+project(':react-native-checkbox').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/checkbox/android')
+include ':@react-native-firebase_app'
+project(':@react-native-firebase_app').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-firebase/app/android')
+include ':@react-native-firebase_messaging'
+project(':@react-native-firebase_messaging').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-firebase/messaging/android')
+include ':@react-native-community_geolocation'
+project(':@react-native-community_geolocation').projectDir = new File(rootProject.projectDir, '../node_modules/@react-native-community/geolocation/android')
+include ':react-native-purchases'
+project(':react-native-purchases').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-purchases/android')

@@ -1,3 +1,17 @@
+<!-- APP SECRET -->
+<!-- 39ab6dae7f494e0786a11aa9e162b770 -->
+<!-- revenuecat -->
+<!-- appl_AiXHGogHIEulbOtFoRauzRglJvj -->
+
+
+
+
+
+
+
+
+
+
 This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
 # Getting Started
